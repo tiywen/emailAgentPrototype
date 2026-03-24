@@ -1,3 +1,6 @@
 openai
 pydantic
 python-dotenv
+streamlit
+msal
+requests

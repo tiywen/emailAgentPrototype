@@ -6,12 +6,9 @@ import os
 import sys
 from pathlib import Path
 
-from dotenv import load_dotenv
-
+from email_assistant.dotenv_load import load_project_dotenv
 from email_assistant.input_loader import parse_input_file
-from email_assistant.llm_client import call_llm_for_analysis
-from email_assistant.models import safe_parse_output
-from email_assistant.preprocessor import build_thread_text
+from email_assistant.summary_pipeline import analysis_to_dict, analyze_unified_input
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -40,35 +37,30 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def run() -> int:
-    load_dotenv()
+    load_project_dotenv(override=True)
     parser = build_parser()
     args = parser.parse_args()
 
     try:
         email_input = parse_input_file(args.input)
-        thread_text = build_thread_text(email_input)
     except Exception as err:
         print(f"[ERROR] Failed to load/prepare input: {err}", file=sys.stderr)
         return 1
 
     if args.dry_run:
+        from email_assistant.preprocessor import build_thread_text
+
         print("=== DRY RUN: Preprocessed Thread Text ===")
-        print(thread_text)
+        print(build_thread_text(email_input))
         return 0
 
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        print("[ERROR] OPENAI_API_KEY is not set.", file=sys.stderr)
-        return 1
-
     try:
-        raw_output = call_llm_for_analysis(model=args.model, thread_text=thread_text, api_key=api_key)
-        parsed_output = safe_parse_output(raw_output)
+        parsed_output = analyze_unified_input(email_input, model=args.model)
     except Exception as err:
         print(f"[ERROR] LLM call or output parsing failed: {err}", file=sys.stderr)
         return 1
 
-    output_dict = parsed_output.model_dump()
+    output_dict = analysis_to_dict(parsed_output)
     print(json.dumps(output_dict, ensure_ascii=False, indent=2))
 
     output_path = Path(args.output)
