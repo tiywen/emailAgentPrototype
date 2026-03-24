@@ -1,0 +1,18 @@
+{
+  "thread_id": "thread-005",
+  "subject": "Prepare onboarding guide",
+  "messages": [
+    {
+      "sender": "hr@company.com",
+      "recipients": ["ops@company.com", "admin@company.com"],
+      "timestamp": "2026-03-19T08:00:00Z",
+      "body": "We need a refreshed onboarding guide by next week."
+    },
+    {
+      "sender": "ops@company.com",
+      "recipients": ["hr@company.com"],
+      "timestamp": "2026-03-19T09:20:00Z",
+      "body": "Noted. Someone should own the first draft soon."
+    }
+  ]
+}

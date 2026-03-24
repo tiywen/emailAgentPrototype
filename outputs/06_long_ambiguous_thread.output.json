@@ -1,0 +1,25 @@
+{
+  "summary": "The team is discussing a revised partner proposal, focusing on pricing assumptions and potential renegotiation due to tight margins. Internal alignment and drafting negotiation boundaries are needed before contacting the partner.",
+  "key_points": [
+    "Partner sent a revised proposal for review.",
+    "Margins are tight in scenario B, indicating a need for renegotiation.",
+    "Sales team member is willing to call the partner but lacks clarity on fallback terms.",
+    "Internal alignment is necessary before proceeding with negotiations."
+  ],
+  "action_items": [
+    {
+      "task": "Draft negotiation boundaries",
+      "owner": "unknown",
+      "deadline": "unknown"
+    },
+    {
+      "task": "Suggest a target margin",
+      "owner": "finance@company.com",
+      "deadline": "unknown"
+    }
+  ],
+  "open_questions": [
+    "What fallback terms do we want for the negotiation?",
+    "What is the deadline for suggesting a target margin?"
+  ]
+}

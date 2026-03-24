@@ -1,0 +1,24 @@
+{
+  "summary": "A postmortem meeting is scheduled for Friday at 3 PM to discuss an API incident. Logs need to be shared before the meeting.",
+  "key_points": [
+    "Postmortem meeting scheduled for Friday at 3 PM.",
+    "Logs must be shared before the meeting.",
+    "SRE will prepare timeline and logs by Friday at 12 PM.",
+    "Confirmation needed on whether the product team is invited."
+  ],
+  "action_items": [
+    {
+      "task": "Share logs before the meeting",
+      "owner": "unknown",
+      "deadline": "unknown"
+    },
+    {
+      "task": "Prepare timeline and logs",
+      "owner": "sre@company.com",
+      "deadline": "2026-03-18T12:00:00Z"
+    }
+  ],
+  "open_questions": [
+    "Is the product team invited to the meeting?"
+  ]
+}

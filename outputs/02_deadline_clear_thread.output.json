@@ -1,0 +1,16 @@
+{
+  "summary": "The project manager requested an update to the homepage copy, with a submission deadline of March 22, 2026. The writer confirmed the task and deadline.",
+  "key_points": [
+    "Project manager requested homepage copy update.",
+    "Deadline for submission is March 22, 2026.",
+    "Writer confirmed understanding and commitment to the deadline."
+  ],
+  "action_items": [
+    {
+      "task": "Update homepage copy",
+      "owner": "writer@company.com",
+      "deadline": "2026-03-22"
+    }
+  ],
+  "open_questions": []
+}

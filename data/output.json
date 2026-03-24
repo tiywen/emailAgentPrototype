@@ -1,0 +1,26 @@
+{
+  "summary": "The team is coordinating the finalization of launch materials for the Q2 product launch, with specific tasks assigned to Bob for drafting customer email copy and Carol for reviewing it.",
+  "key_points": [
+    "Launch materials need to be finalized by next Friday.",
+    "Bob is tasked with drafting the customer email copy.",
+    "Bob will deliver the first draft by Wednesday EOD.",
+    "Carol will review the draft on Thursday morning.",
+    "Confirmation on the final launch date is needed."
+  ],
+  "action_items": [
+    {
+      "task": "Draft customer email copy",
+      "owner": "Bob",
+      "deadline": "2026-03-23"
+    },
+    {
+      "task": "Review customer email draft",
+      "owner": "Carol",
+      "deadline": "2026-03-24"
+    }
+  ],
+  "open_questions": [
+    "Who will review the email before send-out?",
+    "What is the final launch date?"
+  ]
+}

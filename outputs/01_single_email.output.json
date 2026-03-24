@@ -1,0 +1,16 @@
+{
+  "summary": "Request for review of vendor contract by the legal team.",
+  "key_points": [
+    "Vendor contract needs review.",
+    "Deadline for review is March 25, 2026.",
+    "Approval will lead to proceeding with the contract."
+  ],
+  "action_items": [
+    {
+      "task": "Review vendor contract",
+      "owner": "legal@company.com",
+      "deadline": "2026-03-25"
+    }
+  ],
+  "open_questions": []
+}

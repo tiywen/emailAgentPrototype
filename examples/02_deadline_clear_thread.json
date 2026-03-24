@@ -1,0 +1,18 @@
+{
+  "thread_id": "thread-002",
+  "subject": "Website copy update",
+  "messages": [
+    {
+      "sender": "pm@company.com",
+      "recipients": ["writer@company.com"],
+      "timestamp": "2026-03-18T09:00:00Z",
+      "body": "Please update homepage copy and submit final text by 2026-03-22."
+    },
+    {
+      "sender": "writer@company.com",
+      "recipients": ["pm@company.com"],
+      "timestamp": "2026-03-18T12:00:00Z",
+      "body": "Understood. I will submit before end of day on 2026-03-22."
+    }
+  ]
+}

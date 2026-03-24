@@ -1,0 +1,24 @@
+{
+  "thread_id": "thread-001",
+  "subject": "Q2 Product Launch Plan",
+  "messages": [
+    {
+      "sender": "alice@company.com",
+      "recipients": ["team@company.com"],
+      "timestamp": "2026-03-20T09:00:00Z",
+      "body": "We should finalize launch materials by next Friday. Bob, please draft the customer email copy."
+    },
+    {
+      "sender": "bob@company.com",
+      "recipients": ["alice@company.com", "team@company.com"],
+      "timestamp": "2026-03-20T10:30:00Z",
+      "body": "Got it. I can deliver the first draft by Wednesday EOD. Who will review before send-out?"
+    },
+    {
+      "sender": "carol@company.com",
+      "recipients": ["team@company.com"],
+      "timestamp": "2026-03-20T11:00:00Z",
+      "body": "I can review on Thursday morning. Need confirmation on final launch date."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "subject": "Please review legal terms",
+  "sender": "ops@company.com",
+  "recipients": ["legal@company.com"],
+  "timestamp": "2026-03-21T08:30:00Z",
+  "body": "Can you review the vendor contract by 2026-03-25? If approved, we will proceed."
+}

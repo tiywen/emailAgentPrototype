@@ -1,0 +1,18 @@
+{
+  "summary": "The HR department requests a refreshed onboarding guide to be completed by next week, and the Operations team acknowledges the need for a draft owner.",
+  "key_points": [
+    "HR requests a refreshed onboarding guide.",
+    "Deadline for the guide is next week.",
+    "Operations team acknowledges the request."
+  ],
+  "action_items": [
+    {
+      "task": "Prepare first draft of onboarding guide",
+      "owner": "unknown",
+      "deadline": "2026-03-26"
+    }
+  ],
+  "open_questions": [
+    "Who will own the first draft of the onboarding guide?"
+  ]
+}
