@@ -3,8 +3,8 @@ from __future__ import annotations
 import os
 from typing import Any, Dict
 
-from email_assistant.llm_client import SummaryStyle, call_llm_for_analysis
-from email_assistant.models import AnalysisOutput, UnifiedInput, safe_parse_output
+from email_assistant.llm_client import SummaryStyle, call_llm_for_analysis, call_llm_for_reply_decision
+from email_assistant.models import AnalysisOutput, ReplyDecisionOutput, UnifiedInput, safe_parse_output, safe_parse_reply_decision
 from email_assistant.preprocessor import build_thread_text
 
 
@@ -38,3 +38,23 @@ def analyze_thread_text(
 
 def analysis_to_dict(output: AnalysisOutput) -> Dict[str, Any]:
     return output.model_dump()
+
+
+def analyze_reply_decision_thread_text(
+    thread_text: str,
+    *,
+    model: str | None = None,
+    api_key: str | None = None,
+    current_user_identity: str = "unknown",
+) -> ReplyDecisionOutput:
+    key = api_key if api_key is not None else os.getenv("OPENAI_API_KEY")
+    if not key:
+        raise ValueError("OPENAI_API_KEY is not set.")
+    model_name = model or os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+    raw = call_llm_for_reply_decision(
+        model=model_name,
+        thread_text=thread_text,
+        api_key=key,
+        current_user_identity=current_user_identity,
+    )
+    return safe_parse_reply_decision(raw)

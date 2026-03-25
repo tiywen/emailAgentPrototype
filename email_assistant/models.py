@@ -96,3 +96,33 @@ def safe_parse_output(raw_data: object) -> AnalysisOutput:
         return AnalysisOutput.model_validate(raw_data)
     except ValidationError:
         return AnalysisOutput()
+
+
+class ReplyDecisionOutput(BaseModel):
+    是否需要回复: bool = False
+    判断原因: str = ""
+    回复草稿: str = ""
+
+    @field_validator("判断原因", "回复草稿", mode="before")
+    @classmethod
+    def normalize_text(cls, value: object) -> str:
+        if value is None:
+            return ""
+        return str(value).strip()
+
+    @field_validator("是否需要回复", mode="before")
+    @classmethod
+    def normalize_bool(cls, value: object) -> bool:
+        if isinstance(value, bool):
+            return value
+        if value is None:
+            return False
+        text = str(value).strip().lower()
+        return text in ("true", "1", "yes", "y", "是", "需要", "要")
+
+
+def safe_parse_reply_decision(raw_data: object) -> ReplyDecisionOutput:
+    try:
+        return ReplyDecisionOutput.model_validate(raw_data)
+    except ValidationError:
+        return ReplyDecisionOutput()

@@ -30,7 +30,7 @@ from email_assistant.msal_device import (
     try_acquire_token_silent,
 )
 from msal import SerializableTokenCache
-from email_assistant.summary_pipeline import analysis_to_dict, analyze_thread_text
+from email_assistant.summary_pipeline import analysis_to_dict, analyze_reply_decision_thread_text, analyze_thread_text
 
 # --- Page ---
 st.set_page_config(page_title="Email Assistant (Graph)", layout="wide")
@@ -44,6 +44,8 @@ SESSION_SELECTED_MESSAGE_ID = "selected_message_id"
 SESSION_ANALYSIS_CACHE = "analysis_cache"
 SESSION_PROCESSING = "ui_processing"
 SESSION_SIGNED_IN_USER = "signed_in_user_profile"
+SESSION_REPLY_CACHE = "reply_decision_cache"
+SESSION_SUMMARY_VIEW = "summary_last_view"
 
 
 def _logout() -> None:
@@ -56,6 +58,8 @@ def _logout() -> None:
     st.session_state.pop(SESSION_ANALYSIS_CACHE, None)
     st.session_state.pop(SESSION_PROCESSING, None)
     st.session_state.pop(SESSION_SIGNED_IN_USER, None)
+    st.session_state.pop(SESSION_REPLY_CACHE, None)
+    st.session_state.pop(SESSION_SUMMARY_VIEW, None)
 
 
 def _resolve_graph_access_token() -> str | None:
@@ -92,6 +96,34 @@ def _cache_set(message_id: str, style: str, payload: dict) -> None:
     cache = st.session_state.get(SESSION_ANALYSIS_CACHE) or {}
     cache[f"{message_id}:{style}"] = payload
     st.session_state[SESSION_ANALYSIS_CACHE] = cache
+
+
+def _reply_cache_get(message_id: str) -> dict | None:
+    cache = st.session_state.get(SESSION_REPLY_CACHE) or {}
+    return cache.get(message_id)
+
+
+def _reply_cache_set(message_id: str, payload: dict) -> None:
+    cache = st.session_state.get(SESSION_REPLY_CACHE) or {}
+    cache[message_id] = payload
+    st.session_state[SESSION_REPLY_CACHE] = cache
+
+
+def _build_current_user_identity() -> str:
+    profile = st.session_state.get(SESSION_SIGNED_IN_USER) or {}
+    claims = st.session_state.get(SESSION_TOKEN_CLAIMS) or {}
+
+    name = (profile.get("displayName") or "").strip()
+    mail = (profile.get("mail") or "").strip()
+    upn = (profile.get("userPrincipalName") or "").strip()
+    preferred = str(claims.get("preferred_username") or "").strip()
+    unique_name = str(claims.get("unique_name") or "").strip()
+
+    aliases = [v for v in [mail, upn, preferred, unique_name] if v]
+    aliases = list(dict.fromkeys(aliases))
+    alias_text = ", ".join(aliases) if aliases else "unknown"
+    display = name if name else "unknown"
+    return f"display_name={display}; emails_or_aliases={alias_text}"
 
 
 def main() -> None:
@@ -200,7 +232,11 @@ def main() -> None:
         st.error("OPENAI_API_KEY is not set. Add it to `.env` for summarization.")
         return
 
-    model = st.text_input("OpenAI model", value=os.getenv("OPENAI_MODEL", "gpt-4o-mini"))
+    model = st.text_input(
+        "OpenAI model",
+        value=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
+        disabled=_is_processing(),
+    )
     st.caption(
         f"Graph API：`{graph_base_url()}` · 列表优先收件箱；"
         f"若 401 再核对 `GRAPH_API_ROOT`"
@@ -287,11 +323,14 @@ def main() -> None:
     choice = st.selectbox("Select a message", options=labels, index=0, disabled=_is_processing())
     message_id = options[choice]
 
-    prev_selected = st.session_state.get(SESSION_SELECTED_MESSAGE_ID)
-    selection_changed = (prev_selected is not None) and (prev_selected != message_id)
     st.session_state[SESSION_SELECTED_MESSAGE_ID] = message_id
+    summary_view = st.session_state.get(SESSION_SUMMARY_VIEW)
+    if isinstance(summary_view, dict) and summary_view.get("message_id") != message_id:
+        st.session_state.pop(SESSION_SUMMARY_VIEW, None)
+        summary_view = None
 
     st.subheader("Summarize")
+    st.caption("请选择 Short 或 Long 后才会生成摘要（切换邮件不会自动生成）。")
     b1, b2 = st.columns([1, 1])
     with b1:
         do_short = st.button(
@@ -308,14 +347,13 @@ def main() -> None:
             disabled=_is_processing(),
         )
 
-    # Auto-run short summary when selection changes (after first render)
-    should_run = do_long or do_short or selection_changed
-    style = "long" if do_long else "short"
+    style: str | None = None
+    if do_long:
+        style = "long"
+    elif do_short:
+        style = "short"
 
-    if should_run:
-        # If auto-triggered by selection change, default to short
-        if selection_changed and not (do_long or do_short):
-            style = "short"
+    if style is not None:
         try:
             _set_processing(True)
             cached = _cache_get(message_id, style)
@@ -330,32 +368,12 @@ def main() -> None:
                 out = analysis_to_dict(result)
                 _cache_set(message_id, style, {"out": out, "thread_text": thread_text})
 
-            # Natural language output
-            st.subheader("Answer")
-            summary_text = (out.get("summary") or "").strip()
-            points = out.get("key_points") or []
-            questions = out.get("open_questions") or []
-
-            if summary_text:
-                st.markdown(summary_text)
-            else:
-                st.info("No summary returned.")
-
-            if points:
-                st.markdown("**Key points**")
-                st.markdown("\n".join([f"- {p}" for p in points]))
-
-            if questions:
-                st.markdown("**Open questions**")
-                st.markdown("\n".join([f"- {q}" for q in questions]))
-
-            # Debug output at the bottom (collapsible)
-            st.divider()
-            with st.expander("Structured JSON (debug)"):
-                st.json(out)
-            with st.expander("Preprocessed text sent to model (debug)"):
-                st.code(thread_text, language="text")
-
+            st.session_state[SESSION_SUMMARY_VIEW] = {
+                "message_id": message_id,
+                "style": style,
+                "out": out,
+                "thread_text": thread_text,
+            }
         except Exception as e:
             st.error(str(e))
             if "401" in str(e):
@@ -364,6 +382,95 @@ def main() -> None:
                 st.code(probe_body or "(empty body)", language="text")
         finally:
             _set_processing(False)
+
+    summary_view = st.session_state.get(SESSION_SUMMARY_VIEW)
+    if isinstance(summary_view, dict) and summary_view.get("message_id") == message_id:
+        st.subheader("Summary")
+        st.caption(f"当前为 **{summary_view.get('style', 'short')}** 版本。")
+        out = summary_view.get("out") or {}
+        thread_text = summary_view.get("thread_text") or ""
+
+        summary_text = (out.get("summary") or "").strip()
+        points = out.get("key_points") or []
+        questions = out.get("open_questions") or []
+
+        if summary_text:
+            st.markdown(summary_text)
+        else:
+            st.info("No summary returned.")
+
+        if points:
+            st.markdown("**Key points**")
+            st.markdown("\n".join([f"- {p}" for p in points]))
+
+        if questions:
+            st.markdown("**Open questions**")
+            st.markdown("\n".join([f"- {q}" for q in questions]))
+
+        st.divider()
+        with st.expander("Summary structured JSON (debug)"):
+            st.json(out)
+        with st.expander("Summary preprocessed text (debug)"):
+            st.code(thread_text, language="text")
+    else:
+        st.caption("尚未生成摘要：请点击 **Short** 或 **Long**。")
+
+    st.subheader("Reply assistant")
+    do_reply = st.button(
+        "Analyze reply priority & draft",
+        type="primary",
+        use_container_width=True,
+        disabled=_is_processing(),
+    )
+
+    if do_reply:
+        try:
+            _set_processing(True)
+            cached = _reply_cache_get(message_id)
+            if cached:
+                reply_out = cached.get("out") or {}
+                thread_text = cached.get("thread_text") or ""
+            else:
+                with st.spinner("Fetching full message and analyzing reply priority…"):
+                    detail = get_message_detail(token, message_id)
+                    thread_text = graph_message_to_thread_text(detail)
+                    reply_result = analyze_reply_decision_thread_text(
+                        thread_text,
+                        model=model,
+                        current_user_identity=_build_current_user_identity(),
+                    )
+                reply_out = reply_result.model_dump()
+                _reply_cache_set(message_id, {"out": reply_out, "thread_text": thread_text})
+        except Exception as e:
+            st.error(str(e))
+        finally:
+            _set_processing(False)
+
+    reply_block = _reply_cache_get(message_id)
+    if reply_block:
+        st.subheader("Reply decision")
+        reply_out = reply_block.get("out") or {}
+        thread_text = reply_block.get("thread_text") or ""
+
+        need_reply = bool(reply_out.get("是否需要回复"))
+        reason = (reply_out.get("判断原因") or "").strip()
+        draft = (reply_out.get("回复草稿") or "").strip()
+
+        st.write("**是否需要回复**：", need_reply)
+        if reason:
+            st.markdown(reason)
+
+        if need_reply:
+            st.markdown("**回复草稿**")
+            st.text_area("draft", value=draft, height=220, label_visibility="collapsed", disabled=_is_processing())
+        else:
+            st.info("该邮件判断为不需要回复。")
+
+        st.divider()
+        with st.expander("Reply decision JSON (debug)"):
+            st.json(reply_out)
+        with st.expander("Reply preprocessed text (debug)"):
+            st.code(thread_text, language="text")
 
 
 if __name__ == "__main__":
