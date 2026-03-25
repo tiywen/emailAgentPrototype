@@ -22,6 +22,24 @@ def peek_access_token_claims(access_token: str) -> Dict[str, Any]:
         return {}
 
 
+def normalize_jwt_access_token(raw: object) -> str | None:
+    """Return a compact JWT string or None if value is empty / not JWS-shaped (3 base64url segments)."""
+    if raw is None:
+        return None
+    s = str(raw).strip()
+    if not s:
+        return None
+    low = s.lower()
+    if low.startswith("bearer "):
+        s = s[7:].strip()
+    parts = s.split(".")
+    if len(parts) != 3 or not all(parts):
+        return None
+    if len(s) < 30:
+        return None
+    return s
+
+
 def summarize_claims_for_ui(claims: Dict[str, Any]) -> Dict[str, Any]:
     """Strip to non-sensitive fields useful for debugging Graph 401/403."""
     keys = ("aud", "iss", "scp", "roles", "tid", "appid", "iat", "exp", "preferred_username", "upn", "unique_name")

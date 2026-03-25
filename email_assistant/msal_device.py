@@ -5,10 +5,12 @@ import unicodedata
 from typing import Any, Dict, List
 
 import msal
+from msal import SerializableTokenCache
 from msal.authority import AZURE_PUBLIC, AuthorityBuilder
 
 # Microsoft Graph delegated scopes (v2 resource URI prefix)
-GRAPH_SCOPES = ["https://graph.microsoft.com/User.Read", "https://graph.microsoft.com/Mail.Read"]
+# Mail.ReadWrite is required for future draft creation.
+GRAPH_SCOPES = ["https://graph.microsoft.com/User.Read", "https://graph.microsoft.com/Mail.ReadWrite"]
 
 
 def _clean_id(value: str | None) -> str | None:
@@ -59,8 +61,8 @@ def get_entra_env() -> tuple[str, str | None]:
     return client_id, tenant_id
 
 
-def build_public_client() -> msal.PublicClientApplication:
-    """Build PCA. Prefer explicit AuthorityBuilder; optional env tunables for odd Entra/network setups."""
+def build_public_client(token_cache: msal.TokenCache | None = None) -> msal.PublicClientApplication:
+    """Build PCA. Pass ``token_cache`` (e.g. ``SerializableTokenCache``) to persist tokens across Streamlit reruns."""
     client_id, tenant_id = get_entra_env()
     # Full authority override, e.g. https://login.microsoftonline.com/<tenant> or .../organizations
     authority_raw = _authority_override()
@@ -82,7 +84,29 @@ def build_public_client() -> msal.PublicClientApplication:
         client_id,
         authority=authority,
         instance_discovery=instance_discovery,
+        token_cache=token_cache,
     )
+
+
+def try_acquire_token_silent(serialized_cache: str) -> tuple[str | None, str]:
+    """Refresh access token from MSAL cache. Returns (access_token_or_None, serialized_cache_to_persist)."""
+    if not (serialized_cache or "").strip():
+        return None, serialized_cache
+    cache = SerializableTokenCache()
+    cache.deserialize(serialized_cache)
+    app = build_public_client(token_cache=cache)
+    accounts = app.get_accounts()
+    if not accounts:
+        return None, serialized_cache
+    result = app.acquire_token_silent(GRAPH_SCOPES, account=accounts[0])
+    if not result or "access_token" not in result or result.get("error"):
+        return None, serialized_cache
+    token = (result.get("access_token") or "").strip()
+    if not token:
+        return None, serialized_cache
+    if cache.has_state_changed:
+        return token, cache.serialize()
+    return token, serialized_cache
 
 
 def describe_authority(app: msal.PublicClientApplication) -> Dict[str, str]:

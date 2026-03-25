@@ -123,7 +123,7 @@ python -m pip install -r requirements.txt
 streamlit run streamlit_app.py
 ```
 
-Sign in via **device code flow** in the sidebar. After login, the **access token** is stored in Streamlit **session state** (not persisted to disk). Fetch inbox, pick a message, then **Analyze full body** to run the same summarization pipeline as the CLI.
+Sign in via **device code flow** in the sidebar. After login, the app keeps an **MSAL serialized token cache** plus the current access token in Streamlit **session state** (not persisted to disk). Each Graph call first runs **`acquire_token_silent`** so a fresh access token is used when possible—this avoids sending a corrupted or truncated JWT after reruns (Graph error `InvalidAuthenticationToken` / “no dots”). Fetch inbox, pick a message, then **Analyze full body** to run the same summarization pipeline as the CLI.
 
 ### Troubleshooting login (`AADSTS700016`, directory `''`)
 

@@ -63,24 +63,9 @@ class UnifiedInput(BaseModel):
     messages: List[Message] = Field(default_factory=list)
 
 
-class ActionItem(BaseModel):
-    task: str = "unknown"
-    owner: str = "unknown"
-    deadline: str = "unknown"
-
-    @field_validator("task", "owner", "deadline", mode="before")
-    @classmethod
-    def non_empty_str(cls, value: object) -> str:
-        if value is None:
-            return "unknown"
-        text = str(value).strip()
-        return text if text else "unknown"
-
-
 class AnalysisOutput(BaseModel):
     summary: str = ""
     key_points: List[str] = Field(default_factory=list)
-    action_items: List[ActionItem] = Field(default_factory=list)
     open_questions: List[str] = Field(default_factory=list)
 
     @field_validator("summary", mode="before")
@@ -101,9 +86,8 @@ class AnalysisOutput(BaseModel):
         return [text] if text else []
 
     @model_validator(mode="after")
-    def ensure_action_items(self) -> "AnalysisOutput":
-        if self.action_items is None:
-            self.action_items = []
+    def normalize(self) -> "AnalysisOutput":
+        # Keep stable defaults ("" / []), and ignore any extra fields (e.g., legacy action_items)
         return self
 
 

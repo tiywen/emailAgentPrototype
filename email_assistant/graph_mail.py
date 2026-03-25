@@ -74,13 +74,15 @@ def list_inbox_messages(
     top: int = 15,
     timeout: int = 30,
 ) -> List[Dict[str, Any]]:
-    """Fetch a small set of messages with minimal fields via ``GET /me/messages``.
+    """Fetch inbox messages with robust fallbacks across account types.
 
-    Retries with simpler OData on non-success (some hosts reject ``$orderby`` / ``$select``).
+    Strategy:
+    1) Prefer strict inbox endpoint: ``/me/mailFolders/inbox/messages``.
+    2) Fallback: resolve inbox folder id and query ``/me/messages`` with folder filter.
+    3) Last resort: ``/me/messages`` (not strictly inbox, but keeps app usable).
     """
     base = graph_base_url()
-    url = f"{base}/me/messages"
-    attempts: List[Dict[str, str]] = [
+    common_attempts: List[Dict[str, str]] = [
         {
             "$top": str(top),
             "$orderby": "receivedDateTime desc",
@@ -94,16 +96,61 @@ def list_inbox_messages(
     ]
     last_status = 0
     last_body = ""
-    for params in attempts:
+
+    # 1) Strict inbox endpoint
+    inbox_url = f"{base}/me/mailFolders/inbox/messages"
+    for params in common_attempts:
+        resp = requests.get(inbox_url, headers=_auth_headers(access_token), params=params, timeout=timeout)
+        last_status, last_body = resp.status_code, resp.text or ""
+        if resp.status_code == 200:
+            data = resp.json()
+            return list(data.get("value") or [])
+
+    # 2) Folder id + filtered messages endpoint
+    inbox_folder_url = f"{base}/me/mailFolders/inbox"
+    folder_resp = requests.get(
+        inbox_folder_url,
+        headers=_auth_headers(access_token),
+        params={"$select": "id"},
+        timeout=timeout,
+    )
+    last_status, last_body = folder_resp.status_code, folder_resp.text or ""
+    if folder_resp.status_code == 200:
+        folder_id = (folder_resp.json().get("id") or "").strip()
+        if folder_id:
+            filtered_url = f"{base}/me/messages"
+            filter_attempts: List[Dict[str, str]] = [
+                {
+                    "$top": str(top),
+                    "$filter": f"parentFolderId eq '{folder_id}'",
+                    "$orderby": "receivedDateTime desc",
+                    "$select": "id,subject,from,receivedDateTime,bodyPreview,hasAttachments,parentFolderId",
+                },
+                {
+                    "$top": str(top),
+                    "$filter": f"parentFolderId eq '{folder_id}'",
+                },
+            ]
+            for params in filter_attempts:
+                resp = requests.get(filtered_url, headers=_auth_headers(access_token), params=params, timeout=timeout)
+                last_status, last_body = resp.status_code, resp.text or ""
+                if resp.status_code == 200:
+                    data = resp.json()
+                    return list(data.get("value") or [])
+
+    # 3) Last resort fallback to generic /me/messages
+    url = f"{base}/me/messages"
+    for params in common_attempts:
         resp = requests.get(url, headers=_auth_headers(access_token), params=params, timeout=timeout)
         last_status, last_body = resp.status_code, resp.text or ""
         if resp.status_code == 200:
             data = resp.json()
             return list(data.get("value") or [])
+
     raise RuntimeError(
-        f"Graph list messages failed ({last_status}) URL={url} — "
-        f"If /me works but this is 401 with an MSA (Outlook) account, set "
-        f"AZURE_AUTHORITY=https://login.microsoftonline.com/common and re-login. Body: {last_body[:500]}"
+        f"Graph list messages failed ({last_status}) — "
+        f"Tried inbox endpoint, inbox-folder filter, and /me/messages fallback. "
+        f"Body: {last_body[:700]}"
     )
 
 
@@ -117,6 +164,23 @@ def graph_probe_me(access_token: str, *, timeout: int = 30) -> tuple[int, str]:
         timeout=timeout,
     )
     return resp.status_code, (resp.text or "")[:800]
+
+
+def graph_get_me(access_token: str, *, timeout: int = 30) -> Dict[str, Any]:
+    """GET /me and return JSON. Use for UI identity display."""
+    url = f"{graph_base_url()}/me"
+    resp = requests.get(
+        url,
+        headers=_auth_headers(access_token),
+        params={"$select": "id,displayName,mail,userPrincipalName"},
+        timeout=timeout,
+    )
+    if resp.status_code != 200:
+        raise RuntimeError(f"Graph /me failed ({resp.status_code}): {resp.text}")
+    data = resp.json()
+    if not isinstance(data, dict):
+        return {}
+    return data
 
 
 def get_message_detail(access_token: str, message_id: str, *, timeout: int = 30) -> Dict[str, Any]:

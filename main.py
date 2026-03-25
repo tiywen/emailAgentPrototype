@@ -33,6 +33,12 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Skip LLM call and print preprocessed thread text only",
     )
+    parser.add_argument(
+        "--style",
+        choices=["short", "long"],
+        default="short",
+        help="Summary style: short or long",
+    )
     return parser
 
 
@@ -55,7 +61,7 @@ def run() -> int:
         return 0
 
     try:
-        parsed_output = analyze_unified_input(email_input, model=args.model)
+        parsed_output = analyze_unified_input(email_input, model=args.model, style=args.style)
     except Exception as err:
         print(f"[ERROR] LLM call or output parsing failed: {err}", file=sys.stderr)
         return 1
