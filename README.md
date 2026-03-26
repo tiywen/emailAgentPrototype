@@ -51,7 +51,8 @@
 - `email_assistant/models.py`：Pydantic 输入/输出模型
 - `email_assistant/jwt_peek.py`：JWT 诊断字段提取（仅调试）
 - `email_assistant/dotenv_load.py`：项目根 `.env` 加载
-- `examples/`：示例输入
+- `test/cases/`：10 个优先级评测场景（含 expected_output）
+- `run_test_cases.py`：命令行批量执行测试入口
 - `data/`：默认输入/输出样例
 
 ---
@@ -359,3 +360,59 @@ python main.py --input data/input.json --dry-run
 - 本项目为原型，重点在流程可用与交互验证。
 - 结果质量受模型能力、邮件原文质量、上下文完整性影响。
 - JWT 仅做无签名解析用于调试显示，不用于安全验证。  
+
+---
+
+## 11. 测试执行（10 个场景用例）
+
+`test/cases/` 提供了 10 个可直接执行的 dry-run 场景（`tc01`~`tc10`），每个文件包含：
+
+- 顶部注释：该 case 的设计原因与测试指标
+- `input`：测试输入（thread 格式）
+- `expected_output`：预期检查规则（是否需要回复、草稿是否为空、判断原因关键字）
+
+### 11.1 十个 Case 的简要覆盖范围
+
+- `tc01`：上级 + 明确请求 + 当日 deadline（高优先）
+- `tc02`：外部联系人 + 时间要求（高优先）
+- `tc03`：隐性请求、无明确时限（不确定）
+- `tc04`：纯 FYI 且明确无需动作（低优先）
+- `tc05`：系统公告/群发通知（低优先）
+- `tc06`：表面 FYI 但实质审批请求（高优先）
+- `tc07`：长线程末尾才出现关键行动要求（高优先）
+- `tc08`：有请求但无 deadline（中优先）
+- `tc09`：弱请求 + 信息不足（不确定）
+- `tc10`：礼貌措辞但业务紧迫（高优先）
+
+### 11.2 如何运行测试
+
+运行全部：
+
+```bash
+python run_test_cases.py --all
+```
+
+运行单个：
+
+```bash
+python run_test_cases.py --case tc01
+```
+
+运行多个：
+
+```bash
+python run_test_cases.py --case tc01 --case tc06 --case tc10
+```
+
+指定模型与输出目录：
+
+```bash
+python run_test_cases.py --all --model gpt-4o-mini --save-dir test/results
+```
+
+### 11.3 测试输出说明
+
+- 每个 case 的实际结果：`test/results/<case_id>.actual.json`
+- 汇总报告：`test/results/report.json`
+  - 包含 `PASS/FAIL`
+  - 失败原因（字段不匹配、草稿规则不符、判断原因缺少关键字等）

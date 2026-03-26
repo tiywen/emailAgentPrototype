@@ -1,0 +1,22 @@
+// 设计原因：验证“弱请求 + 无时间约束 + 信息不足”时是否保守判为UNCERTAIN。
+// 测试指标：User trust（一致可预测）、Miss rate（避免误判LOW）。
+{
+  "id": "tc09",
+  "input": {
+    "thread_id": "tc09",
+    "subject": "Quick check",
+    "messages": [
+      {
+        "sender": "colleague2@company.com",
+        "recipients": ["you@company.com"],
+        "timestamp": "2026-03-25T13:45:00Z",
+        "body": "Can you take a quick look when possible?"
+      }
+    ]
+  },
+  "expected_output": {
+    "是否需要回复": true,
+    "回复草稿规则": "non_empty",
+    "判断原因应包含": ["priority=UNCERTAIN"]
+  }
+}

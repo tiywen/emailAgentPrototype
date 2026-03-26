@@ -1,0 +1,22 @@
+// 设计原因：验证“系统公告/群发通知”是否避免误报为高优先级。
+// 测试指标：High-priority precision（反向验证）、Override rate。
+{
+  "id": "tc05",
+  "input": {
+    "thread_id": "tc05",
+    "subject": "System maintenance notice",
+    "messages": [
+      {
+        "sender": "it-notice@company.com",
+        "recipients": ["all@company.com"],
+        "timestamp": "2026-03-25T02:00:00Z",
+        "body": "FYI: Scheduled maintenance this Sunday 1am-3am. No user action required."
+      }
+    ]
+  },
+  "expected_output": {
+    "是否需要回复": false,
+    "回复草稿规则": "empty",
+    "判断原因应包含": ["priority=LOW"]
+  }
+}

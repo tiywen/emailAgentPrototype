@@ -1,0 +1,22 @@
+// 设计原因：验证“上级 + 明确请求 + 当日deadline + 紧急语气”的高优先级识别能力。
+// 测试指标：High-priority precision、Miss rate（应避免漏判）。
+{
+  "id": "tc01",
+  "input": {
+    "thread_id": "tc01",
+    "subject": "Final deck before 5pm",
+    "messages": [
+      {
+        "sender": "Alice (Manager)",
+        "recipients": ["you@company.com"],
+        "timestamp": "2026-03-25T08:30:00Z",
+        "body": "Please send me the final deck by 5pm today. This is urgent for the steering meeting."
+      }
+    ]
+  },
+  "expected_output": {
+    "是否需要回复": true,
+    "回复草稿规则": "non_empty",
+    "判断原因应包含": ["priority=HIGH"]
+  }
+}

@@ -1,0 +1,22 @@
+// 设计原因：验证“外部联系人 + 明确请求 + 截止时间”是否稳定判为高优先级。
+// 测试指标：High-priority precision、Suggestion acceptance rate（应生成可用草稿）。
+{
+  "id": "tc02",
+  "input": {
+    "thread_id": "tc02",
+    "subject": "Client confirmation needed",
+    "messages": [
+      {
+        "sender": "client_pm@partner.com",
+        "recipients": ["you@company.com"],
+        "timestamp": "2026-03-25T10:00:00Z",
+        "body": "Could you confirm the implementation schedule by Friday EOD? We need your response before we lock the client timeline."
+      }
+    ]
+  },
+  "expected_output": {
+    "是否需要回复": true,
+    "回复草稿规则": "non_empty",
+    "判断原因应包含": ["priority=HIGH"]
+  }
+}

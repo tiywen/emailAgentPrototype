@@ -1,0 +1,5 @@
+{
+  "是否需要回复": true,
+  "判断原因": "邮件来自同级同事，包含请求但没有明确的时间要求，导致优先级不确定。；priority=UNCERTAIN；score=1；confidence=0.8",
+  "回复草稿": "Hi, thank you for reaching out. I will review and share my thoughts with you shortly."
+}

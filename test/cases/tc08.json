@@ -1,0 +1,22 @@
+// 设计原因：验证“有明确请求但无明确时限”的中优先级判断。
+// 测试指标：Decision quality、Override rate（不应极端判高/低）。
+{
+  "id": "tc08",
+  "input": {
+    "thread_id": "tc08",
+    "subject": "Need your comments on proposal",
+    "messages": [
+      {
+        "sender": "unknown.vendor@partner.com",
+        "recipients": ["you@company.com"],
+        "timestamp": "2026-03-25T07:10:00Z",
+        "body": "Could you review the attached proposal and share your comments?"
+      }
+    ]
+  },
+  "expected_output": {
+    "是否需要回复": true,
+    "回复草稿规则": "non_empty",
+    "判断原因应包含": ["priority=MEDIUM"]
+  }
+}

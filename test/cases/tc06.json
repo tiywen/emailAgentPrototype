@@ -1,0 +1,22 @@
+// 设计原因：验证“表面FYI但含审批请求+deadline”的冲突信号场景。
+// 测试指标：Decision quality、Failure mode（防止被FYI负权重误导）。
+{
+  "id": "tc06",
+  "input": {
+    "thread_id": "tc06",
+    "subject": "FYI - final contract attached",
+    "messages": [
+      {
+        "sender": "alice.manager@company.com",
+        "recipients": ["you@company.com"],
+        "timestamp": "2026-03-25T12:00:00Z",
+        "body": "FYI — final contract is attached, please approve by tomorrow noon."
+      }
+    ]
+  },
+  "expected_output": {
+    "是否需要回复": true,
+    "回复草稿规则": "non_empty",
+    "判断原因应包含": ["priority=HIGH"]
+  }
+}

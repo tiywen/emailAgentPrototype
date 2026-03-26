@@ -1,0 +1,139 @@
+{
+  "total": 10,
+  "passed": 9,
+  "failed": 1,
+  "results": [
+    {
+      "case": "tc01",
+      "status": "PASS",
+      "errors": [],
+      "expected": {
+        "是否需要回复": true,
+        "回复草稿规则": "non_empty",
+        "判断原因应包含": [
+          "priority=HIGH"
+        ]
+      },
+      "actual_file": "tc01.actual.json"
+    },
+    {
+      "case": "tc02",
+      "status": "PASS",
+      "errors": [],
+      "expected": {
+        "是否需要回复": true,
+        "回复草稿规则": "non_empty",
+        "判断原因应包含": [
+          "priority=HIGH"
+        ]
+      },
+      "actual_file": "tc02.actual.json"
+    },
+    {
+      "case": "tc03",
+      "status": "PASS",
+      "errors": [],
+      "expected": {
+        "是否需要回复": true,
+        "回复草稿规则": "non_empty",
+        "判断原因应包含": [
+          "priority=UNCERTAIN"
+        ]
+      },
+      "actual_file": "tc03.actual.json"
+    },
+    {
+      "case": "tc04",
+      "status": "PASS",
+      "errors": [],
+      "expected": {
+        "是否需要回复": false,
+        "回复草稿规则": "empty",
+        "判断原因应包含": [
+          "priority=LOW"
+        ]
+      },
+      "actual_file": "tc04.actual.json"
+    },
+    {
+      "case": "tc05",
+      "status": "PASS",
+      "errors": [],
+      "expected": {
+        "是否需要回复": false,
+        "回复草稿规则": "empty",
+        "判断原因应包含": [
+          "priority=LOW"
+        ]
+      },
+      "actual_file": "tc05.actual.json"
+    },
+    {
+      "case": "tc06",
+      "status": "PASS",
+      "errors": [],
+      "expected": {
+        "是否需要回复": true,
+        "回复草稿规则": "non_empty",
+        "判断原因应包含": [
+          "priority=HIGH"
+        ]
+      },
+      "actual_file": "tc06.actual.json"
+    },
+    {
+      "case": "tc07",
+      "status": "PASS",
+      "errors": [],
+      "expected": {
+        "是否需要回复": true,
+        "回复草稿规则": "non_empty",
+        "判断原因应包含": [
+          "priority=HIGH"
+        ]
+      },
+      "actual_file": "tc07.actual.json"
+    },
+    {
+      "case": "tc08",
+      "status": "FAIL",
+      "errors": [
+        "判断原因 missing token: priority=MEDIUM"
+      ],
+      "expected": {
+        "是否需要回复": true,
+        "回复草稿规则": "non_empty",
+        "判断原因应包含": [
+          "priority=MEDIUM"
+        ]
+      },
+      "actual_file": "tc08.actual.json"
+    },
+    {
+      "case": "tc09",
+      "status": "PASS",
+      "errors": [],
+      "expected": {
+        "是否需要回复": true,
+        "回复草稿规则": "non_empty",
+        "判断原因应包含": [
+          "priority=UNCERTAIN"
+        ]
+      },
+      "actual_file": "tc09.actual.json"
+    },
+    {
+      "case": "tc10",
+      "status": "PASS",
+      "errors": [],
+      "expected": {
+        "是否需要回复": true,
+        "回复草稿规则": "non_empty",
+        "判断原因应包含": [
+          "priority=HIGH"
+        ]
+      },
+      "actual_file": "tc10.actual.json"
+    }
+  ]
+}

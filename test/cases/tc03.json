@@ -1,0 +1,22 @@
+// 设计原因：验证“隐性请求、无明确deadline”的不确定场景是否归入 UNCERTAIN。
+// 测试指标：Miss rate（避免误判LOW）、User trust（一致性）。
+{
+  "id": "tc03",
+  "input": {
+    "thread_id": "tc03",
+    "subject": "Thoughts?",
+    "messages": [
+      {
+        "sender": "teammate@company.com",
+        "recipients": ["you@company.com"],
+        "timestamp": "2026-03-25T11:20:00Z",
+        "body": "Let me know your thoughts when you have a moment."
+      }
+    ]
+  },
+  "expected_output": {
+    "是否需要回复": true,
+    "回复草稿规则": "non_empty",
+    "判断原因应包含": ["priority=UNCERTAIN"]
+  }
+}

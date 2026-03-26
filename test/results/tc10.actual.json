@@ -1,0 +1,5 @@
+{
+  "是否需要回复": true,
+  "判断原因": "该邮件来自外部联系人，包含明确的反馈请求和紧急的时间要求，因此被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
+  "回复草稿": "Dear [Partner Lead],\n\nThank you for your email. I will ensure to provide my feedback by the end of the day.\n\nBest regards,\nTest User"
+}

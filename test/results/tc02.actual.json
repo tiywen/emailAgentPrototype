@@ -1,0 +1,5 @@
+{
+  "是否需要回复": true,
+  "判断原因": "该邮件来自外部客户，包含明确的请求和截止时间，需优先处理。；priority=HIGH；score=8；confidence=0.9",
+  "回复草稿": "Dear [Client's Name],\n\nThank you for your email. I will confirm the implementation schedule by Friday EOD as requested.\n\nBest regards,\nTest User"
+}

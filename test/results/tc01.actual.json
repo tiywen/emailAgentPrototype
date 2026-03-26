@@ -1,0 +1,5 @@
+{
+  "是否需要回复": true,
+  "判断原因": "该邮件来自上级，包含明确请求和紧急的时间要求，因此被归类为高优先级。；priority=HIGH；score=8；confidence=1.0",
+  "回复草稿": "Dear Alice,\n\nI will ensure that the final deck is sent to you by 5pm today.\n\nBest regards,\nTest User"
+}
