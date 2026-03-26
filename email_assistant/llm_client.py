@@ -29,6 +29,11 @@ Rules:
 - Only use facts present in the input.
 - Do not hallucinate or infer unsupported details.
 - Return strict JSON only. No markdown, no extra text.
+- Prioritize extracting action/request signals first (what needs to be done, by whom if explicit).
+- Prioritize extracting deadline/scheduling signals second (time constraints, meeting times, due dates, sequence commitments).
+- In summary and key_points, focus on actionable decisions and pending commitments before background context.
+- Open questions must be strictly grounded in unresolved points from the original thread. Do not generalize or invent broader strategic questions.
+- For long summaries, DO NOT include email addresses, signatures, legal disclaimers, tracking metadata, routing headers, or other irrelevant metadata.
 - Language (must follow the email thread):
   - If the substantive content is mainly one language (e.g. Chinese or English), write **summary**, **key_points**, **action_items** (task/owner/deadline), and **open_questions** entirely in that language. Do not translate to another language unless the thread itself mixes languages for the same point.
   - If the thread clearly mixes **multiple languages** in meaningful amounts, produce a **multilingual** result: keep **summary** as one coherent text that covers the same facts in each language that appears substantially in the input (e.g. a short Chinese paragraph plus a short English paragraph when both are present), and let **key_points** / **open_questions** items use the language of each cited part (or duplicate key facts per language when needed for clarity). **action_items** should use the language of the task as stated in the thread, or bilingual task text if the thread mixes languages for that item.
@@ -37,6 +42,11 @@ Rules:
 Output detail level:
 - {style_instructions}
 - Do NOT include action items in the output for this version.
+- Open questions extraction gate (must satisfy at least one):
+  1) The original thread contains an explicit unresolved item that is not confirmed yet.
+  2) The thread contains an explicit decision point awaiting confirmation by either side.
+  3) The thread clearly indicates a not-yet-closed next step ("what happens next" is pending).
+- If none of the above gates are met, return an empty array for open_questions.
 
 Return schema:
 {{
