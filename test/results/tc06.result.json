@@ -3,14 +3,12 @@
   "scenario_type": "long_thread_action_ambiguous_uncertain",
   "overall_result": "PARTIAL",
   "triage_result": {
-    "result": "PARTIAL",
+    "result": "PASS",
     "reason": "rule-based triage evaluation",
     "checks": {
-      "rule_assertions": "PARTIAL"
+      "rule_assertions": "PASS"
     },
-    "errors": [
-      "signal mismatch: has_deadline expected=True, actual=False"
-    ],
+    "errors": [],
     "actual": {
       "needs_response": true,
       "priority": "MEDIUM",
@@ -18,28 +16,29 @@
       "signals": {
         "sender_importance": "peer",
         "has_request": true,
-        "has_deadline": false,
+        "has_deadline": true,
         "tone": "请求",
         "requires_response": "可能需要"
       },
-      "reason": "邮件包含来自同级同事的请求，虽然没有明确的时间要求，但需要用户可能的行动。；priority=MEDIUM；score=4；confidence=0.9",
-      "reply_draft": "Hi, thank you for the update. I will review the slides and see if we can polish them before sharing. Best, test-user"
+      "reason": "该邮件包含来自同级同事的请求，且有明确的时间要求，需在明天的工作坊前完成。；priority=MEDIUM；score=4；confidence=0.9",
+      "reply_draft": "Hi, Thank you for the update. I will review the slides and see if we can polish them before the workshop. Best regards, test-user"
     }
   },
   "summary_result": {
     "result": "PARTIAL",
-    "reason": "虽然总结捕捉了大部分关键信息，但缺少了开放问题部分的内容。",
+    "reason": "虽然总结捕捉了大部分关键信息，但缺少开放问题，且未提及具体反馈和需要润色的幻灯片。",
     "checks": {
       "coverage": "PARTIAL",
       "faithfulness": "PASS",
       "usefulness": "PARTIAL"
     },
     "missing_items": [
-      "开放问题部分未能完整列出"
+      "specific feedback",
+      "which slides"
     ],
     "hallucinations": [],
     "notes": [
-      "短总结和长总结都符合字数要求，且准确反映了邮件内容。"
+      "短总结和长总结都在字符限制内，且没有严重的误解。"
     ]
   },
   "reply_result": {

@@ -1,7 +1,7 @@
 {
   "case": "tc07",
   "scenario_type": "multi_intent_fyi_request_schedule",
-  "overall_result": "PARTIAL",
+  "overall_result": "PASS",
   "triage_result": {
     "result": "PASS",
     "reason": "rule-based triage evaluation",
@@ -20,27 +20,21 @@
         "tone": "请求",
         "requires_response": "可能需要"
       },
-      "reason": "该邮件包含明确的请求和时间要求，但发件人为同级同事，影响优先级。；priority=MEDIUM；score=4；confidence=0.9",
+      "reason": "该邮件包含明确的请求和时间要求，但发件人是同级同事，影响优先级。；priority=MEDIUM；score=4；confidence=0.9",
       "reply_draft": "Hi Teammate,\n\nThank you for the update. I will review section 2 and get back to you regarding the sync at 4pm tomorrow.\n\nBest,\nTest User"
     }
   },
   "summary_result": {
-    "result": "PARTIAL",
-    "reason": "虽然大部分关键要求被满足，但存在一些表达问题和缺失。",
+    "result": "PASS",
+    "reason": "实际输出全面捕捉了邮件的关键信息，且没有出现误解或虚构内容。",
     "checks": {
-      "coverage": "PARTIAL",
-      "faithfulness": "PARTIAL",
-      "usefulness": "PARTIAL"
+      "coverage": "PASS",
+      "faithfulness": "PASS",
+      "usefulness": "PASS"
     },
-    "missing_items": [
-      "没有明确提到需要在明天4点前完成审查的时间要求"
-    ],
-    "hallucinations": [
-      "没有明显的幻觉，但对开放问题的理解不够准确"
-    ],
-    "notes": [
-      "短摘要和长摘要都包含了关键信息，但开放问题的表述不够清晰，未能完全反映出原邮件的要求。"
-    ]
+    "missing_items": [],
+    "hallucinations": [],
+    "notes": []
   },
   "reply_result": {
     "result": "PASS",

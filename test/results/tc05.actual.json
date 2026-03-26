@@ -31,28 +31,19 @@
     "reply_draft": "Dear Vendor Partner,\n\nThank you for your email. I will review the attached proposal and share my comments with you shortly.\n\nBest regards,\nTest User"
   },
   "summary_short": {
-    "summary": "The vendor partner has requested a review of the attached proposal and is seeking comments from the recipient.",
+    "summary": "The vendor partner has requested a review of the attached proposal and feedback on it. Comments are needed to proceed further.",
     "key_points": [
-      "Vendor partner sent a proposal for review.",
-      "Comments are requested from the recipient."
+      "Vendor partner requests comments on the attached proposal.",
+      "Feedback is necessary for the next steps."
     ],
-    "open_questions": [
-      "What is the deadline for providing comments on the proposal?"
-    ]
+    "open_questions": []
   },
   "summary_long": {
-    "summary": "The vendor partner has sent a proposal for review and is requesting comments from the recipient. The proposal is attached to the email for evaluation.",
+    "summary": "The vendor partner has requested a review of the attached proposal and is seeking comments from the recipient. This indicates a need for feedback to proceed with the proposal process.",
     "key_points": [
-      "The email is from a vendor partner requesting feedback.",
-      "The recipient is expected to review an attached proposal.",
-      "Comments on the proposal are requested by the vendor partner.",
-      "The email was sent on March 25, 2026.",
-      "The recipient's email address is provided in the communication.",
-      "The vendor partner's email address is also included."
+      "Vendor partner has sent a proposal for review.",
+      "Recipient is expected to provide comments on the proposal."
     ],
-    "open_questions": [
-      "What is the deadline for providing comments on the proposal?",
-      "Are there specific areas of the proposal that need more focus during the review?"
-    ]
+    "open_questions": []
   }
 }

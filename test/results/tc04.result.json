@@ -1,7 +1,7 @@
 {
   "case": "tc04",
   "scenario_type": "fyi_but_actionable_high",
-  "overall_result": "PARTIAL",
+  "overall_result": "PASS",
   "triage_result": {
     "result": "PASS",
     "reason": "rule-based triage evaluation",
@@ -20,27 +20,21 @@
         "tone": "请求",
         "requires_response": "明确需要"
       },
-      "reason": "该邮件来自上级，包含明确的请求和截止时间，因此被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
+      "reason": "邮件来自上级，包含明确的请求和截止时间，因此被归类为高优先级。；priority=HIGH；score=8；confidence=1.0",
       "reply_draft": "Dear Alice,\n\nThank you for sending the final contract. I will review and approve it by tomorrow noon as requested.\n\nBest regards,\nTest User"
     }
   },
   "summary_result": {
-    "result": "PARTIAL",
-    "reason": "总结基本捕捉了关键信息，但存在轻微的表达问题和遗漏。",
+    "result": "PASS",
+    "reason": "实际输出完整捕捉了邮件的关键要求，没有缺失或错误理解。",
     "checks": {
-      "coverage": "PARTIAL",
+      "coverage": "PASS",
       "faithfulness": "PASS",
-      "usefulness": "PARTIAL"
+      "usefulness": "PASS"
     },
-    "missing_items": [
-      "未明确提及合同的具体内容或重要性"
-    ],
-    "hallucinations": [
-      "无"
-    ],
-    "notes": [
-      "长摘要中提到的开放问题与邮件内容无关，可能导致误解。"
-    ]
+    "missing_items": [],
+    "hallucinations": [],
+    "notes": []
   },
   "reply_result": {
     "result": "PASS",

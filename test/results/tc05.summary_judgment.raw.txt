@@ -1,0 +1,12 @@
+{
+  "result": "PARTIAL",
+  "reason": "虽然总结捕捉了主要信息，但缺少开放问题，并且关键点数量不足。",
+  "checks": {
+    "coverage": "PARTIAL",
+    "faithfulness": "PASS",
+    "usefulness": "PARTIAL"
+  },
+  "missing_items": ["open questions"],
+  "hallucinations": [],
+  "notes": ["关键点数量不足，未达到预期范围。"]
+}

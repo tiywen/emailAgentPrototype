@@ -1,0 +1,12 @@
+{
+  "result": "PARTIAL",
+  "reason": "虽然总结捕捉了请求反馈的核心内容，但缺少了开放问题部分，并且没有提及具体主题。",
+  "checks": {
+    "coverage": "PARTIAL",
+    "faithfulness": "PASS",
+    "usefulness": "PARTIAL"
+  },
+  "missing_items": ["open questions"],
+  "hallucinations": [],
+  "notes": ["总结中未提及具体主题，未能满足期望要求中的开放问题。"]
+}

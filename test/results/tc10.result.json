@@ -20,26 +20,26 @@
         "tone": "请求",
         "requires_response": "明确需要"
       },
-      "reason": "该邮件来自外部联系人，包含明确的请求和截止时间，需优先处理。；priority=HIGH；score=8；confidence=0.9",
-      "reply_draft": "尊敬的 Partner Lead，感谢您的邮件。我会在今天内提供反馈，以确保我们能按当前方案推进。谢谢！"
+      "reason": "该邮件来自外部重要联系人，包含明确的请求和截止时间，需优先处理。；priority=HIGH；score=8；confidence=0.9",
+      "reply_draft": "尊敬的 Partner Lead，感谢您的邮件。我会在今天内提供反馈，以确保我们在明天的客户会议上顺利推进当前方案。"
     }
   },
   "summary_result": {
     "result": "PARTIAL",
-    "reason": "总结基本涵盖了关键信息，但存在轻微的表达问题和开放问题不符合预期。",
+    "reason": "总结中提到的客户会议时间不准确，且未提及需要确认是否可以按当前方案推进的具体要求。",
     "checks": {
       "coverage": "PARTIAL",
-      "faithfulness": "PASS",
-      "usefulness": "PARTIAL"
+      "faithfulness": "PARTIAL",
+      "usefulness": "PASS"
     },
     "missing_items": [
-      "没有提及'客户会议'的具体时间（明早）"
+      "是否可以按当前方案推进"
     ],
     "hallucinations": [
-      "开放问题中提到的具体反馈细节和潜在影响并未在原文中提及"
+      "next week"
     ],
     "notes": [
-      "总结中对时间的表达不够准确，未能完全反映原文的紧迫性。"
+      "总结中提到的客户会议时间为“明早”，但实际输出中使用了“next morning”，这与原文不符。"
     ]
   },
   "reply_result": {

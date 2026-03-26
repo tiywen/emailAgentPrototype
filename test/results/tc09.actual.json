@@ -33,25 +33,17 @@
   "summary_short": {
     "summary": "The Legal Ops team has requested a review of the latest clause update and confirmation of its acceptability by the end of the day.",
     "key_points": [
-      "Legal Ops has sent a request for review of a clause update.",
+      "Legal Ops has sent a request for review of the latest clause update.",
       "Confirmation of acceptability is needed by today."
     ],
     "open_questions": []
   },
   "summary_long": {
-    "summary": "The email thread involves a request from the Legal Ops team for a review of the latest clause update in a contract. They are seeking confirmation on whether the update is acceptable by the end of the day. The communication emphasizes the urgency of the review process.",
+    "summary": "The Legal Ops team has requested a review of the latest clause update in a contract and requires confirmation of its acceptability by the end of the day.",
     "key_points": [
-      "Legal Ops has sent a request for a review of a contract clause update.",
-      "The team is expected to confirm the acceptability of the update by the end of the day.",
-      "The email highlights the importance of timely feedback on legal documents.",
-      "The communication is marked as confidential.",
-      "The request is directed to the entire team, indicating a collaborative effort.",
-      "The urgency of the review suggests potential implications for ongoing or upcoming projects."
+      "Legal Ops has sent a request for a review of the latest clause update.",
+      "Confirmation of the clause's acceptability is needed by today."
     ],
-    "open_questions": [
-      "What specific changes were made in the latest clause update?",
-      "Are there any concerns or objections from team members regarding the update?",
-      "What are the next steps if the clause update is not acceptable?"
-    ]
+    "open_questions": []
   }
 }

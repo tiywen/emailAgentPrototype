@@ -1,20 +1,20 @@
 {
   "triage_raw": {
     "是否需要回复": true,
-    "判断原因": "邮件包含来自同级同事的请求，虽然没有明确的时间要求，但需要用户可能的行动。；priority=MEDIUM；score=4；confidence=0.9",
-    "回复草稿": "Hi, thank you for the update. I will review the slides and see if we can polish them before sharing. Best, test-user",
+    "判断原因": "该邮件包含来自同级同事的请求，且有明确的时间要求，需在明天的工作坊前完成。；priority=MEDIUM；score=4；confidence=0.9",
+    "回复草稿": "Hi, Thank you for the update. I will review the slides and see if we can polish them before the workshop. Best regards, test-user",
     "_raw_priority": "MEDIUM",
     "_raw_priority_score": 4,
     "_raw_confidence": 0.9,
     "_raw_signals": {
       "sender_importance": "peer",
       "has_request": true,
-      "has_deadline": false,
+      "has_deadline": true,
       "tone": "请求",
       "requires_response": "可能需要"
     },
-    "_raw_reasoning": "邮件包含来自同级同事的请求，虽然没有明确的时间要求，但需要用户可能的行动。",
-    "_raw_reply_draft": "Hi, thank you for the update. I will review the slides and see if we can polish them before sharing. Best, test-user"
+    "_raw_reasoning": "该邮件包含来自同级同事的请求，且有明确的时间要求，需在明天的工作坊前完成。",
+    "_raw_reply_draft": "Hi, Thank you for the update. I will review the slides and see if we can polish them before the workshop. Best regards, test-user"
   },
   "triage_normalized": {
     "needs_response": true,
@@ -23,35 +23,29 @@
     "signals": {
       "sender_importance": "peer",
       "has_request": true,
-      "has_deadline": false,
+      "has_deadline": true,
       "tone": "请求",
       "requires_response": "可能需要"
     },
-    "reason": "邮件包含来自同级同事的请求，虽然没有明确的时间要求，但需要用户可能的行动。；priority=MEDIUM；score=4；confidence=0.9",
-    "reply_draft": "Hi, thank you for the update. I will review the slides and see if we can polish them before sharing. Best, test-user"
+    "reason": "该邮件包含来自同级同事的请求，且有明确的时间要求，需在明天的工作坊前完成。；priority=MEDIUM；score=4；confidence=0.9",
+    "reply_draft": "Hi, Thank you for the update. I will review the slides and see if we can polish them before the workshop. Best regards, test-user"
   },
   "summary_short": {
-    "summary": "The email thread discusses preparations for an upcoming workshop, including the sharing of background materials and draft visuals for review. There is a suggestion to polish a few slides before the workshop.",
+    "summary": "The team is preparing for a workshop scheduled for tomorrow. Background materials have been shared, and draft visuals are under review, with a suggestion to polish a few slides before the workshop.",
     "key_points": [
-      "Background materials for the workshop were shared by the Project PM.",
-      "Draft visuals were sent by the Designer for review.",
-      "The Project PM suggested polishing one or two slides before the workshop."
+      "Background materials for the workshop have been shared.",
+      "Draft visuals are available for review.",
+      "There is a suggestion to polish one or two slides before the workshop."
     ],
     "open_questions": []
   },
   "summary_long": {
-    "summary": "The email thread discusses preparations for an upcoming workshop. The Project PM shares background materials to be reviewed prior to the event. The Designer provides draft visuals for feedback, and the Project PM suggests polishing a couple of slides before finalizing them for sharing.",
+    "summary": "The email thread discusses preparations for an upcoming workshop scheduled for March 25, 2026. The Project PM shares background materials and suggests polishing a few slides before the workshop. The Designer has also provided draft visuals for review, indicating collaboration on the presentation materials.",
     "key_points": [
-      "The Project PM shared background materials for the workshop scheduled for March 25.",
-      "The Designer sent draft visuals for review to ensure they align with the workshop's objectives.",
-      "There is a suggestion from the Project PM to refine one or two slides before they are shared with the participants.",
-      "The communication indicates a collaborative effort to ensure the workshop is well-prepared.",
-      "Timeliness is emphasized, as the materials are being shared the day before the workshop.",
-      "The focus is on enhancing the quality of the presentation materials."
+      "Background materials for the workshop have been shared by the Project PM.",
+      "Draft visuals for the workshop have been sent by the Designer for review.",
+      "The Project PM suggests polishing one or two slides before the workshop."
     ],
-    "open_questions": [
-      "What specific feedback is needed on the draft visuals?",
-      "Which slides should be prioritized for polishing before sharing?"
-    ]
+    "open_questions": []
   }
 }

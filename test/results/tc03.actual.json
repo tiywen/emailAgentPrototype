@@ -2,7 +2,7 @@
   "triage_raw": {
     "是否需要回复": true,
     "判断原因": "邮件来自同级同事，包含请求但没有明确的时间要求，导致优先级不确定。；priority=UNCERTAIN；score=1；confidence=0.8",
-    "回复草稿": "Hi Teammate,\n\nThank you for your message. I will share my thoughts with you shortly.\n\nBest regards,\nTest User",
+    "回复草稿": "Hi Teammate,\n\nThank you for reaching out. I will share my thoughts with you shortly.\n\nBest regards,\nTest User",
     "_raw_priority": "UNCERTAIN",
     "_raw_priority_score": 1,
     "_raw_confidence": 0.8,
@@ -10,11 +10,11 @@
       "sender_importance": "peer",
       "has_request": true,
       "has_deadline": false,
-      "tone": "请求",
+      "tone": "不明确",
       "requires_response": "可能需要"
     },
     "_raw_reasoning": "邮件来自同级同事，包含请求但没有明确的时间要求，导致优先级不确定。",
-    "_raw_reply_draft": "Hi Teammate,\n\nThank you for your message. I will share my thoughts with you shortly.\n\nBest regards,\nTest User"
+    "_raw_reply_draft": "Hi Teammate,\n\nThank you for reaching out. I will share my thoughts with you shortly.\n\nBest regards,\nTest User"
   },
   "triage_normalized": {
     "needs_response": true,
@@ -24,32 +24,26 @@
       "sender_importance": "peer",
       "has_request": true,
       "has_deadline": false,
-      "tone": "请求",
+      "tone": "不明确",
       "requires_response": "可能需要"
     },
     "reason": "邮件来自同级同事，包含请求但没有明确的时间要求，导致优先级不确定。；priority=UNCERTAIN；score=1；confidence=0.8",
-    "reply_draft": "Hi Teammate,\n\nThank you for your message. I will share my thoughts with you shortly.\n\nBest regards,\nTest User"
+    "reply_draft": "Hi Teammate,\n\nThank you for reaching out. I will share my thoughts with you shortly.\n\nBest regards,\nTest User"
   },
   "summary_short": {
-    "summary": "Teammate is requesting your thoughts on a matter. They are awaiting your response at your convenience.",
+    "summary": "Teammate is requesting your thoughts on a matter at your convenience.",
     "key_points": [
-      "Teammate is seeking feedback.",
-      "Response is requested when convenient."
+      "Teammate is awaiting your feedback.",
+      "No specific deadline for the response is mentioned."
     ],
-    "open_questions": [
-      "What specific topic or issue does Teammate want feedback on?"
-    ]
+    "open_questions": []
   },
   "summary_long": {
-    "summary": "Teammate has reached out to request your thoughts on a matter. They are awaiting your feedback at your convenience.",
+    "summary": "Teammate is requesting feedback on a topic and is awaiting your thoughts. There is no specific deadline mentioned for this response.",
     "key_points": [
-      "Teammate is seeking your input.",
-      "The request is open-ended, allowing for flexibility in response time.",
-      "No specific topic or deadline has been mentioned."
+      "Teammate is seeking your input on a matter.",
+      "No specific deadline for providing feedback is indicated."
     ],
-    "open_questions": [
-      "What specific topic does Teammate want feedback on?",
-      "Is there a deadline for providing your thoughts?"
-    ]
+    "open_questions": []
   }
 }

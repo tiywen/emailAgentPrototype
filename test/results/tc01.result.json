@@ -26,7 +26,7 @@
   },
   "summary_result": {
     "result": "PASS",
-    "reason": "实际输出全面捕捉了邮件的关键信息，且没有出现错误或遗漏。",
+    "reason": "实际输出完整地捕捉了邮件的关键信息，符合所有要求。",
     "checks": {
       "coverage": "PASS",
       "faithfulness": "PASS",

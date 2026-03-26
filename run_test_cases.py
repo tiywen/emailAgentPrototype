@@ -716,7 +716,7 @@ def main() -> int:
     }
     (save_dir / "report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(report, ensure_ascii=False, indent=2))
-    return 0 if passed == len(case_files) else 1
+    return 0 if passed_cases == len(case_files) else 1
 
 
 if __name__ == "__main__":

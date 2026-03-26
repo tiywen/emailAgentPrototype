@@ -1,0 +1,12 @@
+{
+  "result": "PASS",
+  "reason": "回复满足所有关键要求，语气专业且中立。",
+  "checks": {
+    "coverage": "PASS",
+    "faithfulness": "PASS",
+    "usefulness": "PASS"
+  },
+  "missing_items": [],
+  "hallucinations": [],
+  "notes": []
+}

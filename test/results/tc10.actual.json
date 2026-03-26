@@ -1,8 +1,8 @@
 {
   "triage_raw": {
     "是否需要回复": true,
-    "判断原因": "该邮件来自外部联系人，包含明确的请求和截止时间，需优先处理。；priority=HIGH；score=8；confidence=0.9",
-    "回复草稿": "尊敬的 Partner Lead，感谢您的邮件。我会在今天内提供反馈，以确保我们能按当前方案推进。谢谢！",
+    "判断原因": "该邮件来自外部重要联系人，包含明确的请求和截止时间，需优先处理。；priority=HIGH；score=8；confidence=0.9",
+    "回复草稿": "尊敬的 Partner Lead，感谢您的邮件。我会在今天内提供反馈，以确保我们在明天的客户会议上顺利推进当前方案。",
     "_raw_priority": "HIGH",
     "_raw_priority_score": 8,
     "_raw_confidence": 0.9,
@@ -13,8 +13,8 @@
       "tone": "请求",
       "requires_response": "明确需要"
     },
-    "_raw_reasoning": "该邮件来自外部联系人，包含明确的请求和截止时间，需优先处理。",
-    "_raw_reply_draft": "尊敬的 Partner Lead，感谢您的邮件。我会在今天内提供反馈，以确保我们能按当前方案推进。谢谢！"
+    "_raw_reasoning": "该邮件来自外部重要联系人，包含明确的请求和截止时间，需优先处理。",
+    "_raw_reply_draft": "尊敬的 Partner Lead，感谢您的邮件。我会在今天内提供反馈，以确保我们在明天的客户会议上顺利推进当前方案。"
   },
   "triage_normalized": {
     "needs_response": true,
@@ -27,31 +27,25 @@
       "tone": "请求",
       "requires_response": "明确需要"
     },
-    "reason": "该邮件来自外部联系人，包含明确的请求和截止时间，需优先处理。；priority=HIGH；score=8；confidence=0.9",
-    "reply_draft": "尊敬的 Partner Lead，感谢您的邮件。我会在今天内提供反馈，以确保我们能按当前方案推进。谢谢！"
+    "reason": "该邮件来自外部重要联系人，包含明确的请求和截止时间，需优先处理。；priority=HIGH；score=8；confidence=0.9",
+    "reply_draft": "尊敬的 Partner Lead，感谢您的邮件。我会在今天内提供反馈，以确保我们在明天的客户会议上顺利推进当前方案。"
   },
   "summary_short": {
-    "summary": "The Partner Lead is requesting feedback on the current proposal before a customer meeting scheduled for the next morning. They would like to receive this feedback by the end of the day.",
+    "summary": "The Partner Lead requests feedback on the current proposal by the end of the day, as there is a customer meeting scheduled for the next morning. Confirmation is needed to proceed with the current plan.",
+    "key_points": [
+      "Feedback is requested by the end of the day.",
+      "Confirmation is needed to proceed with the current proposal.",
+      "A customer meeting is scheduled for the next morning."
+    ],
+    "open_questions": []
+  },
+  "summary_long": {
+    "summary": "The Partner Lead is requesting feedback on the current proposal by the end of the day, as there is a customer meeting scheduled for the next morning. Confirmation is needed to proceed with the current plan.",
     "key_points": [
       "Feedback is requested by the end of the day.",
       "There is a customer meeting scheduled for the next morning.",
-      "Confirmation is needed on whether to proceed with the current proposal."
+      "Confirmation is needed to proceed with the current proposal."
     ],
-    "open_questions": [
-      "Can we confirm if the current proposal can be advanced?"
-    ]
-  },
-  "summary_long": {
-    "summary": "The Partner Lead has requested feedback on the current proposal before a customer meeting scheduled for the next morning. They emphasized the need for confirmation by the end of the day to ensure that the plan can proceed as intended.",
-    "key_points": [
-      "The Partner Lead is seeking feedback on a proposal.",
-      "The deadline for feedback is by the end of the day.",
-      "There is a customer meeting scheduled for the next morning.",
-      "Confirmation is needed to proceed with the current plan."
-    ],
-    "open_questions": [
-      "Is there any specific aspect of the proposal that requires more detailed feedback?",
-      "What are the potential implications if the feedback is not provided by the deadline?"
-    ]
+    "open_questions": []
   }
 }

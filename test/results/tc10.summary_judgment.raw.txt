@@ -1,0 +1,12 @@
+{
+  "result": "PARTIAL",
+  "reason": "总结中提到的客户会议时间不准确，且未提及需要确认是否可以按当前方案推进的具体要求。",
+  "checks": {
+    "coverage": "PARTIAL",
+    "faithfulness": "PARTIAL",
+    "usefulness": "PASS"
+  },
+  "missing_items": ["是否可以按当前方案推进"],
+  "hallucinations": ["next week"],
+  "notes": ["总结中提到的客户会议时间为“明早”，但实际输出中使用了“next morning”，这与原文不符。"]
+}

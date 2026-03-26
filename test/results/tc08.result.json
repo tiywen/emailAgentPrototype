@@ -1,7 +1,7 @@
 {
   "case": "tc08",
   "scenario_type": "sender_ambiguity_delegate_mail",
-  "overall_result": "PARTIAL",
+  "overall_result": "PASS",
   "triage_result": {
     "result": "PASS",
     "reason": "rule-based triage evaluation",
@@ -20,25 +20,21 @@
         "tone": "请求",
         "requires_response": "明确需要"
       },
-      "reason": "该邮件包含明确的请求和紧急的时间要求，需在明天10:00之前确认。；priority=HIGH；score=8；confidence=0.9",
-      "reply_draft": "Dear Office Assistant,\n\nThank you for your message. I confirm that I have read the pre-read as requested.\n\nBest regards,\nTest User"
+      "reason": "该邮件包含明确的请求和紧急的时间要求，需在明天10:00之前确认阅读。；priority=HIGH；score=8；confidence=0.9",
+      "reply_draft": "尊敬的办公室助理，\n\n感谢您的提醒。我会在明天10:00之前确认阅读预读材料。\n\n谢谢！\n\n此致，\ntest-user"
     }
   },
   "summary_result": {
-    "result": "PARTIAL",
-    "reason": "总结基本涵盖了关键信息，但存在开放问题，且未明确指出预读文件的具体内容。",
+    "result": "PASS",
+    "reason": "实际输出全面满足了所有关键要求，没有严重问题。",
     "checks": {
-      "coverage": "PARTIAL",
+      "coverage": "PASS",
       "faithfulness": "PASS",
-      "usefulness": "PARTIAL"
+      "usefulness": "PASS"
     },
-    "missing_items": [
-      "具体的预读文件内容"
-    ],
+    "missing_items": [],
     "hallucinations": [],
-    "notes": [
-      "开放问题未在期望要求中列出，但提及的内容与邮件无关。"
-    ]
+    "notes": []
   },
   "reply_result": {
     "result": "PASS",

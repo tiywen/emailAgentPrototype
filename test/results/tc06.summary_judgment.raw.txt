@@ -1,0 +1,12 @@
+{
+  "result": "PARTIAL",
+  "reason": "虽然总结捕捉了大部分关键信息，但缺少开放问题，且未提及具体反馈和需要润色的幻灯片。",
+  "checks": {
+    "coverage": "PARTIAL",
+    "faithfulness": "PASS",
+    "usefulness": "PARTIAL"
+  },
+  "missing_items": ["specific feedback", "which slides"],
+  "hallucinations": [],
+  "notes": ["短总结和长总结都在字符限制内，且没有严重的误解。"]
+}

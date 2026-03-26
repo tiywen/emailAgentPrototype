@@ -31,20 +31,19 @@
     "reply_draft": ""
   },
   "summary_short": {
-    "summary": "A scheduled system maintenance is set for this Sunday from 1am to 3am. No user action is required during this time.",
+    "summary": "Scheduled maintenance will occur this Sunday from 1am to 3am. No user action is required during this time.",
     "key_points": [
-      "Scheduled maintenance on Sunday.",
-      "Time: 1am to 3am.",
+      "Scheduled maintenance on Sunday from 1am to 3am.",
       "No user action required."
     ],
     "open_questions": []
   },
   "summary_long": {
-    "summary": "A scheduled system maintenance is set for this Sunday from 1am to 3am. Users are informed that no action is required on their part during this time.",
+    "summary": "There is a scheduled system maintenance planned for this Sunday from 1am to 3am. No action is required from users during this time.",
     "key_points": [
-      "Scheduled maintenance is on Sunday.",
+      "Scheduled maintenance on Sunday.",
       "Maintenance window is from 1am to 3am.",
-      "No user action is required during the maintenance."
+      "No user action is required."
     ],
     "open_questions": []
   }

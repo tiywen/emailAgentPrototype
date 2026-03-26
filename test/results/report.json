@@ -1,15 +1,15 @@
 {
   "total": 10,
-  "passed": 2,
-  "failed": 8,
+  "passed": 6,
+  "failed": 4,
   "triage_counts": {
-    "PASS": 9,
-    "PARTIAL": 1,
+    "PASS": 10,
+    "PARTIAL": 0,
     "FAIL": 0
   },
   "summary_counts": {
-    "PASS": 2,
-    "PARTIAL": 8,
+    "PASS": 6,
+    "PARTIAL": 4,
     "FAIL": 0
   },
   "reply_counts": {
@@ -18,11 +18,11 @@
     "FAIL": 0
   },
   "overall_counts": {
-    "PASS": 2,
-    "PARTIAL": 8,
+    "PASS": 6,
+    "PARTIAL": 4,
     "FAIL": 0
   },
-  "overall_pass_rate": 0.2,
+  "overall_pass_rate": 0.6,
   "results": [
     {
       "case": "tc01",
@@ -52,7 +52,7 @@
       },
       "summary_result": {
         "result": "PASS",
-        "reason": "实际输出全面捕捉了邮件的关键信息，且没有出现错误或遗漏。",
+        "reason": "实际输出完整地捕捉了邮件的关键信息，符合所有要求。",
         "checks": {
           "coverage": "PASS",
           "faithfulness": "PASS",
@@ -253,30 +253,27 @@
             "sender_importance": "peer",
             "has_request": true,
             "has_deadline": false,
-            "tone": "请求",
+            "tone": "不明确",
             "requires_response": "可能需要"
           },
           "reason": "邮件来自同级同事，包含请求但没有明确的时间要求，导致优先级不确定。；priority=UNCERTAIN；score=1；confidence=0.8",
-          "reply_draft": "Hi Teammate,\n\nThank you for your message. I will share my thoughts with you shortly.\n\nBest regards,\nTest User"
+          "reply_draft": "Hi Teammate,\n\nThank you for reaching out. I will share my thoughts with you shortly.\n\nBest regards,\nTest User"
         }
       },
       "summary_result": {
         "result": "PARTIAL",
-        "reason": "虽然大部分要求得到满足，但存在一些缺失和表达问题。",
+        "reason": "虽然总结捕捉了请求反馈的核心内容，但缺少了开放问题部分，并且没有提及具体主题。",
         "checks": {
           "coverage": "PARTIAL",
           "faithfulness": "PASS",
           "usefulness": "PARTIAL"
         },
         "missing_items": [
-          "没有提及具体的主题或问题",
-          "长摘要中的开放问题包含了额外的内容"
+          "open questions"
         ],
-        "hallucinations": [
-          "无"
-        ],
+        "hallucinations": [],
         "notes": [
-          "短摘要和长摘要都未明确指出Teammate的请求没有具体的主题或截止日期。"
+          "总结中未提及具体主题，未能满足期望要求中的开放问题。"
         ]
       },
       "reply_result": {
@@ -353,7 +350,7 @@
     {
       "case": "tc04",
       "scenario_type": "fyi_but_actionable_high",
-      "overall_result": "PARTIAL",
+      "overall_result": "PASS",
       "triage_result": {
         "result": "PASS",
         "reason": "rule-based triage evaluation",
@@ -372,27 +369,21 @@
             "tone": "请求",
             "requires_response": "明确需要"
           },
-          "reason": "该邮件来自上级，包含明确的请求和截止时间，因此被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
+          "reason": "邮件来自上级，包含明确的请求和截止时间，因此被归类为高优先级。；priority=HIGH；score=8；confidence=1.0",
           "reply_draft": "Dear Alice,\n\nThank you for sending the final contract. I will review and approve it by tomorrow noon as requested.\n\nBest regards,\nTest User"
         }
       },
       "summary_result": {
-        "result": "PARTIAL",
-        "reason": "总结基本捕捉了关键信息，但存在轻微的表达问题和遗漏。",
+        "result": "PASS",
+        "reason": "实际输出完整捕捉了邮件的关键要求，没有缺失或错误理解。",
         "checks": {
-          "coverage": "PARTIAL",
+          "coverage": "PASS",
           "faithfulness": "PASS",
-          "usefulness": "PARTIAL"
+          "usefulness": "PASS"
         },
-        "missing_items": [
-          "未明确提及合同的具体内容或重要性"
-        ],
-        "hallucinations": [
-          "无"
-        ],
-        "notes": [
-          "长摘要中提到的开放问题与邮件内容无关，可能导致误解。"
-        ]
+        "missing_items": [],
+        "hallucinations": [],
+        "notes": []
       },
       "reply_result": {
         "result": "PASS",
@@ -492,20 +483,18 @@
       },
       "summary_result": {
         "result": "PARTIAL",
-        "reason": "虽然总结捕捉了大部分关键信息，但缺少了对反馈的具体询问，并且长摘要中包含了一些不必要的细节。",
+        "reason": "虽然总结捕捉了主要信息，但缺少开放问题，并且关键点数量不足。",
         "checks": {
           "coverage": "PARTIAL",
           "faithfulness": "PASS",
           "usefulness": "PARTIAL"
         },
         "missing_items": [
-          "具体的反馈请求"
+          "open questions"
         ],
-        "hallucinations": [
-          "无"
-        ],
+        "hallucinations": [],
         "notes": [
-          "长摘要中包含了发件人和收件人的电子邮件地址，这在总结中并不必要。"
+          "关键点数量不足，未达到预期范围。"
         ]
       },
       "reply_result": {
@@ -589,14 +578,12 @@
       "scenario_type": "long_thread_action_ambiguous_uncertain",
       "overall_result": "PARTIAL",
       "triage_result": {
-        "result": "PARTIAL",
+        "result": "PASS",
         "reason": "rule-based triage evaluation",
         "checks": {
-          "rule_assertions": "PARTIAL"
+          "rule_assertions": "PASS"
         },
-        "errors": [
-          "signal mismatch: has_deadline expected=True, actual=False"
-        ],
+        "errors": [],
         "actual": {
           "needs_response": true,
           "priority": "MEDIUM",
@@ -604,28 +591,29 @@
           "signals": {
             "sender_importance": "peer",
             "has_request": true,
-            "has_deadline": false,
+            "has_deadline": true,
             "tone": "请求",
             "requires_response": "可能需要"
           },
-          "reason": "邮件包含来自同级同事的请求，虽然没有明确的时间要求，但需要用户可能的行动。；priority=MEDIUM；score=4；confidence=0.9",
-          "reply_draft": "Hi, thank you for the update. I will review the slides and see if we can polish them before sharing. Best, test-user"
+          "reason": "该邮件包含来自同级同事的请求，且有明确的时间要求，需在明天的工作坊前完成。；priority=MEDIUM；score=4；confidence=0.9",
+          "reply_draft": "Hi, Thank you for the update. I will review the slides and see if we can polish them before the workshop. Best regards, test-user"
         }
       },
       "summary_result": {
         "result": "PARTIAL",
-        "reason": "虽然总结捕捉了大部分关键信息，但缺少了开放问题部分的内容。",
+        "reason": "虽然总结捕捉了大部分关键信息，但缺少开放问题，且未提及具体反馈和需要润色的幻灯片。",
         "checks": {
           "coverage": "PARTIAL",
           "faithfulness": "PASS",
           "usefulness": "PARTIAL"
         },
         "missing_items": [
-          "开放问题部分未能完整列出"
+          "specific feedback",
+          "which slides"
         ],
         "hallucinations": [],
         "notes": [
-          "短总结和长总结都符合字数要求，且准确反映了邮件内容。"
+          "短总结和长总结都在字符限制内，且没有严重的误解。"
         ]
       },
       "reply_result": {
@@ -704,7 +692,7 @@
     {
       "case": "tc07",
       "scenario_type": "multi_intent_fyi_request_schedule",
-      "overall_result": "PARTIAL",
+      "overall_result": "PASS",
       "triage_result": {
         "result": "PASS",
         "reason": "rule-based triage evaluation",
@@ -723,27 +711,21 @@
             "tone": "请求",
             "requires_response": "可能需要"
           },
-          "reason": "该邮件包含明确的请求和时间要求，但发件人为同级同事，影响优先级。；priority=MEDIUM；score=4；confidence=0.9",
+          "reason": "该邮件包含明确的请求和时间要求，但发件人是同级同事，影响优先级。；priority=MEDIUM；score=4；confidence=0.9",
           "reply_draft": "Hi Teammate,\n\nThank you for the update. I will review section 2 and get back to you regarding the sync at 4pm tomorrow.\n\nBest,\nTest User"
         }
       },
       "summary_result": {
-        "result": "PARTIAL",
-        "reason": "虽然大部分关键要求被满足，但存在一些表达问题和缺失。",
+        "result": "PASS",
+        "reason": "实际输出全面捕捉了邮件的关键信息，且没有出现误解或虚构内容。",
         "checks": {
-          "coverage": "PARTIAL",
-          "faithfulness": "PARTIAL",
-          "usefulness": "PARTIAL"
+          "coverage": "PASS",
+          "faithfulness": "PASS",
+          "usefulness": "PASS"
         },
-        "missing_items": [
-          "没有明确提到需要在明天4点前完成审查的时间要求"
-        ],
-        "hallucinations": [
-          "没有明显的幻觉，但对开放问题的理解不够准确"
-        ],
-        "notes": [
-          "短摘要和长摘要都包含了关键信息，但开放问题的表述不够清晰，未能完全反映出原邮件的要求。"
-        ]
+        "missing_items": [],
+        "hallucinations": [],
+        "notes": []
       },
       "reply_result": {
         "result": "PASS",
@@ -822,7 +804,7 @@
     {
       "case": "tc08",
       "scenario_type": "sender_ambiguity_delegate_mail",
-      "overall_result": "PARTIAL",
+      "overall_result": "PASS",
       "triage_result": {
         "result": "PASS",
         "reason": "rule-based triage evaluation",
@@ -841,25 +823,21 @@
             "tone": "请求",
             "requires_response": "明确需要"
           },
-          "reason": "该邮件包含明确的请求和紧急的时间要求，需在明天10:00之前确认。；priority=HIGH；score=8；confidence=0.9",
-          "reply_draft": "Dear Office Assistant,\n\nThank you for your message. I confirm that I have read the pre-read as requested.\n\nBest regards,\nTest User"
+          "reason": "该邮件包含明确的请求和紧急的时间要求，需在明天10:00之前确认阅读。；priority=HIGH；score=8；confidence=0.9",
+          "reply_draft": "尊敬的办公室助理，\n\n感谢您的提醒。我会在明天10:00之前确认阅读预读材料。\n\n谢谢！\n\n此致，\ntest-user"
         }
       },
       "summary_result": {
-        "result": "PARTIAL",
-        "reason": "总结基本涵盖了关键信息，但存在开放问题，且未明确指出预读文件的具体内容。",
+        "result": "PASS",
+        "reason": "实际输出全面满足了所有关键要求，没有严重问题。",
         "checks": {
-          "coverage": "PARTIAL",
+          "coverage": "PASS",
           "faithfulness": "PASS",
-          "usefulness": "PARTIAL"
+          "usefulness": "PASS"
         },
-        "missing_items": [
-          "具体的预读文件内容"
-        ],
+        "missing_items": [],
         "hallucinations": [],
-        "notes": [
-          "开放问题未在期望要求中列出，但提及的内容与邮件无关。"
-        ]
+        "notes": []
       },
       "reply_result": {
         "result": "PASS",
@@ -935,7 +913,7 @@
     {
       "case": "tc09",
       "scenario_type": "noisy_formatting_forward_chain",
-      "overall_result": "PARTIAL",
+      "overall_result": "PASS",
       "triage_result": {
         "result": "PASS",
         "reason": "rule-based triage evaluation",
@@ -959,24 +937,16 @@
         }
       },
       "summary_result": {
-        "result": "PARTIAL",
-        "reason": "虽然总结捕捉了主要要求，但长摘要中包含了一些不必要的细节和开放问题，未完全符合期望。",
+        "result": "PASS",
+        "reason": "实际输出全面满足了期望要求，准确捕捉了关键信息。",
         "checks": {
-          "coverage": "PARTIAL",
+          "coverage": "PASS",
           "faithfulness": "PASS",
-          "usefulness": "PARTIAL"
+          "usefulness": "PASS"
         },
         "missing_items": [],
-        "hallucinations": [
-          "The email highlights the importance of timely feedback on legal documents.",
-          "The communication is marked as confidential.",
-          "The request is directed to the entire team, indicating a collaborative effort.",
-          "The urgency of the review suggests potential implications for ongoing or upcoming projects."
-        ],
-        "notes": [
-          "长摘要中包含了多于必要的细节，未能保持简洁性。",
-          "开放问题部分包含了不必要的内容，未能与原邮件内容直接相关。"
-        ]
+        "hallucinations": [],
+        "notes": []
       },
       "reply_result": {
         "result": "PASS",
@@ -1072,26 +1042,26 @@
             "tone": "请求",
             "requires_response": "明确需要"
           },
-          "reason": "该邮件来自外部联系人，包含明确的请求和截止时间，需优先处理。；priority=HIGH；score=8；confidence=0.9",
-          "reply_draft": "尊敬的 Partner Lead，感谢您的邮件。我会在今天内提供反馈，以确保我们能按当前方案推进。谢谢！"
+          "reason": "该邮件来自外部重要联系人，包含明确的请求和截止时间，需优先处理。；priority=HIGH；score=8；confidence=0.9",
+          "reply_draft": "尊敬的 Partner Lead，感谢您的邮件。我会在今天内提供反馈，以确保我们在明天的客户会议上顺利推进当前方案。"
         }
       },
       "summary_result": {
         "result": "PARTIAL",
-        "reason": "总结基本涵盖了关键信息，但存在轻微的表达问题和开放问题不符合预期。",
+        "reason": "总结中提到的客户会议时间不准确，且未提及需要确认是否可以按当前方案推进的具体要求。",
         "checks": {
           "coverage": "PARTIAL",
-          "faithfulness": "PASS",
-          "usefulness": "PARTIAL"
+          "faithfulness": "PARTIAL",
+          "usefulness": "PASS"
         },
         "missing_items": [
-          "没有提及'客户会议'的具体时间（明早）"
+          "是否可以按当前方案推进"
         ],
         "hallucinations": [
-          "开放问题中提到的具体反馈细节和潜在影响并未在原文中提及"
+          "next week"
         ],
         "notes": [
-          "总结中对时间的表达不够准确，未能完全反映原文的紧迫性。"
+          "总结中提到的客户会议时间为“明早”，但实际输出中使用了“next morning”，这与原文不符。"
         ]
       },
       "reply_result": {

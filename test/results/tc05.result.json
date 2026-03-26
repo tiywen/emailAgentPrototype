@@ -26,20 +26,18 @@
   },
   "summary_result": {
     "result": "PARTIAL",
-    "reason": "虽然总结捕捉了大部分关键信息，但缺少了对反馈的具体询问，并且长摘要中包含了一些不必要的细节。",
+    "reason": "虽然总结捕捉了主要信息，但缺少开放问题，并且关键点数量不足。",
     "checks": {
       "coverage": "PARTIAL",
       "faithfulness": "PASS",
       "usefulness": "PARTIAL"
     },
     "missing_items": [
-      "具体的反馈请求"
+      "open questions"
     ],
-    "hallucinations": [
-      "无"
-    ],
+    "hallucinations": [],
     "notes": [
-      "长摘要中包含了发件人和收件人的电子邮件地址，这在总结中并不必要。"
+      "关键点数量不足，未达到预期范围。"
     ]
   },
   "reply_result": {

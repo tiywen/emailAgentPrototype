@@ -1,0 +1,12 @@
+{
+  "result": "PASS",
+  "reason": "实际输出准确地反映了邮件的性质和优先级，符合期望要求。",
+  "checks": {
+    "coverage": "PASS",
+    "faithfulness": "PASS",
+    "usefulness": "PASS"
+  },
+  "missing_items": [],
+  "hallucinations": [],
+  "notes": []
+}

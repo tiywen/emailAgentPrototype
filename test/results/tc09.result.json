@@ -1,7 +1,7 @@
 {
   "case": "tc09",
   "scenario_type": "noisy_formatting_forward_chain",
-  "overall_result": "PARTIAL",
+  "overall_result": "PASS",
   "triage_result": {
     "result": "PASS",
     "reason": "rule-based triage evaluation",
@@ -25,24 +25,16 @@
     }
   },
   "summary_result": {
-    "result": "PARTIAL",
-    "reason": "虽然总结捕捉了主要要求，但长摘要中包含了一些不必要的细节和开放问题，未完全符合期望。",
+    "result": "PASS",
+    "reason": "实际输出全面满足了期望要求，准确捕捉了关键信息。",
     "checks": {
-      "coverage": "PARTIAL",
+      "coverage": "PASS",
       "faithfulness": "PASS",
-      "usefulness": "PARTIAL"
+      "usefulness": "PASS"
     },
     "missing_items": [],
-    "hallucinations": [
-      "The email highlights the importance of timely feedback on legal documents.",
-      "The communication is marked as confidential.",
-      "The request is directed to the entire team, indicating a collaborative effort.",
-      "The urgency of the review suggests potential implications for ongoing or upcoming projects."
-    ],
-    "notes": [
-      "长摘要中包含了多于必要的细节，未能保持简洁性。",
-      "开放问题部分包含了不必要的内容，未能与原邮件内容直接相关。"
-    ]
+    "hallucinations": [],
+    "notes": []
   },
   "reply_result": {
     "result": "PASS",

@@ -31,21 +31,19 @@
     "reply_draft": "Dear Alice,\n\nI will ensure that the final deck is sent to you by 5pm today.\n\nBest regards,\nTest User"
   },
   "summary_short": {
-    "summary": "Alice has requested the final deck to be sent by 5pm today, emphasizing its urgency for the upcoming steering meeting.",
+    "summary": "Alice has requested the final deck to be sent by 5pm today for an urgent steering meeting.",
     "key_points": [
-      "Final deck is needed by 5pm today.",
-      "Request is marked as urgent.",
-      "The deck is for the steering meeting."
+      "Final deck needs to be sent by 5pm today.",
+      "The request is marked as urgent for the steering meeting."
     ],
     "open_questions": []
   },
   "summary_long": {
-    "summary": "Alice has requested the final presentation deck to be sent by 5pm today, emphasizing the urgency due to its importance for the upcoming steering meeting.",
+    "summary": "Alice has requested the final deck to be sent by 5pm today, emphasizing the urgency for the upcoming steering meeting.",
     "key_points": [
-      "Alice is the manager requesting the final deck.",
+      "Alice needs the final deck.",
       "The deadline for submission is 5pm today.",
-      "The request is marked as urgent.",
-      "The final deck is needed for a steering meeting."
+      "The request is marked as urgent for the steering meeting."
     ],
     "open_questions": []
   }

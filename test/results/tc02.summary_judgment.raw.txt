@@ -1,0 +1,12 @@
+{
+  "result": "PASS",
+  "reason": "实际输出满足所有关键要求，没有严重问题。",
+  "checks": {
+    "coverage": "PASS",
+    "faithfulness": "PASS",
+    "usefulness": "PASS"
+  },
+  "missing_items": [],
+  "hallucinations": [],
+  "notes": []
+}

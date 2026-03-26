@@ -17,30 +17,27 @@
         "sender_importance": "peer",
         "has_request": true,
         "has_deadline": false,
-        "tone": "请求",
+        "tone": "不明确",
         "requires_response": "可能需要"
       },
       "reason": "邮件来自同级同事，包含请求但没有明确的时间要求，导致优先级不确定。；priority=UNCERTAIN；score=1；confidence=0.8",
-      "reply_draft": "Hi Teammate,\n\nThank you for your message. I will share my thoughts with you shortly.\n\nBest regards,\nTest User"
+      "reply_draft": "Hi Teammate,\n\nThank you for reaching out. I will share my thoughts with you shortly.\n\nBest regards,\nTest User"
     }
   },
   "summary_result": {
     "result": "PARTIAL",
-    "reason": "虽然大部分要求得到满足，但存在一些缺失和表达问题。",
+    "reason": "虽然总结捕捉了请求反馈的核心内容，但缺少了开放问题部分，并且没有提及具体主题。",
     "checks": {
       "coverage": "PARTIAL",
       "faithfulness": "PASS",
       "usefulness": "PARTIAL"
     },
     "missing_items": [
-      "没有提及具体的主题或问题",
-      "长摘要中的开放问题包含了额外的内容"
+      "open questions"
     ],
-    "hallucinations": [
-      "无"
-    ],
+    "hallucinations": [],
     "notes": [
-      "短摘要和长摘要都未明确指出Teammate的请求没有具体的主题或截止日期。"
+      "总结中未提及具体主题，未能满足期望要求中的开放问题。"
     ]
   },
   "reply_result": {
