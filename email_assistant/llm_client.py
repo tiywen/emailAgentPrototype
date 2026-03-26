@@ -86,64 +86,84 @@ def call_llm_for_analysis(
 
 def build_reply_decision_prompt(thread_text: str, *, current_user_identity: str) -> str:
     return f"""
-你是一个邮件助手，需要判断一封邮件的回复优先级，并在需要时生成回复草稿。
+你是一个帮助用户处理工作邮件的智能助手。
+你的任务是分析给定邮件以及可能提供的邮件线程，判断该邮件的处理优先级。
+请严格按照以下步骤执行，不要跳步，也不要做超出信息范围的推断。
 
-当前用户身份（你必须据此判断“是否需要用户本人回复”）：
-{current_user_identity}
-
-任务：
-1. 阅读邮件内容
-2. 判断该邮件的回复优先级（1/2/3/4）
-3. 根据优先级判断是否需要回复
-4. 如果需要回复，生成一封合适的回复草稿
-
-优先级定义：
-- Priority 1：必须尽快回复。邮件包含明确请求、直接提问、紧急事项、临近截止时间、重要决策确认，或如果不回复可能造成明显延误/误解。
-- Priority 2：建议回复。邮件包含一般性问题、协作请求、礼貌性确认、需要给出态度或反馈，但紧急性较低。
-- Priority 3：通常不需要回复。邮件主要是通知、同步进展、抄送信息，虽然与用户有关，但没有明确要求用户行动。
-- Priority 4：明确不需要回复。邮件纯通知、群发公告、系统邮件、营销邮件，或内容已闭环，无回复价值。
-
-回复规则：
-- Priority 1 和 Priority 2：需要回复
-- Priority 3 和 Priority 4：不需要回复
-
-优先级上调规则：
-在初步判断后，如果邮件满足以下任一条件，则上调优先级：
-- 出现明确问题、请求、确认需求
-- 提到 deadline、as soon as possible、urgent、today、tomorrow、by [date] 等时间要求
-- 发件人是重要联系人，或邮件涉及关键合作、面试、录用、客户、老师、上级、重要项目
-- 若不回复，可能影响流程推进、关系维护或业务结果
-- 对方在跟进此前未获回复的事项
-- 邮件明确期待用户给出决定、材料、时间安排或批准
-
-线程责任归属规则（必须优先判断）：
-- 不能只看单封邮件字面内容，必须结合整个 thread 的上下文判断“任务是否属于当前用户本人”。
-- 仅当线程中存在明确证据表明当前用户是责任方/决策方/被直接点名执行者时，才允许按请求或时效因素上调优先级。
-- 如果当前用户只是 FYI 被动卷入（例如仅被抄送、未被直接提问、未被分配任务、历史发言中未承担责任），则不应因为礼貌性措辞或一般性推进语句而上调优先级。
-- 对“你/你们”指代不清、责任主体不明确时，默认按较低优先级处理（保守判断），并在判断原因里说明“责任归属不明确”。
-- 若邮件中出现的收件人/责任人不是“当前用户身份”中的邮箱或别名，则默认不判定为“需要用户本人回复”，除非线程明确要求当前用户做决策/批准/提供材料。
-
-上调规则说明：
-- 轻微触发条件：上调 1 级
-- 强触发条件（如紧急 deadline、直接催办、关键决策）：可上调 2 级
-- Priority 1 为最高级，不能继续上调
-
-要求：
-- 判断要保守、准确，不要因为礼貌措辞就误判为需要回复
-- 不编造邮件中没有的信息
-- 如果生成回复草稿，语言要专业、礼貌、简洁，并贴合原邮件语气（正式/半正式）
-- 如果信息不足但仍可能需要回复，可生成一个安全、通用的草稿（明确指出需要对方确认的信息）
-- 在“是否需要回复=true”前，必须先确认“该任务对当前用户存在直接责任或明确期待动作”；若无，则倾向 false（Priority 3/4）。
-
-语言规则（必须遵守）：
-- 回复与原因的语言要与邮件语言一致：中文邮件用中文；英文邮件用英文；多语种邮件则分别用对应语言（可在同一字段中分段呈现）。
-
-输出格式（必须严格遵守，仅输出 JSON，不要输出其它任何文本）：
+---步骤1：提取关键信号---
+请从邮件中识别以下信息：
+1. 发件人重要性（sender_importance）：
+- 上级（manager）
+- 同级同事（peer）
+- 下属（report）
+- 外部联系人（external）
+- 不明确（unknown）
+2. 是否包含明确请求（has_request）：
+- 是否要求用户执行动作（如回复、审批、提交）
+3. 是否包含时间信息（has_deadline）：
+- 是否存在 deadline / 紧急时间要求
+4. 邮件语气（tone）：
+- 信息通知（FYI）/ 请求 / 紧急 / 不明确
+5. 是否需要用户回复（requires_response）：
+- 明确需要 / 可能需要 / 不需要
+---步骤2：根据规则计算 Priority Score---
+请基于以下规则为每个信号赋予分值，并计算总分：
+1. 发件人重要性：
+- manager = +3
+- external = +2
+- peer / report = +1
+- unknown = 0
+2. 请求信号：
+- 有明确请求 = +3
+- 无请求 = 0
+3. 时间紧迫性：
+- 有 deadline / 明确时间要求 = +3
+- 无 = 0
+4. 语气：
+- 紧急 = +2
+- 请求 = +1
+- FYI / 信息类 = -2
+5. 是否需要回复：
+- 明确需要回复 = +2
+- 可能需要 = +1
+- 不需要 = 0
+计算：
+Priority Score = 上述所有分值之和
+---步骤3：根据 Score 判断优先级---
+请根据以下区间分类：
+- 高优先级（HIGH）：Score ≥ 6
+- 中优先级（MEDIUM）：Score 在 3–5
+- 不确定（UNCERTAIN）：Score 在 1–2
+- 低优先级（LOW）：Score ≤ 0
+注意：
+- 只有在非常确定不需要任何行动时，才允许输出“低优先级”
+- 如果存在不确定性或信息不足以做出判断，请优先选择“UNCERTAIN”，而不是低优先级
+---步骤4：输出判断理由---
+用一句话说明该邮件为什么被归类为该优先级（重点说明关键影响因素）。
+---步骤5：输出置信度---
+输出0到1的小数，表示你对该判断的信心。
+---步骤6：生成回复草稿---
+- 当优先级为 HIGH / MEDIUM / UNCERTAIN 时，默认生成一份可直接发送前编辑的回复草稿。
+- 当优先级为 LOW 时，回复草稿留空字符串。
+- 草稿要求：专业、礼貌、简洁，并尽量贴合原邮件语气；信息不足时使用安全措辞并提出待确认点。
+---输出格式（必须严格遵守）---
 {{
-  "是否需要回复": true/false,
-  "判断原因": "...（必须包含：优先级=1/2/3/4 + 简短原因）",
-  "回复草稿": \"...\"  // 如果不需要回复则为空字符串
+"priority": "HIGH / MEDIUM / UNCERTAIN / LOW",
+"priority_score": 数值,
+"confidence": 0.0,
+"signals": {{
+"sender_importance": "",
+"has_request": true,
+"has_deadline": false,
+"tone": "",
+"requires_response": ""
+}},
+"reasoning": "",
+"reply_draft": ""
 }}
+
+当前用户身份（用于识别“是否需要当前用户动作”）：
+{current_user_identity}
 
 输入邮件：
 {thread_text}
@@ -170,7 +190,44 @@ def call_llm_for_reply_decision(
 
     content = completion.choices[0].message.content or "{}"
     try:
-        return json.loads(content)
+        data = json.loads(content)
+        if isinstance(data, dict) and "priority" in data:
+            priority = str(data.get("priority") or "").strip().upper()
+            score = data.get("priority_score")
+            confidence = data.get("confidence")
+            reasoning = str(data.get("reasoning") or "").strip()
+            signals = data.get("signals") if isinstance(data.get("signals"), dict) else {}
+            requires_response = str(signals.get("requires_response") or "").strip()
+
+            need_reply = priority in ("HIGH", "MEDIUM", "UNCERTAIN")
+            if not need_reply and requires_response in ("明确需要", "可能需要"):
+                need_reply = True
+            if priority == "LOW":
+                need_reply = False
+
+            draft = str(
+                data.get("reply_draft")
+                or data.get("回复草稿")
+                or ""
+            ).strip()
+            if priority == "LOW":
+                draft = ""
+
+            reason_parts = []
+            if reasoning:
+                reason_parts.append(reasoning)
+            reason_parts.append(f"priority={priority or 'UNCERTAIN'}")
+            if score is not None:
+                reason_parts.append(f"score={score}")
+            if confidence is not None:
+                reason_parts.append(f"confidence={confidence}")
+
+            return {
+                "是否需要回复": need_reply,
+                "判断原因": "；".join(reason_parts),
+                "回复草稿": draft,
+            }
+        return data
     except json.JSONDecodeError as err:
         raise ValueError(
             "LLM output is not valid JSON. Raw output:\n"
