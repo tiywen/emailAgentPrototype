@@ -1,0 +1,116 @@
+{
+  "case": "tc03",
+  "scenario_type": "implicit_request_uncertain",
+  "overall_result": "PARTIAL",
+  "triage_result": {
+    "result": "PASS",
+    "reason": "rule-based triage evaluation",
+    "checks": {
+      "rule_assertions": "PASS"
+    },
+    "errors": [],
+    "actual": {
+      "needs_response": true,
+      "priority": "UNCERTAIN",
+      "score": 1,
+      "signals": {
+        "sender_importance": "peer",
+        "has_request": true,
+        "has_deadline": false,
+        "tone": "请求",
+        "requires_response": "可能需要"
+      },
+      "reason": "邮件来自同级同事，包含请求但没有明确的时间要求，导致优先级不确定。；priority=UNCERTAIN；score=1；confidence=0.8",
+      "reply_draft": "Hi Teammate,\n\nThank you for your message. I will share my thoughts with you shortly.\n\nBest regards,\nTest User"
+    }
+  },
+  "summary_result": {
+    "result": "PARTIAL",
+    "reason": "虽然大部分要求得到满足，但存在一些缺失和表达问题。",
+    "checks": {
+      "coverage": "PARTIAL",
+      "faithfulness": "PASS",
+      "usefulness": "PARTIAL"
+    },
+    "missing_items": [
+      "没有提及具体的主题或问题",
+      "长摘要中的开放问题包含了额外的内容"
+    ],
+    "hallucinations": [
+      "无"
+    ],
+    "notes": [
+      "短摘要和长摘要都未明确指出Teammate的请求没有具体的主题或截止日期。"
+    ]
+  },
+  "reply_result": {
+    "result": "PASS",
+    "reason": "回复满足所有关键要求，语气专业且中立。",
+    "checks": {
+      "coverage": "PASS",
+      "faithfulness": "PASS",
+      "usefulness": "PASS"
+    },
+    "missing_items": [],
+    "hallucinations": [],
+    "notes": []
+  },
+  "expected": {
+    "triage": {
+      "needs_response": true,
+      "allowed_priority": [
+        "UNCERTAIN",
+        "MEDIUM"
+      ],
+      "disallowed_priority": [
+        "LOW"
+      ],
+      "expected_signal_assertions": {
+        "has_deadline": false
+      },
+      "expected_score_band": [
+        1,
+        5
+      ],
+      "reason_must_include_any": [
+        "请求",
+        "不确定",
+        "没有明确的时间要求"
+      ]
+    },
+    "summary": {
+      "must_capture": [
+        "thoughts",
+        "response"
+      ],
+      "must_not_hallucinate": [
+        "today EOD",
+        "urgent"
+      ],
+      "expected_key_points_count_range": [
+        1,
+        6
+      ],
+      "expected_open_questions": [
+        "specific topic"
+      ],
+      "short_summary_max_chars": 260,
+      "long_summary_min_chars": 40
+    },
+    "reply": {
+      "should_generate": true,
+      "tone": "professional_neutral",
+      "must_include": [
+        "share",
+        "shortly"
+      ],
+      "must_not_include": [
+        "by today 5pm"
+      ],
+      "max_length_category": "short"
+    }
+  },
+  "actual_file": "tc03.actual.json",
+  "summary_judgment_raw_file": "tc03.summary_judgment.raw.txt",
+  "reply_judgment_raw_file": "tc03.reply_judgment.raw.txt"
+}

@@ -1,321 +1,1171 @@
 {
   "total": 10,
-  "passed": 8,
-  "failed": 2,
+  "passed": 2,
+  "failed": 8,
+  "triage_counts": {
+    "PASS": 9,
+    "PARTIAL": 1,
+    "FAIL": 0
+  },
+  "summary_counts": {
+    "PASS": 2,
+    "PARTIAL": 8,
+    "FAIL": 0
+  },
+  "reply_counts": {
+    "PASS": 10,
+    "PARTIAL": 0,
+    "FAIL": 0
+  },
+  "overall_counts": {
+    "PASS": 2,
+    "PARTIAL": 8,
+    "FAIL": 0
+  },
+  "overall_pass_rate": 0.2,
   "results": [
     {
       "case": "tc01",
-      "status": "PASS",
-      "errors": [],
-      "expected": {
-        "是否需要回复": true,
-        "回复草稿规则": "non_empty",
-        "判断原因应包含": [
-          "priority=HIGH"
-        ],
-        "signals": {
-          "sender_importance": [
-            "manager"
-          ],
-          "has_request": true,
-          "has_deadline": true,
-          "requires_response": [
-            "明确需要",
-            "可能需要"
-          ]
+      "scenario_type": "manager_request_deadline_high_risk",
+      "overall_result": "PASS",
+      "triage_result": {
+        "result": "PASS",
+        "reason": "rule-based triage evaluation",
+        "checks": {
+          "rule_assertions": "PASS"
         },
-        "score_band": {
-          "min": 6
-        },
-        "priority_rule": {
-          "allowed": [
-            "HIGH"
-          ]
+        "errors": [],
+        "actual": {
+          "needs_response": true,
+          "priority": "HIGH",
+          "score": 8,
+          "signals": {
+            "sender_importance": "manager",
+            "has_request": true,
+            "has_deadline": true,
+            "tone": "紧急",
+            "requires_response": "明确需要"
+          },
+          "reason": "该邮件来自上级，包含明确的请求和紧急的时间要求，因此被归类为高优先级。；priority=HIGH；score=8；confidence=1.0",
+          "reply_draft": "Dear Alice,\n\nI will ensure that the final deck is sent to you by 5pm today.\n\nBest regards,\nTest User"
         }
       },
-      "actual_file": "tc01.actual.json",
-      "normalized_file": "tc01.normalized.json"
-    },
-    {
-      "case": "tc02",
-      "status": "PASS",
-      "errors": [],
+      "summary_result": {
+        "result": "PASS",
+        "reason": "实际输出全面捕捉了邮件的关键信息，且没有出现错误或遗漏。",
+        "checks": {
+          "coverage": "PASS",
+          "faithfulness": "PASS",
+          "usefulness": "PASS"
+        },
+        "missing_items": [],
+        "hallucinations": [],
+        "notes": []
+      },
+      "reply_result": {
+        "result": "PASS",
+        "reason": "回复满足所有关键要求，语气专业且中立。",
+        "checks": {
+          "coverage": "PASS",
+          "faithfulness": "PASS",
+          "usefulness": "PASS"
+        },
+        "missing_items": [],
+        "hallucinations": [],
+        "notes": []
+      },
       "expected": {
-        "是否需要回复": false,
-        "回复草稿规则": "empty",
-        "判断原因应包含": [
-          "priority=LOW"
-        ],
-        "signals": {
-          "has_request": false,
-          "has_deadline": false,
-          "requires_response": [
-            "不需要"
-          ]
-        },
-        "score_band": {
-          "max": 1
-        },
-        "priority_rule": {
-          "allowed": [
+        "triage": {
+          "needs_response": true,
+          "allowed_priority": [
+            "HIGH"
+          ],
+          "disallowed_priority": [
             "LOW",
             "UNCERTAIN"
           ],
-          "forbidden": [
-            "HIGH"
+          "expected_signal_assertions": {
+            "sender_importance": "manager",
+            "has_request": true,
+            "has_deadline": true
+          },
+          "expected_score_band": [
+            6,
+            20
+          ],
+          "reason_must_include_any": [
+            "deadline",
+            "urgent",
+            "上级",
+            "manager"
           ]
+        },
+        "summary": {
+          "must_capture": [
+            "final deck",
+            "5pm",
+            "urgent"
+          ],
+          "must_not_hallucinate": [
+            "next week",
+            "no action needed"
+          ],
+          "expected_key_points_count_range": [
+            1,
+            8
+          ],
+          "expected_open_questions": [],
+          "short_summary_max_chars": 260,
+          "long_summary_min_chars": 60
+        },
+        "reply": {
+          "should_generate": true,
+          "tone": "professional_neutral",
+          "must_include": [
+            "5pm",
+            "final deck"
+          ],
+          "must_not_include": [
+            "cannot help"
+          ],
+          "max_length_category": "short"
+        }
+      },
+      "actual_file": "tc01.actual.json",
+      "summary_judgment_raw_file": "tc01.summary_judgment.raw.txt",
+      "reply_judgment_raw_file": "tc01.reply_judgment.raw.txt"
+    },
+    {
+      "case": "tc02",
+      "scenario_type": "system_notice_low_priority",
+      "overall_result": "PASS",
+      "triage_result": {
+        "result": "PASS",
+        "reason": "rule-based triage evaluation",
+        "checks": {
+          "rule_assertions": "PASS"
+        },
+        "errors": [],
+        "actual": {
+          "needs_response": false,
+          "priority": "LOW",
+          "score": 0,
+          "signals": {
+            "sender_importance": "unknown",
+            "has_request": false,
+            "has_deadline": false,
+            "tone": "FYI",
+            "requires_response": "不需要"
+          },
+          "reason": "该邮件仅为信息通知，且不需要用户采取任何行动，因此被归类为低优先级。；priority=LOW；score=0；confidence=0.9",
+          "reply_draft": ""
+        }
+      },
+      "summary_result": {
+        "result": "PASS",
+        "reason": "实际输出满足所有关键要求，没有严重问题。",
+        "checks": {
+          "coverage": "PASS",
+          "faithfulness": "PASS",
+          "usefulness": "PASS"
+        },
+        "missing_items": [],
+        "hallucinations": [],
+        "notes": []
+      },
+      "reply_result": {
+        "result": "PASS",
+        "reason": "实际输出准确地反映了邮件的性质和优先级，符合期望要求。",
+        "checks": {
+          "coverage": "PASS",
+          "faithfulness": "PASS",
+          "usefulness": "PASS"
+        },
+        "missing_items": [],
+        "hallucinations": [],
+        "notes": []
+      },
+      "expected": {
+        "triage": {
+          "needs_response": false,
+          "allowed_priority": [
+            "LOW",
+            "UNCERTAIN"
+          ],
+          "disallowed_priority": [
+            "HIGH"
+          ],
+          "expected_signal_assertions": {
+            "has_request": false,
+            "has_deadline": false
+          },
+          "expected_score_band": [
+            -10,
+            2
+          ],
+          "reason_must_include_any": [
+            "FYI",
+            "no action",
+            "不需要"
+          ]
+        },
+        "summary": {
+          "must_capture": [
+            "maintenance",
+            "no user action"
+          ],
+          "must_not_hallucinate": [
+            "reply required",
+            "approval"
+          ],
+          "expected_key_points_count_range": [
+            1,
+            6
+          ],
+          "expected_open_questions": [],
+          "short_summary_max_chars": 260,
+          "long_summary_min_chars": 30
+        },
+        "reply": {
+          "should_generate": false
         }
       },
       "actual_file": "tc02.actual.json",
-      "normalized_file": "tc02.normalized.json"
+      "summary_judgment_raw_file": "tc02.summary_judgment.raw.txt",
+      "reply_judgment_raw_file": "tc02.reply_judgment.raw.txt"
     },
     {
       "case": "tc03",
-      "status": "PASS",
-      "errors": [],
-      "expected": {
-        "是否需要回复": true,
-        "回复草稿规则": "non_empty",
-        "判断原因应包含": [
-          "priority=UNCERTAIN"
+      "scenario_type": "implicit_request_uncertain",
+      "overall_result": "PARTIAL",
+      "triage_result": {
+        "result": "PASS",
+        "reason": "rule-based triage evaluation",
+        "checks": {
+          "rule_assertions": "PASS"
+        },
+        "errors": [],
+        "actual": {
+          "needs_response": true,
+          "priority": "UNCERTAIN",
+          "score": 1,
+          "signals": {
+            "sender_importance": "peer",
+            "has_request": true,
+            "has_deadline": false,
+            "tone": "请求",
+            "requires_response": "可能需要"
+          },
+          "reason": "邮件来自同级同事，包含请求但没有明确的时间要求，导致优先级不确定。；priority=UNCERTAIN；score=1；confidence=0.8",
+          "reply_draft": "Hi Teammate,\n\nThank you for your message. I will share my thoughts with you shortly.\n\nBest regards,\nTest User"
+        }
+      },
+      "summary_result": {
+        "result": "PARTIAL",
+        "reason": "虽然大部分要求得到满足，但存在一些缺失和表达问题。",
+        "checks": {
+          "coverage": "PARTIAL",
+          "faithfulness": "PASS",
+          "usefulness": "PARTIAL"
+        },
+        "missing_items": [
+          "没有提及具体的主题或问题",
+          "长摘要中的开放问题包含了额外的内容"
         ],
-        "signals": {
-          "has_deadline": false,
-          "requires_response": [
-            "可能需要"
-          ]
+        "hallucinations": [
+          "无"
+        ],
+        "notes": [
+          "短摘要和长摘要都未明确指出Teammate的请求没有具体的主题或截止日期。"
+        ]
+      },
+      "reply_result": {
+        "result": "PASS",
+        "reason": "回复满足所有关键要求，语气专业且中立。",
+        "checks": {
+          "coverage": "PASS",
+          "faithfulness": "PASS",
+          "usefulness": "PASS"
         },
-        "score_band": {
-          "min": 1,
-          "max": 4
-        },
-        "priority_rule": {
-          "allowed": [
+        "missing_items": [],
+        "hallucinations": [],
+        "notes": []
+      },
+      "expected": {
+        "triage": {
+          "needs_response": true,
+          "allowed_priority": [
             "UNCERTAIN",
             "MEDIUM"
           ],
-          "forbidden": [
+          "disallowed_priority": [
             "LOW"
+          ],
+          "expected_signal_assertions": {
+            "has_deadline": false
+          },
+          "expected_score_band": [
+            1,
+            5
+          ],
+          "reason_must_include_any": [
+            "请求",
+            "不确定",
+            "没有明确的时间要求"
           ]
+        },
+        "summary": {
+          "must_capture": [
+            "thoughts",
+            "response"
+          ],
+          "must_not_hallucinate": [
+            "today EOD",
+            "urgent"
+          ],
+          "expected_key_points_count_range": [
+            1,
+            6
+          ],
+          "expected_open_questions": [
+            "specific topic"
+          ],
+          "short_summary_max_chars": 260,
+          "long_summary_min_chars": 40
+        },
+        "reply": {
+          "should_generate": true,
+          "tone": "professional_neutral",
+          "must_include": [
+            "share",
+            "shortly"
+          ],
+          "must_not_include": [
+            "by today 5pm"
+          ],
+          "max_length_category": "short"
         }
       },
       "actual_file": "tc03.actual.json",
-      "normalized_file": "tc03.normalized.json"
+      "summary_judgment_raw_file": "tc03.summary_judgment.raw.txt",
+      "reply_judgment_raw_file": "tc03.reply_judgment.raw.txt"
     },
     {
       "case": "tc04",
-      "status": "PASS",
-      "errors": [],
-      "expected": {
-        "是否需要回复": true,
-        "回复草稿规则": "non_empty",
-        "判断原因应包含": [
-          "priority=HIGH"
+      "scenario_type": "fyi_but_actionable_high",
+      "overall_result": "PARTIAL",
+      "triage_result": {
+        "result": "PASS",
+        "reason": "rule-based triage evaluation",
+        "checks": {
+          "rule_assertions": "PASS"
+        },
+        "errors": [],
+        "actual": {
+          "needs_response": true,
+          "priority": "HIGH",
+          "score": 8,
+          "signals": {
+            "sender_importance": "manager",
+            "has_request": true,
+            "has_deadline": true,
+            "tone": "请求",
+            "requires_response": "明确需要"
+          },
+          "reason": "该邮件来自上级，包含明确的请求和截止时间，因此被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
+          "reply_draft": "Dear Alice,\n\nThank you for sending the final contract. I will review and approve it by tomorrow noon as requested.\n\nBest regards,\nTest User"
+        }
+      },
+      "summary_result": {
+        "result": "PARTIAL",
+        "reason": "总结基本捕捉了关键信息，但存在轻微的表达问题和遗漏。",
+        "checks": {
+          "coverage": "PARTIAL",
+          "faithfulness": "PASS",
+          "usefulness": "PARTIAL"
+        },
+        "missing_items": [
+          "未明确提及合同的具体内容或重要性"
         ],
-        "signals": {
-          "has_request": true,
-          "has_deadline": true
+        "hallucinations": [
+          "无"
+        ],
+        "notes": [
+          "长摘要中提到的开放问题与邮件内容无关，可能导致误解。"
+        ]
+      },
+      "reply_result": {
+        "result": "PASS",
+        "reason": "回复满足所有关键要求，语气专业且中立。",
+        "checks": {
+          "coverage": "PASS",
+          "faithfulness": "PASS",
+          "usefulness": "PASS"
         },
-        "score_band": {
-          "min": 6
-        },
-        "priority_rule": {
-          "allowed": [
+        "missing_items": [],
+        "hallucinations": [],
+        "notes": []
+      },
+      "expected": {
+        "triage": {
+          "needs_response": true,
+          "allowed_priority": [
             "HIGH"
           ],
-          "not_low": true
+          "disallowed_priority": [
+            "LOW",
+            "UNCERTAIN"
+          ],
+          "expected_signal_assertions": {
+            "has_request": true,
+            "has_deadline": true
+          },
+          "expected_score_band": [
+            6,
+            20
+          ],
+          "reason_must_include_any": [
+            "请求",
+            "截止时间",
+            "高优先级"
+          ]
+        },
+        "summary": {
+          "must_capture": [
+            "approval",
+            "tomorrow noon",
+            "contract"
+          ],
+          "must_not_hallucinate": [
+            "no action needed"
+          ],
+          "expected_key_points_count_range": [
+            1,
+            8
+          ],
+          "expected_open_questions": [],
+          "short_summary_max_chars": 260,
+          "long_summary_min_chars": 60
+        },
+        "reply": {
+          "should_generate": true,
+          "tone": "professional_neutral",
+          "must_include": [
+            "审核",
+            "批准"
+          ],
+          "must_not_include": [
+            "ignore this"
+          ],
+          "max_length_category": "short"
         }
       },
       "actual_file": "tc04.actual.json",
-      "normalized_file": "tc04.normalized.json"
+      "summary_judgment_raw_file": "tc04.summary_judgment.raw.txt",
+      "reply_judgment_raw_file": "tc04.reply_judgment.raw.txt"
     },
     {
       "case": "tc05",
-      "status": "FAIL",
-      "errors": [
-        "priority_score above max: score=8.0, max=7",
-        "priority=HIGH violates high_requires_any gating rule (need one of ['has_deadline', 'sender_importance=manager'], signals={'sender_importance': 'external', 'has_request': True, 'has_deadline': False, 'tone': '请求', 'requires_response': '明确需要'})"
-      ],
+      "scenario_type": "external_request_no_deadline_boundary",
+      "overall_result": "PARTIAL",
+      "triage_result": {
+        "result": "PASS",
+        "reason": "rule-based triage evaluation",
+        "checks": {
+          "rule_assertions": "PASS"
+        },
+        "errors": [],
+        "actual": {
+          "needs_response": true,
+          "priority": "HIGH",
+          "score": 8,
+          "signals": {
+            "sender_importance": "external",
+            "has_request": true,
+            "has_deadline": false,
+            "tone": "请求",
+            "requires_response": "明确需要"
+          },
+          "reason": "该邮件来自外部合作伙伴，包含明确的请求并需要用户回复，因而被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
+          "reply_draft": "Dear Vendor Partner,\n\nThank you for your email. I will review the attached proposal and share my comments with you shortly.\n\nBest regards,\nTest User"
+        }
+      },
+      "summary_result": {
+        "result": "PARTIAL",
+        "reason": "虽然总结捕捉了大部分关键信息，但缺少了对反馈的具体询问，并且长摘要中包含了一些不必要的细节。",
+        "checks": {
+          "coverage": "PARTIAL",
+          "faithfulness": "PASS",
+          "usefulness": "PARTIAL"
+        },
+        "missing_items": [
+          "具体的反馈请求"
+        ],
+        "hallucinations": [
+          "无"
+        ],
+        "notes": [
+          "长摘要中包含了发件人和收件人的电子邮件地址，这在总结中并不必要。"
+        ]
+      },
+      "reply_result": {
+        "result": "PASS",
+        "reason": "回复满足所有关键要求，语气专业且中立。",
+        "checks": {
+          "coverage": "PASS",
+          "faithfulness": "PASS",
+          "usefulness": "PASS"
+        },
+        "missing_items": [],
+        "hallucinations": [],
+        "notes": []
+      },
       "expected": {
-        "是否需要回复": true,
-        "回复草稿规则": "non_empty",
-        "signals": {
-          "sender_importance": [
-            "external",
-            "unknown"
-          ],
-          "has_request": true,
-          "has_deadline": false
-        },
-        "score_band": {
-          "min": 2,
-          "max": 7
-        },
-        "priority_rule": {
-          "allowed": [
+        "triage": {
+          "needs_response": true,
+          "allowed_priority": [
             "MEDIUM",
             "UNCERTAIN",
             "HIGH"
           ],
-          "forbidden": [
+          "disallowed_priority": [
             "LOW"
           ],
-          "high_requires_any": [
-            "has_deadline",
-            "sender_importance=manager"
+          "expected_signal_assertions": {
+            "sender_importance": "external",
+            "has_request": true,
+            "has_deadline": false
+          },
+          "expected_score_band": [
+            2,
+            8
+          ],
+          "reason_must_include_any": [
+            "外部",
+            "请求",
+            "高优先级"
           ]
+        },
+        "summary": {
+          "must_capture": [
+            "review",
+            "proposal",
+            "comments"
+          ],
+          "must_not_hallucinate": [
+            "by today",
+            "approval request"
+          ],
+          "expected_key_points_count_range": [
+            1,
+            8
+          ],
+          "expected_open_questions": [
+            "deadline",
+            "feedback"
+          ],
+          "short_summary_max_chars": 260,
+          "long_summary_min_chars": 50
+        },
+        "reply": {
+          "should_generate": true,
+          "tone": "professional_neutral",
+          "must_include": [
+            "review",
+            "comments"
+          ],
+          "must_not_include": [
+            "by 5pm today"
+          ],
+          "max_length_category": "short"
         }
       },
       "actual_file": "tc05.actual.json",
-      "normalized_file": "tc05.normalized.json"
+      "summary_judgment_raw_file": "tc05.summary_judgment.raw.txt",
+      "reply_judgment_raw_file": "tc05.reply_judgment.raw.txt"
     },
     {
       "case": "tc06",
-      "status": "PASS",
-      "errors": [],
+      "scenario_type": "long_thread_action_ambiguous_uncertain",
+      "overall_result": "PARTIAL",
+      "triage_result": {
+        "result": "PARTIAL",
+        "reason": "rule-based triage evaluation",
+        "checks": {
+          "rule_assertions": "PARTIAL"
+        },
+        "errors": [
+          "signal mismatch: has_deadline expected=True, actual=False"
+        ],
+        "actual": {
+          "needs_response": true,
+          "priority": "MEDIUM",
+          "score": 4,
+          "signals": {
+            "sender_importance": "peer",
+            "has_request": true,
+            "has_deadline": false,
+            "tone": "请求",
+            "requires_response": "可能需要"
+          },
+          "reason": "邮件包含来自同级同事的请求，虽然没有明确的时间要求，但需要用户可能的行动。；priority=MEDIUM；score=4；confidence=0.9",
+          "reply_draft": "Hi, thank you for the update. I will review the slides and see if we can polish them before sharing. Best, test-user"
+        }
+      },
+      "summary_result": {
+        "result": "PARTIAL",
+        "reason": "虽然总结捕捉了大部分关键信息，但缺少了开放问题部分的内容。",
+        "checks": {
+          "coverage": "PARTIAL",
+          "faithfulness": "PASS",
+          "usefulness": "PARTIAL"
+        },
+        "missing_items": [
+          "开放问题部分未能完整列出"
+        ],
+        "hallucinations": [],
+        "notes": [
+          "短总结和长总结都符合字数要求，且准确反映了邮件内容。"
+        ]
+      },
+      "reply_result": {
+        "result": "PASS",
+        "reason": "回复满足所有关键要求，语气专业且中立。",
+        "checks": {
+          "coverage": "PASS",
+          "faithfulness": "PASS",
+          "usefulness": "PASS"
+        },
+        "missing_items": [],
+        "hallucinations": [],
+        "notes": []
+      },
       "expected": {
-        "是否需要回复": true,
-        "回复草稿规则": "non_empty",
-        "signals": {
-          "has_deadline": false,
-          "requires_response": [
-            "可能需要",
-            "明确需要"
-          ]
-        },
-        "score_band": {
-          "min": 1,
-          "max": 5
-        },
-        "priority_rule": {
-          "allowed": [
+        "triage": {
+          "needs_response": true,
+          "allowed_priority": [
             "UNCERTAIN",
             "MEDIUM"
           ],
-          "forbidden": [
+          "disallowed_priority": [
             "LOW"
+          ],
+          "expected_signal_assertions": {
+            "has_deadline": true
+          },
+          "expected_score_band": [
+            1,
+            5
+          ],
+          "reason_must_include_any": [
+            "请求",
+            "工作坊",
+            "时间紧迫性"
           ]
+        },
+        "summary": {
+          "must_capture": [
+            "background materials",
+            "draft visuals",
+            "polish"
+          ],
+          "must_not_hallucinate": [
+            "hard deadline",
+            "must send by today"
+          ],
+          "expected_key_points_count_range": [
+            2,
+            10
+          ],
+          "expected_open_questions": [
+            "specific feedback",
+            "which slides"
+          ],
+          "short_summary_max_chars": 260,
+          "long_summary_min_chars": 80
+        },
+        "reply": {
+          "should_generate": true,
+          "tone": "professional_neutral",
+          "must_include": [
+            "review",
+            "workshop"
+          ],
+          "must_not_include": [
+            "will deliver by"
+          ],
+          "max_length_category": "short"
         }
       },
       "actual_file": "tc06.actual.json",
-      "normalized_file": "tc06.normalized.json"
+      "summary_judgment_raw_file": "tc06.summary_judgment.raw.txt",
+      "reply_judgment_raw_file": "tc06.reply_judgment.raw.txt"
     },
     {
       "case": "tc07",
-      "status": "FAIL",
-      "errors": [
-        "signal mismatch: has_deadline expected=False, actual=True",
-        "priority_score above max: score=8.0, max=6"
-      ],
+      "scenario_type": "multi_intent_fyi_request_schedule",
+      "overall_result": "PARTIAL",
+      "triage_result": {
+        "result": "PASS",
+        "reason": "rule-based triage evaluation",
+        "checks": {
+          "rule_assertions": "PASS"
+        },
+        "errors": [],
+        "actual": {
+          "needs_response": true,
+          "priority": "MEDIUM",
+          "score": 4,
+          "signals": {
+            "sender_importance": "peer",
+            "has_request": true,
+            "has_deadline": true,
+            "tone": "请求",
+            "requires_response": "可能需要"
+          },
+          "reason": "该邮件包含明确的请求和时间要求，但发件人为同级同事，影响优先级。；priority=MEDIUM；score=4；confidence=0.9",
+          "reply_draft": "Hi Teammate,\n\nThank you for the update. I will review section 2 and get back to you regarding the sync at 4pm tomorrow.\n\nBest,\nTest User"
+        }
+      },
+      "summary_result": {
+        "result": "PARTIAL",
+        "reason": "虽然大部分关键要求被满足，但存在一些表达问题和缺失。",
+        "checks": {
+          "coverage": "PARTIAL",
+          "faithfulness": "PARTIAL",
+          "usefulness": "PARTIAL"
+        },
+        "missing_items": [
+          "没有明确提到需要在明天4点前完成审查的时间要求"
+        ],
+        "hallucinations": [
+          "没有明显的幻觉，但对开放问题的理解不够准确"
+        ],
+        "notes": [
+          "短摘要和长摘要都包含了关键信息，但开放问题的表述不够清晰，未能完全反映出原邮件的要求。"
+        ]
+      },
+      "reply_result": {
+        "result": "PASS",
+        "reason": "回复满足所有关键要求，语气专业且中立。",
+        "checks": {
+          "coverage": "PASS",
+          "faithfulness": "PASS",
+          "usefulness": "PASS"
+        },
+        "missing_items": [],
+        "hallucinations": [],
+        "notes": []
+      },
       "expected": {
-        "是否需要回复": true,
-        "回复草稿规则": "non_empty",
-        "signals": {
-          "has_request": true,
-          "has_deadline": false
-        },
-        "score_band": {
-          "min": 2,
-          "max": 6
-        },
-        "priority_rule": {
-          "allowed": [
+        "triage": {
+          "needs_response": true,
+          "allowed_priority": [
             "MEDIUM",
             "UNCERTAIN",
             "HIGH"
           ],
-          "forbidden": [
+          "disallowed_priority": [
             "LOW"
+          ],
+          "expected_signal_assertions": {
+            "has_request": true
+          },
+          "expected_score_band": [
+            2,
+            9
+          ],
+          "reason_must_include_any": [
+            "请求",
+            "审阅",
+            "确认时间"
           ]
+        },
+        "summary": {
+          "must_capture": [
+            "latest draft",
+            "review section 2",
+            "4pm tomorrow"
+          ],
+          "must_not_hallucinate": [
+            "client escalation",
+            "approval by CEO"
+          ],
+          "expected_key_points_count_range": [
+            2,
+            10
+          ],
+          "expected_open_questions": [
+            "4pm",
+            "sync"
+          ],
+          "short_summary_max_chars": 280,
+          "long_summary_min_chars": 70
+        },
+        "reply": {
+          "should_generate": true,
+          "tone": "professional_neutral",
+          "must_include": [
+            "review section 2",
+            "4pm"
+          ],
+          "must_not_include": [
+            "final approval granted"
+          ],
+          "max_length_category": "short"
         }
       },
       "actual_file": "tc07.actual.json",
-      "normalized_file": "tc07.normalized.json"
+      "summary_judgment_raw_file": "tc07.summary_judgment.raw.txt",
+      "reply_judgment_raw_file": "tc07.reply_judgment.raw.txt"
     },
     {
       "case": "tc08",
-      "status": "PASS",
-      "errors": [],
+      "scenario_type": "sender_ambiguity_delegate_mail",
+      "overall_result": "PARTIAL",
+      "triage_result": {
+        "result": "PASS",
+        "reason": "rule-based triage evaluation",
+        "checks": {
+          "rule_assertions": "PASS"
+        },
+        "errors": [],
+        "actual": {
+          "needs_response": true,
+          "priority": "HIGH",
+          "score": 8,
+          "signals": {
+            "sender_importance": "unknown",
+            "has_request": true,
+            "has_deadline": true,
+            "tone": "请求",
+            "requires_response": "明确需要"
+          },
+          "reason": "该邮件包含明确的请求和紧急的时间要求，需在明天10:00之前确认。；priority=HIGH；score=8；confidence=0.9",
+          "reply_draft": "Dear Office Assistant,\n\nThank you for your message. I confirm that I have read the pre-read as requested.\n\nBest regards,\nTest User"
+        }
+      },
+      "summary_result": {
+        "result": "PARTIAL",
+        "reason": "总结基本涵盖了关键信息，但存在开放问题，且未明确指出预读文件的具体内容。",
+        "checks": {
+          "coverage": "PARTIAL",
+          "faithfulness": "PASS",
+          "usefulness": "PARTIAL"
+        },
+        "missing_items": [
+          "具体的预读文件内容"
+        ],
+        "hallucinations": [],
+        "notes": [
+          "开放问题未在期望要求中列出，但提及的内容与邮件无关。"
+        ]
+      },
+      "reply_result": {
+        "result": "PASS",
+        "reason": "回复满足所有关键要求，语气专业且中立。",
+        "checks": {
+          "coverage": "PASS",
+          "faithfulness": "PASS",
+          "usefulness": "PASS"
+        },
+        "missing_items": [],
+        "hallucinations": [],
+        "notes": []
+      },
       "expected": {
-        "是否需要回复": true,
-        "回复草稿规则": "non_empty",
-        "signals": {
-          "has_request": true,
-          "has_deadline": true,
-          "requires_response": [
-            "明确需要",
-            "可能需要"
-          ]
-        },
-        "score_band": {
-          "min": 4
-        },
-        "priority_rule": {
-          "allowed": [
+        "triage": {
+          "needs_response": true,
+          "allowed_priority": [
             "MEDIUM",
             "HIGH"
           ],
-          "forbidden": [
+          "disallowed_priority": [
             "LOW"
+          ],
+          "expected_signal_assertions": {
+            "has_request": true,
+            "has_deadline": true
+          },
+          "expected_score_band": [
+            4,
+            20
+          ],
+          "reason_must_include_any": [
+            "请求",
+            "明天10:00",
+            "确认阅读"
           ]
+        },
+        "summary": {
+          "must_capture": [
+            "on behalf of VP",
+            "confirm",
+            "tomorrow 10:00"
+          ],
+          "must_not_hallucinate": [
+            "contract approval",
+            "no response needed"
+          ],
+          "expected_key_points_count_range": [
+            1,
+            8
+          ],
+          "expected_open_questions": [],
+          "short_summary_max_chars": 260,
+          "long_summary_min_chars": 50
+        },
+        "reply": {
+          "should_generate": true,
+          "tone": "professional_neutral",
+          "must_include": [
+            "确认",
+            "预读材料"
+          ],
+          "must_not_include": [
+            "ignore"
+          ],
+          "max_length_category": "short"
         }
       },
       "actual_file": "tc08.actual.json",
-      "normalized_file": "tc08.normalized.json"
+      "summary_judgment_raw_file": "tc08.summary_judgment.raw.txt",
+      "reply_judgment_raw_file": "tc08.reply_judgment.raw.txt"
     },
     {
       "case": "tc09",
-      "status": "PASS",
-      "errors": [],
+      "scenario_type": "noisy_formatting_forward_chain",
+      "overall_result": "PARTIAL",
+      "triage_result": {
+        "result": "PASS",
+        "reason": "rule-based triage evaluation",
+        "checks": {
+          "rule_assertions": "PASS"
+        },
+        "errors": [],
+        "actual": {
+          "needs_response": true,
+          "priority": "HIGH",
+          "score": 8,
+          "signals": {
+            "sender_importance": "peer",
+            "has_request": true,
+            "has_deadline": true,
+            "tone": "请求",
+            "requires_response": "明确需要"
+          },
+          "reason": "该邮件来自同级同事，包含明确的请求和今天的确认截止时间，导致其被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
+          "reply_draft": "Hi Legal Ops,\n\nThank you for the update. I will review the latest clause and confirm by the end of the day.\n\nBest regards,\nTest User"
+        }
+      },
+      "summary_result": {
+        "result": "PARTIAL",
+        "reason": "虽然总结捕捉了主要要求，但长摘要中包含了一些不必要的细节和开放问题，未完全符合期望。",
+        "checks": {
+          "coverage": "PARTIAL",
+          "faithfulness": "PASS",
+          "usefulness": "PARTIAL"
+        },
+        "missing_items": [],
+        "hallucinations": [
+          "The email highlights the importance of timely feedback on legal documents.",
+          "The communication is marked as confidential.",
+          "The request is directed to the entire team, indicating a collaborative effort.",
+          "The urgency of the review suggests potential implications for ongoing or upcoming projects."
+        ],
+        "notes": [
+          "长摘要中包含了多于必要的细节，未能保持简洁性。",
+          "开放问题部分包含了不必要的内容，未能与原邮件内容直接相关。"
+        ]
+      },
+      "reply_result": {
+        "result": "PASS",
+        "reason": "回复满足所有关键要求，语气专业且中立。",
+        "checks": {
+          "coverage": "PASS",
+          "faithfulness": "PASS",
+          "usefulness": "PASS"
+        },
+        "missing_items": [],
+        "hallucinations": [],
+        "notes": []
+      },
       "expected": {
-        "是否需要回复": true,
-        "回复草稿规则": "non_empty",
-        "signals": {
-          "has_request": true,
-          "has_deadline": true
-        },
-        "score_band": {
-          "min": 4
-        },
-        "priority_rule": {
-          "allowed": [
+        "triage": {
+          "needs_response": true,
+          "allowed_priority": [
             "MEDIUM",
             "HIGH"
           ],
-          "forbidden": [
+          "disallowed_priority": [
             "LOW"
+          ],
+          "expected_signal_assertions": {
+            "has_request": true,
+            "has_deadline": true
+          },
+          "expected_score_band": [
+            4,
+            20
+          ],
+          "reason_must_include_any": [
+            "请求",
+            "确认",
+            "高优先级"
           ]
+        },
+        "summary": {
+          "must_capture": [
+            "review",
+            "clause update",
+            "confirm today"
+          ],
+          "must_not_hallucinate": [
+            "Confidentiality Notice as action item",
+            "image attachment required"
+          ],
+          "expected_key_points_count_range": [
+            1,
+            10
+          ],
+          "expected_open_questions": [],
+          "short_summary_max_chars": 280,
+          "long_summary_min_chars": 60
+        },
+        "reply": {
+          "should_generate": true,
+          "tone": "professional_neutral",
+          "must_include": [
+            "review",
+            "confirm"
+          ],
+          "must_not_include": [
+            "cid:logo",
+            "confidentiality notice"
+          ],
+          "max_length_category": "short"
         }
       },
       "actual_file": "tc09.actual.json",
-      "normalized_file": "tc09.normalized.json"
+      "summary_judgment_raw_file": "tc09.summary_judgment.raw.txt",
+      "reply_judgment_raw_file": "tc09.reply_judgment.raw.txt"
     },
     {
       "case": "tc10",
-      "status": "PASS",
-      "errors": [],
+      "scenario_type": "multilingual_polite_urgent",
+      "overall_result": "PARTIAL",
+      "triage_result": {
+        "result": "PASS",
+        "reason": "rule-based triage evaluation",
+        "checks": {
+          "rule_assertions": "PASS"
+        },
+        "errors": [],
+        "actual": {
+          "needs_response": true,
+          "priority": "HIGH",
+          "score": 8,
+          "signals": {
+            "sender_importance": "external",
+            "has_request": true,
+            "has_deadline": true,
+            "tone": "请求",
+            "requires_response": "明确需要"
+          },
+          "reason": "该邮件来自外部联系人，包含明确的请求和截止时间，需优先处理。；priority=HIGH；score=8；confidence=0.9",
+          "reply_draft": "尊敬的 Partner Lead，感谢您的邮件。我会在今天内提供反馈，以确保我们能按当前方案推进。谢谢！"
+        }
+      },
+      "summary_result": {
+        "result": "PARTIAL",
+        "reason": "总结基本涵盖了关键信息，但存在轻微的表达问题和开放问题不符合预期。",
+        "checks": {
+          "coverage": "PARTIAL",
+          "faithfulness": "PASS",
+          "usefulness": "PARTIAL"
+        },
+        "missing_items": [
+          "没有提及'客户会议'的具体时间（明早）"
+        ],
+        "hallucinations": [
+          "开放问题中提到的具体反馈细节和潜在影响并未在原文中提及"
+        ],
+        "notes": [
+          "总结中对时间的表达不够准确，未能完全反映原文的紧迫性。"
+        ]
+      },
+      "reply_result": {
+        "result": "PASS",
+        "reason": "回复满足所有关键要求，语气专业且中立。",
+        "checks": {
+          "coverage": "PASS",
+          "faithfulness": "PASS",
+          "usefulness": "PASS"
+        },
+        "missing_items": [],
+        "hallucinations": [],
+        "notes": []
+      },
       "expected": {
-        "是否需要回复": true,
-        "回复草稿规则": "non_empty",
-        "signals": {
-          "has_request": true,
-          "has_deadline": true,
-          "requires_response": [
-            "明确需要",
-            "可能需要"
-          ]
-        },
-        "score_band": {
-          "min": 6
-        },
-        "priority_rule": {
-          "allowed": [
+        "triage": {
+          "needs_response": true,
+          "allowed_priority": [
             "HIGH"
+          ],
+          "disallowed_priority": [
+            "LOW",
+            "UNCERTAIN"
+          ],
+          "expected_signal_assertions": {
+            "has_request": true,
+            "has_deadline": true
+          },
+          "expected_score_band": [
+            6,
+            20
+          ],
+          "reason_must_include_any": [
+            "外部重要联系人",
+            "截止时间",
+            "优先处理"
           ]
+        },
+        "summary": {
+          "must_capture": [
+            "feedback",
+            "end of day",
+            "客户会议",
+            "明早"
+          ],
+          "must_not_hallucinate": [
+            "next week",
+            "optional reply"
+          ],
+          "expected_key_points_count_range": [
+            1,
+            10
+          ],
+          "expected_open_questions": [],
+          "short_summary_max_chars": 300,
+          "long_summary_min_chars": 60
+        },
+        "reply": {
+          "should_generate": true,
+          "tone": "professional_neutral",
+          "must_include": [
+            "今天内",
+            "反馈"
+          ],
+          "must_not_include": [
+            "lol",
+            "bro"
+          ],
+          "max_length_category": "short"
         }
       },
       "actual_file": "tc10.actual.json",
-      "normalized_file": "tc10.normalized.json"
+      "summary_judgment_raw_file": "tc10.summary_judgment.raw.txt",
+      "reply_judgment_raw_file": "tc10.reply_judgment.raw.txt"
     }
   ]
 }

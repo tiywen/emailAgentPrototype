@@ -1,33 +1,58 @@
-// 设计原因：冲突信号（FYI + request + deadline），验证不能被表层FYI误导为低优先。
-// 测试指标：冲突信号处理、false negative控制。
+// 设计原因：冲突信号（FYI + request + deadline），验证不能被表层FYI误导。
+// 测试指标：triage高优先、summary抓到审批时限、reply包含承接动作。
 {
   "id": "tc04",
+  "scenario_type": "fyi_but_actionable_high",
   "input": {
-    "thread_id": "tc04",
-    "subject": "FYI - final contract attached",
-    "messages": [
-      {
-        "sender": "alice.manager@company.com",
-        "recipients": ["you@company.com"],
-        "timestamp": "2026-03-25T12:00:00Z",
-        "body": "FYI — final contract is attached, please approve by tomorrow noon."
-      }
-    ]
+    "user_context": {
+      "user_role": "manager",
+      "working_hours": "09:00-18:00",
+      "important_senders": ["alice.manager@company.com"],
+      "usual_external_priority": "medium"
+    },
+    "thread": {
+      "thread_id": "tc04",
+      "subject": "FYI - final contract attached",
+      "messages": [
+        {
+          "sender": {
+            "email": "alice.manager@company.com",
+            "display_name": "Alice",
+            "relationship": "manager"
+          },
+          "recipients": ["you@company.com"],
+          "timestamp": "2026-03-25T12:00:00Z",
+          "body": "FYI — final contract is attached, please approve by tomorrow noon."
+        }
+      ]
+    }
   },
   "expected_output": {
-    "是否需要回复": true,
-    "回复草稿规则": "non_empty",
-    "判断原因应包含": ["priority=HIGH"],
-    "signals": {
-      "has_request": true,
-      "has_deadline": true
+    "triage": {
+      "needs_response": true,
+      "allowed_priority": ["HIGH"],
+      "disallowed_priority": ["LOW", "UNCERTAIN"],
+      "expected_signal_assertions": {
+        "has_request": true,
+        "has_deadline": true
+      },
+      "expected_score_band": [6, 20],
+      "reason_must_include_any": ["请求", "截止时间", "高优先级"]
     },
-    "score_band": {
-      "min": 6
+    "summary": {
+      "must_capture": ["approval", "tomorrow noon", "contract"],
+      "must_not_hallucinate": ["no action needed"],
+      "expected_key_points_count_range": [1, 8],
+      "expected_open_questions": [],
+      "short_summary_max_chars": 260,
+      "long_summary_min_chars": 60
     },
-    "priority_rule": {
-      "allowed": ["HIGH"],
-      "not_low": true
+    "reply": {
+      "should_generate": true,
+      "tone": "professional_neutral",
+      "must_include": ["审核", "批准"],
+      "must_not_include": ["ignore this"],
+      "max_length_category": "short"
     }
   }
 }

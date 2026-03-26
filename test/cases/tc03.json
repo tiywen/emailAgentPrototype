@@ -1,34 +1,57 @@
-// 设计原因：UNCERTAIN制度化场景1：弱请求 + 角色不清 + 无deadline。
-// 测试指标：在低把握度下优先不确定，避免错误自信分类。
+// 设计原因：UNCERTAIN制度化场景1（弱请求 + 无deadline + 角色信息弱）。
+// 测试指标：triage不应判LOW，summary呈现模糊性，reply不过度承诺。
 {
   "id": "tc03",
+  "scenario_type": "implicit_request_uncertain",
   "input": {
-    "thread_id": "tc03",
-    "subject": "Thoughts?",
-    "messages": [
-      {
-        "sender": "teammate@company.com",
-        "recipients": ["you@company.com"],
-        "timestamp": "2026-03-25T11:20:00Z",
-        "body": "Let me know your thoughts when you have a moment."
-      }
-    ]
+    "user_context": {
+      "user_role": "manager",
+      "working_hours": "09:00-18:00",
+      "important_senders": [],
+      "usual_external_priority": "medium"
+    },
+    "thread": {
+      "thread_id": "tc03",
+      "subject": "Thoughts?",
+      "messages": [
+        {
+          "sender": {
+            "email": "teammate@company.com",
+            "display_name": "Teammate",
+            "relationship": "peer"
+          },
+          "recipients": ["you@company.com"],
+          "timestamp": "2026-03-25T11:20:00Z",
+          "body": "Let me know your thoughts when you have a moment."
+        }
+      ]
+    }
   },
   "expected_output": {
-    "是否需要回复": true,
-    "回复草稿规则": "non_empty",
-    "判断原因应包含": ["priority=UNCERTAIN"],
-    "signals": {
-      "has_deadline": false,
-      "requires_response": ["可能需要"]
+    "triage": {
+      "needs_response": true,
+      "allowed_priority": ["UNCERTAIN", "MEDIUM"],
+      "disallowed_priority": ["LOW"],
+      "expected_signal_assertions": {
+        "has_deadline": false
+      },
+      "expected_score_band": [1, 5],
+      "reason_must_include_any": ["请求", "不确定", "没有明确的时间要求"]
     },
-    "score_band": {
-      "min": 1,
-      "max": 4
+    "summary": {
+      "must_capture": ["thoughts", "response"],
+      "must_not_hallucinate": ["today EOD", "urgent"],
+      "expected_key_points_count_range": [1, 6],
+      "expected_open_questions": ["specific topic"],
+      "short_summary_max_chars": 260,
+      "long_summary_min_chars": 40
     },
-    "priority_rule": {
-      "allowed": ["UNCERTAIN", "MEDIUM"],
-      "forbidden": ["LOW"]
+    "reply": {
+      "should_generate": true,
+      "tone": "professional_neutral",
+      "must_include": ["share", "shortly"],
+      "must_not_include": ["by today 5pm"],
+      "max_length_category": "short"
     }
   }
 }

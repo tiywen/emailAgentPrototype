@@ -1,0 +1,114 @@
+{
+  "case": "tc04",
+  "scenario_type": "fyi_but_actionable_high",
+  "overall_result": "PARTIAL",
+  "triage_result": {
+    "result": "PASS",
+    "reason": "rule-based triage evaluation",
+    "checks": {
+      "rule_assertions": "PASS"
+    },
+    "errors": [],
+    "actual": {
+      "needs_response": true,
+      "priority": "HIGH",
+      "score": 8,
+      "signals": {
+        "sender_importance": "manager",
+        "has_request": true,
+        "has_deadline": true,
+        "tone": "请求",
+        "requires_response": "明确需要"
+      },
+      "reason": "该邮件来自上级，包含明确的请求和截止时间，因此被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
+      "reply_draft": "Dear Alice,\n\nThank you for sending the final contract. I will review and approve it by tomorrow noon as requested.\n\nBest regards,\nTest User"
+    }
+  },
+  "summary_result": {
+    "result": "PARTIAL",
+    "reason": "总结基本捕捉了关键信息，但存在轻微的表达问题和遗漏。",
+    "checks": {
+      "coverage": "PARTIAL",
+      "faithfulness": "PASS",
+      "usefulness": "PARTIAL"
+    },
+    "missing_items": [
+      "未明确提及合同的具体内容或重要性"
+    ],
+    "hallucinations": [
+      "无"
+    ],
+    "notes": [
+      "长摘要中提到的开放问题与邮件内容无关，可能导致误解。"
+    ]
+  },
+  "reply_result": {
+    "result": "PASS",
+    "reason": "回复满足所有关键要求，语气专业且中立。",
+    "checks": {
+      "coverage": "PASS",
+      "faithfulness": "PASS",
+      "usefulness": "PASS"
+    },
+    "missing_items": [],
+    "hallucinations": [],
+    "notes": []
+  },
+  "expected": {
+    "triage": {
+      "needs_response": true,
+      "allowed_priority": [
+        "HIGH"
+      ],
+      "disallowed_priority": [
+        "LOW",
+        "UNCERTAIN"
+      ],
+      "expected_signal_assertions": {
+        "has_request": true,
+        "has_deadline": true
+      },
+      "expected_score_band": [
+        6,
+        20
+      ],
+      "reason_must_include_any": [
+        "请求",
+        "截止时间",
+        "高优先级"
+      ]
+    },
+    "summary": {
+      "must_capture": [
+        "approval",
+        "tomorrow noon",
+        "contract"
+      ],
+      "must_not_hallucinate": [
+        "no action needed"
+      ],
+      "expected_key_points_count_range": [
+        1,
+        8
+      ],
+      "expected_open_questions": [],
+      "short_summary_max_chars": 260,
+      "long_summary_min_chars": 60
+    },
+    "reply": {
+      "should_generate": true,
+      "tone": "professional_neutral",
+      "must_include": [
+        "审核",
+        "批准"
+      ],
+      "must_not_include": [
+        "ignore this"
+      ],
+      "max_length_category": "short"
+    }
+  },
+  "actual_file": "tc04.actual.json",
+  "summary_judgment_raw_file": "tc04.summary_judgment.raw.txt",
+  "reply_judgment_raw_file": "tc04.reply_judgment.raw.txt"
+}

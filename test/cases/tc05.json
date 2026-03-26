@@ -1,35 +1,59 @@
-// 设计原因：校准边界样本（external + request + no deadline）。
-// 测试指标：score band校准、优先级容忍区间、HIGH gating规则。
+// 设计原因：边界校准（external + request + no deadline）。
+// 测试指标：允许MEDIUM/UNCERTAIN，若HIGH需满足更强证据；summary/reply避免捏造时限。
 {
   "id": "tc05",
+  "scenario_type": "external_request_no_deadline_boundary",
   "input": {
-    "thread_id": "tc05",
-    "subject": "Need your comments on proposal",
-    "messages": [
-      {
-        "sender": "unknown.vendor@partner.com",
-        "recipients": ["you@company.com"],
-        "timestamp": "2026-03-25T07:10:00Z",
-        "body": "Could you review the attached proposal and share your comments?"
-      }
-    ]
+    "user_context": {
+      "user_role": "manager",
+      "working_hours": "09:00-18:00",
+      "important_senders": [],
+      "usual_external_priority": "medium"
+    },
+    "thread": {
+      "thread_id": "tc05",
+      "subject": "Need your comments on proposal",
+      "messages": [
+        {
+          "sender": {
+            "email": "unknown.vendor@partner.com",
+            "display_name": "Vendor Partner",
+            "relationship": "external"
+          },
+          "recipients": ["you@company.com"],
+          "timestamp": "2026-03-25T07:10:00Z",
+          "body": "Could you review the attached proposal and share your comments?"
+        }
+      ]
+    }
   },
   "expected_output": {
-    "是否需要回复": true,
-    "回复草稿规则": "non_empty",
-    "signals": {
-      "sender_importance": ["external", "unknown"],
-      "has_request": true,
-      "has_deadline": false
+    "triage": {
+      "needs_response": true,
+      "allowed_priority": ["MEDIUM", "UNCERTAIN", "HIGH"],
+      "disallowed_priority": ["LOW"],
+      "expected_signal_assertions": {
+        "sender_importance": "external",
+        "has_request": true,
+        "has_deadline": false
+      },
+      "expected_score_band": [2, 8],
+      "reason_must_include_any": ["外部", "请求", "高优先级"]
     },
-    "score_band": {
-      "min": 2,
-      "max": 7
+    "summary": {
+      "must_capture": ["review", "proposal", "comments"],
+      "must_not_hallucinate": ["by today", "approval request"],
+      "expected_key_points_count_range": [1, 8],
+      "expected_open_questions": ["deadline", "feedback"],
+      "short_summary_max_chars": 260,
+      "long_summary_min_chars": 50
     },
-    "priority_rule": {
-      "allowed": ["MEDIUM", "UNCERTAIN", "HIGH"],
-      "forbidden": ["LOW"],
-      "high_requires_any": ["has_deadline", "sender_importance=manager"]
+    "reply": {
+      "should_generate": true,
+      "tone": "professional_neutral",
+      "must_include": ["review", "comments"],
+      "must_not_include": ["by 5pm today"],
+      "max_length_category": "short"
     }
   }
 }

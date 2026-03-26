@@ -1,0 +1,99 @@
+{
+  "case": "tc02",
+  "scenario_type": "system_notice_low_priority",
+  "overall_result": "PASS",
+  "triage_result": {
+    "result": "PASS",
+    "reason": "rule-based triage evaluation",
+    "checks": {
+      "rule_assertions": "PASS"
+    },
+    "errors": [],
+    "actual": {
+      "needs_response": false,
+      "priority": "LOW",
+      "score": 0,
+      "signals": {
+        "sender_importance": "unknown",
+        "has_request": false,
+        "has_deadline": false,
+        "tone": "FYI",
+        "requires_response": "不需要"
+      },
+      "reason": "该邮件仅为信息通知，且不需要用户采取任何行动，因此被归类为低优先级。；priority=LOW；score=0；confidence=0.9",
+      "reply_draft": ""
+    }
+  },
+  "summary_result": {
+    "result": "PASS",
+    "reason": "实际输出满足所有关键要求，没有严重问题。",
+    "checks": {
+      "coverage": "PASS",
+      "faithfulness": "PASS",
+      "usefulness": "PASS"
+    },
+    "missing_items": [],
+    "hallucinations": [],
+    "notes": []
+  },
+  "reply_result": {
+    "result": "PASS",
+    "reason": "实际输出准确地反映了邮件的性质和优先级，符合期望要求。",
+    "checks": {
+      "coverage": "PASS",
+      "faithfulness": "PASS",
+      "usefulness": "PASS"
+    },
+    "missing_items": [],
+    "hallucinations": [],
+    "notes": []
+  },
+  "expected": {
+    "triage": {
+      "needs_response": false,
+      "allowed_priority": [
+        "LOW",
+        "UNCERTAIN"
+      ],
+      "disallowed_priority": [
+        "HIGH"
+      ],
+      "expected_signal_assertions": {
+        "has_request": false,
+        "has_deadline": false
+      },
+      "expected_score_band": [
+        -10,
+        2
+      ],
+      "reason_must_include_any": [
+        "FYI",
+        "no action",
+        "不需要"
+      ]
+    },
+    "summary": {
+      "must_capture": [
+        "maintenance",
+        "no user action"
+      ],
+      "must_not_hallucinate": [
+        "reply required",
+        "approval"
+      ],
+      "expected_key_points_count_range": [
+        1,
+        6
+      ],
+      "expected_open_questions": [],
+      "short_summary_max_chars": 260,
+      "long_summary_min_chars": 30
+    },
+    "reply": {
+      "should_generate": false
+    }
+  },
+  "actual_file": "tc02.actual.json",
+  "summary_judgment_raw_file": "tc02.summary_judgment.raw.txt",
+  "reply_judgment_raw_file": "tc02.reply_judgment.raw.txt"
+}

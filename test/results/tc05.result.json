@@ -1,0 +1,120 @@
+{
+  "case": "tc05",
+  "scenario_type": "external_request_no_deadline_boundary",
+  "overall_result": "PARTIAL",
+  "triage_result": {
+    "result": "PASS",
+    "reason": "rule-based triage evaluation",
+    "checks": {
+      "rule_assertions": "PASS"
+    },
+    "errors": [],
+    "actual": {
+      "needs_response": true,
+      "priority": "HIGH",
+      "score": 8,
+      "signals": {
+        "sender_importance": "external",
+        "has_request": true,
+        "has_deadline": false,
+        "tone": "请求",
+        "requires_response": "明确需要"
+      },
+      "reason": "该邮件来自外部合作伙伴，包含明确的请求并需要用户回复，因而被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
+      "reply_draft": "Dear Vendor Partner,\n\nThank you for your email. I will review the attached proposal and share my comments with you shortly.\n\nBest regards,\nTest User"
+    }
+  },
+  "summary_result": {
+    "result": "PARTIAL",
+    "reason": "虽然总结捕捉了大部分关键信息，但缺少了对反馈的具体询问，并且长摘要中包含了一些不必要的细节。",
+    "checks": {
+      "coverage": "PARTIAL",
+      "faithfulness": "PASS",
+      "usefulness": "PARTIAL"
+    },
+    "missing_items": [
+      "具体的反馈请求"
+    ],
+    "hallucinations": [
+      "无"
+    ],
+    "notes": [
+      "长摘要中包含了发件人和收件人的电子邮件地址，这在总结中并不必要。"
+    ]
+  },
+  "reply_result": {
+    "result": "PASS",
+    "reason": "回复满足所有关键要求，语气专业且中立。",
+    "checks": {
+      "coverage": "PASS",
+      "faithfulness": "PASS",
+      "usefulness": "PASS"
+    },
+    "missing_items": [],
+    "hallucinations": [],
+    "notes": []
+  },
+  "expected": {
+    "triage": {
+      "needs_response": true,
+      "allowed_priority": [
+        "MEDIUM",
+        "UNCERTAIN",
+        "HIGH"
+      ],
+      "disallowed_priority": [
+        "LOW"
+      ],
+      "expected_signal_assertions": {
+        "sender_importance": "external",
+        "has_request": true,
+        "has_deadline": false
+      },
+      "expected_score_band": [
+        2,
+        8
+      ],
+      "reason_must_include_any": [
+        "外部",
+        "请求",
+        "高优先级"
+      ]
+    },
+    "summary": {
+      "must_capture": [
+        "review",
+        "proposal",
+        "comments"
+      ],
+      "must_not_hallucinate": [
+        "by today",
+        "approval request"
+      ],
+      "expected_key_points_count_range": [
+        1,
+        8
+      ],
+      "expected_open_questions": [
+        "deadline",
+        "feedback"
+      ],
+      "short_summary_max_chars": 260,
+      "long_summary_min_chars": 50
+    },
+    "reply": {
+      "should_generate": true,
+      "tone": "professional_neutral",
+      "must_include": [
+        "review",
+        "comments"
+      ],
+      "must_not_include": [
+        "by 5pm today"
+      ],
+      "max_length_category": "short"
+    }
+  },
+  "actual_file": "tc05.actual.json",
+  "summary_judgment_raw_file": "tc05.summary_judgment.raw.txt",
+  "reply_judgment_raw_file": "tc05.reply_judgment.raw.txt"
+}

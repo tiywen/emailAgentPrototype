@@ -1,0 +1,117 @@
+{
+  "case": "tc10",
+  "scenario_type": "multilingual_polite_urgent",
+  "overall_result": "PARTIAL",
+  "triage_result": {
+    "result": "PASS",
+    "reason": "rule-based triage evaluation",
+    "checks": {
+      "rule_assertions": "PASS"
+    },
+    "errors": [],
+    "actual": {
+      "needs_response": true,
+      "priority": "HIGH",
+      "score": 8,
+      "signals": {
+        "sender_importance": "external",
+        "has_request": true,
+        "has_deadline": true,
+        "tone": "请求",
+        "requires_response": "明确需要"
+      },
+      "reason": "该邮件来自外部联系人，包含明确的请求和截止时间，需优先处理。；priority=HIGH；score=8；confidence=0.9",
+      "reply_draft": "尊敬的 Partner Lead，感谢您的邮件。我会在今天内提供反馈，以确保我们能按当前方案推进。谢谢！"
+    }
+  },
+  "summary_result": {
+    "result": "PARTIAL",
+    "reason": "总结基本涵盖了关键信息，但存在轻微的表达问题和开放问题不符合预期。",
+    "checks": {
+      "coverage": "PARTIAL",
+      "faithfulness": "PASS",
+      "usefulness": "PARTIAL"
+    },
+    "missing_items": [
+      "没有提及'客户会议'的具体时间（明早）"
+    ],
+    "hallucinations": [
+      "开放问题中提到的具体反馈细节和潜在影响并未在原文中提及"
+    ],
+    "notes": [
+      "总结中对时间的表达不够准确，未能完全反映原文的紧迫性。"
+    ]
+  },
+  "reply_result": {
+    "result": "PASS",
+    "reason": "回复满足所有关键要求，语气专业且中立。",
+    "checks": {
+      "coverage": "PASS",
+      "faithfulness": "PASS",
+      "usefulness": "PASS"
+    },
+    "missing_items": [],
+    "hallucinations": [],
+    "notes": []
+  },
+  "expected": {
+    "triage": {
+      "needs_response": true,
+      "allowed_priority": [
+        "HIGH"
+      ],
+      "disallowed_priority": [
+        "LOW",
+        "UNCERTAIN"
+      ],
+      "expected_signal_assertions": {
+        "has_request": true,
+        "has_deadline": true
+      },
+      "expected_score_band": [
+        6,
+        20
+      ],
+      "reason_must_include_any": [
+        "外部重要联系人",
+        "截止时间",
+        "优先处理"
+      ]
+    },
+    "summary": {
+      "must_capture": [
+        "feedback",
+        "end of day",
+        "客户会议",
+        "明早"
+      ],
+      "must_not_hallucinate": [
+        "next week",
+        "optional reply"
+      ],
+      "expected_key_points_count_range": [
+        1,
+        10
+      ],
+      "expected_open_questions": [],
+      "short_summary_max_chars": 300,
+      "long_summary_min_chars": 60
+    },
+    "reply": {
+      "should_generate": true,
+      "tone": "professional_neutral",
+      "must_include": [
+        "今天内",
+        "反馈"
+      ],
+      "must_not_include": [
+        "lol",
+        "bro"
+      ],
+      "max_length_category": "short"
+    }
+  },
+  "actual_file": "tc10.actual.json",
+  "summary_judgment_raw_file": "tc10.summary_judgment.raw.txt",
+  "reply_judgment_raw_file": "tc10.reply_judgment.raw.txt"
+}

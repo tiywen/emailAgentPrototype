@@ -1,32 +1,58 @@
-// 设计原因：多语言输入（中文+英文）与礼貌紧急并存，验证跨语言信号抽取。
-// 测试指标：多语言鲁棒性、high-priority识别、reply可用性。
+// 设计原因：多语言输入（中文+英文）+ 礼貌紧急。
+// 测试指标：跨语言triage、summary信息完整、reply语气专业且不过度冗长。
 {
   "id": "tc10",
+  "scenario_type": "multilingual_polite_urgent",
   "input": {
-    "thread_id": "tc10",
-    "subject": "客户会议前确认 / Feedback before customer meeting",
-    "messages": [
-      {
-        "sender": "partner_lead@partner.com",
-        "recipients": ["you@company.com"],
-        "timestamp": "2026-03-25T06:50:00Z",
-        "body": "Would really appreciate your feedback by end of day. 我们明早有客户会议，请今天内确认是否可以按当前方案推进。"
-      }
-    ]
+    "user_context": {
+      "user_role": "manager",
+      "working_hours": "09:00-18:00",
+      "important_senders": [],
+      "usual_external_priority": "medium"
+    },
+    "thread": {
+      "thread_id": "tc10",
+      "subject": "客户会议前确认 / Feedback before customer meeting",
+      "messages": [
+        {
+          "sender": {
+            "email": "partner_lead@partner.com",
+            "display_name": "Partner Lead",
+            "relationship": "external"
+          },
+          "recipients": ["you@company.com"],
+          "timestamp": "2026-03-25T06:50:00Z",
+          "body": "Would really appreciate your feedback by end of day. 我们明早有客户会议，请今天内确认是否可以按当前方案推进。"
+        }
+      ]
+    }
   },
   "expected_output": {
-    "是否需要回复": true,
-    "回复草稿规则": "non_empty",
-    "signals": {
-      "has_request": true,
-      "has_deadline": true,
-      "requires_response": ["明确需要", "可能需要"]
+    "triage": {
+      "needs_response": true,
+      "allowed_priority": ["HIGH"],
+      "disallowed_priority": ["LOW", "UNCERTAIN"],
+      "expected_signal_assertions": {
+        "has_request": true,
+        "has_deadline": true
+      },
+      "expected_score_band": [6, 20],
+      "reason_must_include_any": ["外部重要联系人", "截止时间", "优先处理"]
     },
-    "score_band": {
-      "min": 6
+    "summary": {
+      "must_capture": ["feedback", "end of day", "客户会议", "明早"],
+      "must_not_hallucinate": ["next week", "optional reply"],
+      "expected_key_points_count_range": [1, 10],
+      "expected_open_questions": [],
+      "short_summary_max_chars": 300,
+      "long_summary_min_chars": 60
     },
-    "priority_rule": {
-      "allowed": ["HIGH"]
+    "reply": {
+      "should_generate": true,
+      "tone": "professional_neutral",
+      "must_include": ["今天内", "反馈"],
+      "must_not_include": ["lol", "bro"],
+      "max_length_category": "short"
     }
   }
 }

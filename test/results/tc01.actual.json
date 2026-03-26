@@ -1,17 +1,52 @@
 {
-  "是否需要回复": true,
-  "判断原因": "该邮件来自上级，包含明确请求和紧急的时间要求，因此被归类为高优先级。；priority=HIGH；score=8；confidence=1.0",
-  "回复草稿": "Dear Alice,\n\nI will ensure that the final deck is sent to you by 5pm today.\n\nBest regards,\nTest User",
-  "_raw_priority": "HIGH",
-  "_raw_priority_score": 8,
-  "_raw_confidence": 1.0,
-  "_raw_signals": {
-    "sender_importance": "manager",
-    "has_request": true,
-    "has_deadline": true,
-    "tone": "紧急",
-    "requires_response": "明确需要"
+  "triage_raw": {
+    "是否需要回复": true,
+    "判断原因": "该邮件来自上级，包含明确的请求和紧急的时间要求，因此被归类为高优先级。；priority=HIGH；score=8；confidence=1.0",
+    "回复草稿": "Dear Alice,\n\nI will ensure that the final deck is sent to you by 5pm today.\n\nBest regards,\nTest User",
+    "_raw_priority": "HIGH",
+    "_raw_priority_score": 8,
+    "_raw_confidence": 1.0,
+    "_raw_signals": {
+      "sender_importance": "manager",
+      "has_request": true,
+      "has_deadline": true,
+      "tone": "紧急",
+      "requires_response": "明确需要"
+    },
+    "_raw_reasoning": "该邮件来自上级，包含明确的请求和紧急的时间要求，因此被归类为高优先级。",
+    "_raw_reply_draft": "Dear Alice,\n\nI will ensure that the final deck is sent to you by 5pm today.\n\nBest regards,\nTest User"
   },
-  "_raw_reasoning": "该邮件来自上级，包含明确请求和紧急的时间要求，因此被归类为高优先级。",
-  "_raw_reply_draft": "Dear Alice,\n\nI will ensure that the final deck is sent to you by 5pm today.\n\nBest regards,\nTest User"
+  "triage_normalized": {
+    "needs_response": true,
+    "priority": "HIGH",
+    "score": 8,
+    "signals": {
+      "sender_importance": "manager",
+      "has_request": true,
+      "has_deadline": true,
+      "tone": "紧急",
+      "requires_response": "明确需要"
+    },
+    "reason": "该邮件来自上级，包含明确的请求和紧急的时间要求，因此被归类为高优先级。；priority=HIGH；score=8；confidence=1.0",
+    "reply_draft": "Dear Alice,\n\nI will ensure that the final deck is sent to you by 5pm today.\n\nBest regards,\nTest User"
+  },
+  "summary_short": {
+    "summary": "Alice has requested the final deck to be sent by 5pm today, emphasizing its urgency for the upcoming steering meeting.",
+    "key_points": [
+      "Final deck is needed by 5pm today.",
+      "Request is marked as urgent.",
+      "The deck is for the steering meeting."
+    ],
+    "open_questions": []
+  },
+  "summary_long": {
+    "summary": "Alice has requested the final presentation deck to be sent by 5pm today, emphasizing the urgency due to its importance for the upcoming steering meeting.",
+    "key_points": [
+      "Alice is the manager requesting the final deck.",
+      "The deadline for submission is 5pm today.",
+      "The request is marked as urgent.",
+      "The final deck is needed for a steering meeting."
+    ],
+    "open_questions": []
+  }
 }

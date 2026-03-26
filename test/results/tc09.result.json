@@ -1,0 +1,118 @@
+{
+  "case": "tc09",
+  "scenario_type": "noisy_formatting_forward_chain",
+  "overall_result": "PARTIAL",
+  "triage_result": {
+    "result": "PASS",
+    "reason": "rule-based triage evaluation",
+    "checks": {
+      "rule_assertions": "PASS"
+    },
+    "errors": [],
+    "actual": {
+      "needs_response": true,
+      "priority": "HIGH",
+      "score": 8,
+      "signals": {
+        "sender_importance": "peer",
+        "has_request": true,
+        "has_deadline": true,
+        "tone": "请求",
+        "requires_response": "明确需要"
+      },
+      "reason": "该邮件来自同级同事，包含明确的请求和今天的确认截止时间，导致其被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
+      "reply_draft": "Hi Legal Ops,\n\nThank you for the update. I will review the latest clause and confirm by the end of the day.\n\nBest regards,\nTest User"
+    }
+  },
+  "summary_result": {
+    "result": "PARTIAL",
+    "reason": "虽然总结捕捉了主要要求，但长摘要中包含了一些不必要的细节和开放问题，未完全符合期望。",
+    "checks": {
+      "coverage": "PARTIAL",
+      "faithfulness": "PASS",
+      "usefulness": "PARTIAL"
+    },
+    "missing_items": [],
+    "hallucinations": [
+      "The email highlights the importance of timely feedback on legal documents.",
+      "The communication is marked as confidential.",
+      "The request is directed to the entire team, indicating a collaborative effort.",
+      "The urgency of the review suggests potential implications for ongoing or upcoming projects."
+    ],
+    "notes": [
+      "长摘要中包含了多于必要的细节，未能保持简洁性。",
+      "开放问题部分包含了不必要的内容，未能与原邮件内容直接相关。"
+    ]
+  },
+  "reply_result": {
+    "result": "PASS",
+    "reason": "回复满足所有关键要求，语气专业且中立。",
+    "checks": {
+      "coverage": "PASS",
+      "faithfulness": "PASS",
+      "usefulness": "PASS"
+    },
+    "missing_items": [],
+    "hallucinations": [],
+    "notes": []
+  },
+  "expected": {
+    "triage": {
+      "needs_response": true,
+      "allowed_priority": [
+        "MEDIUM",
+        "HIGH"
+      ],
+      "disallowed_priority": [
+        "LOW"
+      ],
+      "expected_signal_assertions": {
+        "has_request": true,
+        "has_deadline": true
+      },
+      "expected_score_band": [
+        4,
+        20
+      ],
+      "reason_must_include_any": [
+        "请求",
+        "确认",
+        "高优先级"
+      ]
+    },
+    "summary": {
+      "must_capture": [
+        "review",
+        "clause update",
+        "confirm today"
+      ],
+      "must_not_hallucinate": [
+        "Confidentiality Notice as action item",
+        "image attachment required"
+      ],
+      "expected_key_points_count_range": [
+        1,
+        10
+      ],
+      "expected_open_questions": [],
+      "short_summary_max_chars": 280,
+      "long_summary_min_chars": 60
+    },
+    "reply": {
+      "should_generate": true,
+      "tone": "professional_neutral",
+      "must_include": [
+        "review",
+        "confirm"
+      ],
+      "must_not_include": [
+        "cid:logo",
+        "confidentiality notice"
+      ],
+      "max_length_category": "short"
+    }
+  },
+  "actual_file": "tc09.actual.json",
+  "summary_judgment_raw_file": "tc09.summary_judgment.raw.txt",
+  "reply_judgment_raw_file": "tc09.reply_judgment.raw.txt"
+}

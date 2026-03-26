@@ -1,17 +1,51 @@
 {
-  "是否需要回复": false,
-  "判断原因": "该邮件仅为信息通知，且不需要任何用户行动，因此被归类为低优先级。；priority=LOW；score=0；confidence=1.0",
-  "回复草稿": "",
-  "_raw_priority": "LOW",
-  "_raw_priority_score": 0,
-  "_raw_confidence": 1.0,
-  "_raw_signals": {
-    "sender_importance": "unknown",
-    "has_request": false,
-    "has_deadline": false,
-    "tone": "FYI",
-    "requires_response": "不需要"
+  "triage_raw": {
+    "是否需要回复": false,
+    "判断原因": "该邮件仅为信息通知，且不需要用户采取任何行动，因此被归类为低优先级。；priority=LOW；score=0；confidence=0.9",
+    "回复草稿": "",
+    "_raw_priority": "LOW",
+    "_raw_priority_score": 0,
+    "_raw_confidence": 0.9,
+    "_raw_signals": {
+      "sender_importance": "unknown",
+      "has_request": false,
+      "has_deadline": false,
+      "tone": "FYI",
+      "requires_response": "不需要"
+    },
+    "_raw_reasoning": "该邮件仅为信息通知，且不需要用户采取任何行动，因此被归类为低优先级。",
+    "_raw_reply_draft": ""
   },
-  "_raw_reasoning": "该邮件仅为信息通知，且不需要任何用户行动，因此被归类为低优先级。",
-  "_raw_reply_draft": ""
+  "triage_normalized": {
+    "needs_response": false,
+    "priority": "LOW",
+    "score": 0,
+    "signals": {
+      "sender_importance": "unknown",
+      "has_request": false,
+      "has_deadline": false,
+      "tone": "FYI",
+      "requires_response": "不需要"
+    },
+    "reason": "该邮件仅为信息通知，且不需要用户采取任何行动，因此被归类为低优先级。；priority=LOW；score=0；confidence=0.9",
+    "reply_draft": ""
+  },
+  "summary_short": {
+    "summary": "A scheduled system maintenance is set for this Sunday from 1am to 3am. No user action is required during this time.",
+    "key_points": [
+      "Scheduled maintenance on Sunday.",
+      "Time: 1am to 3am.",
+      "No user action required."
+    ],
+    "open_questions": []
+  },
+  "summary_long": {
+    "summary": "A scheduled system maintenance is set for this Sunday from 1am to 3am. Users are informed that no action is required on their part during this time.",
+    "key_points": [
+      "Scheduled maintenance is on Sunday.",
+      "Maintenance window is from 1am to 3am.",
+      "No user action is required during the maintenance."
+    ],
+    "open_questions": []
+  }
 }

@@ -1,34 +1,54 @@
 // 设计原因：明显应判低（系统公告 / no action required）。
-// 测试指标：低优先级稳定性、避免误报高优先、草稿行为正确。
+// 测试指标：triage保守、summary简短、reply必须为空。
 {
   "id": "tc02",
+  "scenario_type": "system_notice_low_priority",
   "input": {
-    "thread_id": "tc02",
-    "subject": "System maintenance notice",
-    "messages": [
-      {
-        "sender": "it-notice@company.com",
-        "recipients": ["all@company.com"],
-        "timestamp": "2026-03-25T02:00:00Z",
-        "body": "FYI: Scheduled maintenance this Sunday 1am-3am. No user action required."
-      }
-    ]
+    "user_context": {
+      "user_role": "manager",
+      "working_hours": "09:00-18:00",
+      "important_senders": [],
+      "usual_external_priority": "medium"
+    },
+    "thread": {
+      "thread_id": "tc02",
+      "subject": "System maintenance notice",
+      "messages": [
+        {
+          "sender": {
+            "email": "it-notice@company.com",
+            "display_name": "IT Notice",
+            "relationship": "unknown"
+          },
+          "recipients": ["all@company.com"],
+          "timestamp": "2026-03-25T02:00:00Z",
+          "body": "FYI: Scheduled maintenance this Sunday 1am-3am. No user action required."
+        }
+      ]
+    }
   },
   "expected_output": {
-    "是否需要回复": false,
-    "回复草稿规则": "empty",
-    "判断原因应包含": ["priority=LOW"],
-    "signals": {
-      "has_request": false,
-      "has_deadline": false,
-      "requires_response": ["不需要"]
+    "triage": {
+      "needs_response": false,
+      "allowed_priority": ["LOW", "UNCERTAIN"],
+      "disallowed_priority": ["HIGH"],
+      "expected_signal_assertions": {
+        "has_request": false,
+        "has_deadline": false
+      },
+      "expected_score_band": [-10, 2],
+      "reason_must_include_any": ["FYI", "no action", "不需要"]
     },
-    "score_band": {
-      "max": 1
+    "summary": {
+      "must_capture": ["maintenance", "no user action"],
+      "must_not_hallucinate": ["reply required", "approval"],
+      "expected_key_points_count_range": [1, 6],
+      "expected_open_questions": [],
+      "short_summary_max_chars": 260,
+      "long_summary_min_chars": 30
     },
-    "priority_rule": {
-      "allowed": ["LOW", "UNCERTAIN"],
-      "forbidden": ["HIGH"]
+    "reply": {
+      "should_generate": false
     }
   }
 }

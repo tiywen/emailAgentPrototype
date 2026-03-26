@@ -1,45 +1,77 @@
-// 设计原因：UNCERTAIN制度化场景2：长thread中最后一句行动要求是否成立不明确。
-// 测试指标：信息不足时避免过度自信，优先UNCERTAIN/MEDIUM而非LOW。
+// 设计原因：UNCERTAIN制度化场景2（长thread最后一句是否构成action不明确）。
+// 测试指标：triage不应LOW、summary要指出不确定、reply应使用安全措辞。
 {
   "id": "tc06",
+  "scenario_type": "long_thread_action_ambiguous_uncertain",
   "input": {
-    "thread_id": "tc06",
-    "subject": "Workshop prep follow-up",
-    "messages": [
-      {
-        "sender": "pm@company.com",
-        "recipients": ["you@company.com"],
-        "timestamp": "2026-03-24T08:00:00Z",
-        "body": "Sharing background materials for tomorrow's workshop."
-      },
-      {
-        "sender": "designer@company.com",
-        "recipients": ["you@company.com"],
-        "timestamp": "2026-03-24T15:00:00Z",
-        "body": "Draft visuals are attached for review."
-      },
-      {
-        "sender": "pm@company.com",
-        "recipients": ["you@company.com"],
-        "timestamp": "2026-03-25T09:30:00Z",
-        "body": "If possible, maybe we can polish one or two slides before sharing."
-      }
-    ]
+    "user_context": {
+      "user_role": "manager",
+      "working_hours": "09:00-18:00",
+      "important_senders": [],
+      "usual_external_priority": "medium"
+    },
+    "thread": {
+      "thread_id": "tc06",
+      "subject": "Workshop prep follow-up",
+      "messages": [
+        {
+          "sender": {
+            "email": "pm@company.com",
+            "display_name": "Project PM",
+            "relationship": "peer"
+          },
+          "recipients": ["you@company.com"],
+          "timestamp": "2026-03-24T08:00:00Z",
+          "body": "Sharing background materials for tomorrow's workshop."
+        },
+        {
+          "sender": {
+            "email": "designer@company.com",
+            "display_name": "Designer",
+            "relationship": "peer"
+          },
+          "recipients": ["you@company.com"],
+          "timestamp": "2026-03-24T15:00:00Z",
+          "body": "Draft visuals are attached for review."
+        },
+        {
+          "sender": {
+            "email": "pm@company.com",
+            "display_name": "Project PM",
+            "relationship": "peer"
+          },
+          "recipients": ["you@company.com"],
+          "timestamp": "2026-03-25T09:30:00Z",
+          "body": "If possible, maybe we can polish one or two slides before sharing."
+        }
+      ]
+    }
   },
   "expected_output": {
-    "是否需要回复": true,
-    "回复草稿规则": "non_empty",
-    "signals": {
-      "has_deadline": false,
-      "requires_response": ["可能需要", "明确需要"]
+    "triage": {
+      "needs_response": true,
+      "allowed_priority": ["UNCERTAIN", "MEDIUM"],
+      "disallowed_priority": ["LOW"],
+      "expected_signal_assertions": {
+        "has_deadline": true
+      },
+      "expected_score_band": [1, 5],
+      "reason_must_include_any": ["请求", "工作坊", "时间紧迫性"]
     },
-    "score_band": {
-      "min": 1,
-      "max": 5
+    "summary": {
+      "must_capture": ["background materials", "draft visuals", "polish"],
+      "must_not_hallucinate": ["hard deadline", "must send by today"],
+      "expected_key_points_count_range": [2, 10],
+      "expected_open_questions": ["specific feedback", "which slides"],
+      "short_summary_max_chars": 260,
+      "long_summary_min_chars": 80
     },
-    "priority_rule": {
-      "allowed": ["UNCERTAIN", "MEDIUM"],
-      "forbidden": ["LOW"]
+    "reply": {
+      "should_generate": true,
+      "tone": "professional_neutral",
+      "must_include": ["review", "workshop"],
+      "must_not_include": ["will deliver by"],
+      "max_length_category": "short"
     }
   }
 }

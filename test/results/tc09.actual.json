@@ -1,17 +1,57 @@
 {
-  "是否需要回复": true,
-  "判断原因": "该邮件来自同级同事，包含明确的请求和今天的确认截止时间，导致其被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
-  "回复草稿": "Hi Legal Ops,\n\nThank you for the update. I will review the latest clause and confirm by the end of the day.\n\nBest regards,\nTest User",
-  "_raw_priority": "HIGH",
-  "_raw_priority_score": 8,
-  "_raw_confidence": 0.9,
-  "_raw_signals": {
-    "sender_importance": "peer",
-    "has_request": true,
-    "has_deadline": true,
-    "tone": "请求",
-    "requires_response": "明确需要"
+  "triage_raw": {
+    "是否需要回复": true,
+    "判断原因": "该邮件来自同级同事，包含明确的请求和今天的确认截止时间，导致其被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
+    "回复草稿": "Hi Legal Ops,\n\nThank you for the update. I will review the latest clause and confirm by the end of the day.\n\nBest regards,\nTest User",
+    "_raw_priority": "HIGH",
+    "_raw_priority_score": 8,
+    "_raw_confidence": 0.9,
+    "_raw_signals": {
+      "sender_importance": "peer",
+      "has_request": true,
+      "has_deadline": true,
+      "tone": "请求",
+      "requires_response": "明确需要"
+    },
+    "_raw_reasoning": "该邮件来自同级同事，包含明确的请求和今天的确认截止时间，导致其被归类为高优先级。",
+    "_raw_reply_draft": "Hi Legal Ops,\n\nThank you for the update. I will review the latest clause and confirm by the end of the day.\n\nBest regards,\nTest User"
   },
-  "_raw_reasoning": "该邮件来自同级同事，包含明确的请求和今天的确认截止时间，导致其被归类为高优先级。",
-  "_raw_reply_draft": "Hi Legal Ops,\n\nThank you for the update. I will review the latest clause and confirm by the end of the day.\n\nBest regards,\nTest User"
+  "triage_normalized": {
+    "needs_response": true,
+    "priority": "HIGH",
+    "score": 8,
+    "signals": {
+      "sender_importance": "peer",
+      "has_request": true,
+      "has_deadline": true,
+      "tone": "请求",
+      "requires_response": "明确需要"
+    },
+    "reason": "该邮件来自同级同事，包含明确的请求和今天的确认截止时间，导致其被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
+    "reply_draft": "Hi Legal Ops,\n\nThank you for the update. I will review the latest clause and confirm by the end of the day.\n\nBest regards,\nTest User"
+  },
+  "summary_short": {
+    "summary": "The Legal Ops team has requested a review of the latest clause update and confirmation of its acceptability by the end of the day.",
+    "key_points": [
+      "Legal Ops has sent a request for review of a clause update.",
+      "Confirmation of acceptability is needed by today."
+    ],
+    "open_questions": []
+  },
+  "summary_long": {
+    "summary": "The email thread involves a request from the Legal Ops team for a review of the latest clause update in a contract. They are seeking confirmation on whether the update is acceptable by the end of the day. The communication emphasizes the urgency of the review process.",
+    "key_points": [
+      "Legal Ops has sent a request for a review of a contract clause update.",
+      "The team is expected to confirm the acceptability of the update by the end of the day.",
+      "The email highlights the importance of timely feedback on legal documents.",
+      "The communication is marked as confidential.",
+      "The request is directed to the entire team, indicating a collaborative effort.",
+      "The urgency of the review suggests potential implications for ongoing or upcoming projects."
+    ],
+    "open_questions": [
+      "What specific changes were made in the latest clause update?",
+      "Are there any concerns or objections from team members regarding the update?",
+      "What are the next steps if the clause update is not acceptable?"
+    ]
+  }
 }

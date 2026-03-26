@@ -1,17 +1,53 @@
 {
-  "是否需要回复": true,
-  "判断原因": "该邮件来自外部发件人，并包含明确的请求和紧急的时间要求，因此被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
-  "回复草稿": "Dear VP Li,\n\nI confirm that I have read the pre-read as requested. \n\nBest regards,\nTest User",
-  "_raw_priority": "HIGH",
-  "_raw_priority_score": 8,
-  "_raw_confidence": 0.9,
-  "_raw_signals": {
-    "sender_importance": "external",
-    "has_request": true,
-    "has_deadline": true,
-    "tone": "请求",
-    "requires_response": "明确需要"
+  "triage_raw": {
+    "是否需要回复": true,
+    "判断原因": "该邮件包含明确的请求和紧急的时间要求，需在明天10:00之前确认。；priority=HIGH；score=8；confidence=0.9",
+    "回复草稿": "Dear Office Assistant,\n\nThank you for your message. I confirm that I have read the pre-read as requested.\n\nBest regards,\nTest User",
+    "_raw_priority": "HIGH",
+    "_raw_priority_score": 8,
+    "_raw_confidence": 0.9,
+    "_raw_signals": {
+      "sender_importance": "unknown",
+      "has_request": true,
+      "has_deadline": true,
+      "tone": "请求",
+      "requires_response": "明确需要"
+    },
+    "_raw_reasoning": "该邮件包含明确的请求和紧急的时间要求，需在明天10:00之前确认。",
+    "_raw_reply_draft": "Dear Office Assistant,\n\nThank you for your message. I confirm that I have read the pre-read as requested.\n\nBest regards,\nTest User"
   },
-  "_raw_reasoning": "该邮件来自外部发件人，并包含明确的请求和紧急的时间要求，因此被归类为高优先级。",
-  "_raw_reply_draft": "Dear VP Li,\n\nI confirm that I have read the pre-read as requested. \n\nBest regards,\nTest User"
+  "triage_normalized": {
+    "needs_response": true,
+    "priority": "HIGH",
+    "score": 8,
+    "signals": {
+      "sender_importance": "unknown",
+      "has_request": true,
+      "has_deadline": true,
+      "tone": "请求",
+      "requires_response": "明确需要"
+    },
+    "reason": "该邮件包含明确的请求和紧急的时间要求，需在明天10:00之前确认。；priority=HIGH；score=8；confidence=0.9",
+    "reply_draft": "Dear Office Assistant,\n\nThank you for your message. I confirm that I have read the pre-read as requested.\n\nBest regards,\nTest User"
+  },
+  "summary_short": {
+    "summary": "The Office Assistant is requesting confirmation from the recipient that they have read the pre-read document on behalf of VP Li. The deadline for this confirmation is set for tomorrow at 10:00.",
+    "key_points": [
+      "Request for confirmation of pre-read document.",
+      "Message sent on behalf of VP Li.",
+      "Confirmation deadline is tomorrow at 10:00."
+    ],
+    "open_questions": []
+  },
+  "summary_long": {
+    "summary": "The Office Assistant is sending a message on behalf of VP Li, requesting confirmation that the recipient has read the pre-read document. The deadline for this confirmation is set for tomorrow at 10:00 AM.",
+    "key_points": [
+      "The message is sent by the Office Assistant on behalf of VP Li.",
+      "The recipient is requested to confirm reading the pre-read document.",
+      "The deadline for confirmation is tomorrow at 10:00 AM."
+    ],
+    "open_questions": [
+      "What specific pre-read document is being referred to?"
+    ]
+  }
 }

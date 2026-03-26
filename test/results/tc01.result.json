@@ -1,0 +1,111 @@
+{
+  "case": "tc01",
+  "scenario_type": "manager_request_deadline_high_risk",
+  "overall_result": "PASS",
+  "triage_result": {
+    "result": "PASS",
+    "reason": "rule-based triage evaluation",
+    "checks": {
+      "rule_assertions": "PASS"
+    },
+    "errors": [],
+    "actual": {
+      "needs_response": true,
+      "priority": "HIGH",
+      "score": 8,
+      "signals": {
+        "sender_importance": "manager",
+        "has_request": true,
+        "has_deadline": true,
+        "tone": "紧急",
+        "requires_response": "明确需要"
+      },
+      "reason": "该邮件来自上级，包含明确的请求和紧急的时间要求，因此被归类为高优先级。；priority=HIGH；score=8；confidence=1.0",
+      "reply_draft": "Dear Alice,\n\nI will ensure that the final deck is sent to you by 5pm today.\n\nBest regards,\nTest User"
+    }
+  },
+  "summary_result": {
+    "result": "PASS",
+    "reason": "实际输出全面捕捉了邮件的关键信息，且没有出现错误或遗漏。",
+    "checks": {
+      "coverage": "PASS",
+      "faithfulness": "PASS",
+      "usefulness": "PASS"
+    },
+    "missing_items": [],
+    "hallucinations": [],
+    "notes": []
+  },
+  "reply_result": {
+    "result": "PASS",
+    "reason": "回复满足所有关键要求，语气专业且中立。",
+    "checks": {
+      "coverage": "PASS",
+      "faithfulness": "PASS",
+      "usefulness": "PASS"
+    },
+    "missing_items": [],
+    "hallucinations": [],
+    "notes": []
+  },
+  "expected": {
+    "triage": {
+      "needs_response": true,
+      "allowed_priority": [
+        "HIGH"
+      ],
+      "disallowed_priority": [
+        "LOW",
+        "UNCERTAIN"
+      ],
+      "expected_signal_assertions": {
+        "sender_importance": "manager",
+        "has_request": true,
+        "has_deadline": true
+      },
+      "expected_score_band": [
+        6,
+        20
+      ],
+      "reason_must_include_any": [
+        "deadline",
+        "urgent",
+        "上级",
+        "manager"
+      ]
+    },
+    "summary": {
+      "must_capture": [
+        "final deck",
+        "5pm",
+        "urgent"
+      ],
+      "must_not_hallucinate": [
+        "next week",
+        "no action needed"
+      ],
+      "expected_key_points_count_range": [
+        1,
+        8
+      ],
+      "expected_open_questions": [],
+      "short_summary_max_chars": 260,
+      "long_summary_min_chars": 60
+    },
+    "reply": {
+      "should_generate": true,
+      "tone": "professional_neutral",
+      "must_include": [
+        "5pm",
+        "final deck"
+      ],
+      "must_not_include": [
+        "cannot help"
+      ],
+      "max_length_category": "short"
+    }
+  },
+  "actual_file": "tc01.actual.json",
+  "summary_judgment_raw_file": "tc01.summary_judgment.raw.txt",
+  "reply_judgment_raw_file": "tc01.reply_judgment.raw.txt"
+}

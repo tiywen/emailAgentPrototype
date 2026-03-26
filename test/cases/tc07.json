@@ -1,33 +1,57 @@
-// 设计原因：多意图邮件（FYI + request + scheduling）避免“平均化”误判。
-// 测试指标：multi-intent识别、priority稳健性、reply行为。
+// 设计原因：多意图邮件（FYI + request + scheduling）。
+// 测试指标：triage不能漏判，summary需覆盖三种意图，reply避免过度承诺。
 {
   "id": "tc07",
+  "scenario_type": "multi_intent_fyi_request_schedule",
   "input": {
-    "thread_id": "tc07",
-    "subject": "Plan update + quick review + scheduling",
-    "messages": [
-      {
-        "sender": "teammate@company.com",
-        "recipients": ["you@company.com"],
-        "timestamp": "2026-03-25T09:30:00Z",
-        "body": "FYI, we finished the latest draft. Could you quickly review section 2 and let us know if 4pm tomorrow works for a sync?"
-      }
-    ]
+    "user_context": {
+      "user_role": "manager",
+      "working_hours": "09:00-18:00",
+      "important_senders": [],
+      "usual_external_priority": "medium"
+    },
+    "thread": {
+      "thread_id": "tc07",
+      "subject": "Plan update + quick review + scheduling",
+      "messages": [
+        {
+          "sender": {
+            "email": "teammate@company.com",
+            "display_name": "Teammate",
+            "relationship": "peer"
+          },
+          "recipients": ["you@company.com"],
+          "timestamp": "2026-03-25T09:30:00Z",
+          "body": "FYI, we finished the latest draft. Could you quickly review section 2 and let us know if 4pm tomorrow works for a sync?"
+        }
+      ]
+    }
   },
   "expected_output": {
-    "是否需要回复": true,
-    "回复草稿规则": "non_empty",
-    "signals": {
-      "has_request": true,
-      "has_deadline": false
+    "triage": {
+      "needs_response": true,
+      "allowed_priority": ["MEDIUM", "UNCERTAIN", "HIGH"],
+      "disallowed_priority": ["LOW"],
+      "expected_signal_assertions": {
+        "has_request": true
+      },
+      "expected_score_band": [2, 9],
+      "reason_must_include_any": ["请求", "审阅", "确认时间"]
     },
-    "score_band": {
-      "min": 2,
-      "max": 6
+    "summary": {
+      "must_capture": ["latest draft", "review section 2", "4pm tomorrow"],
+      "must_not_hallucinate": ["client escalation", "approval by CEO"],
+      "expected_key_points_count_range": [2, 10],
+      "expected_open_questions": ["4pm", "sync"],
+      "short_summary_max_chars": 280,
+      "long_summary_min_chars": 70
     },
-    "priority_rule": {
-      "allowed": ["MEDIUM", "UNCERTAIN", "HIGH"],
-      "forbidden": ["LOW"]
+    "reply": {
+      "should_generate": true,
+      "tone": "professional_neutral",
+      "must_include": ["review section 2", "4pm"],
+      "must_not_include": ["final approval granted"],
+      "max_length_category": "short"
     }
   }
 }

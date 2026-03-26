@@ -1,0 +1,113 @@
+{
+  "case": "tc08",
+  "scenario_type": "sender_ambiguity_delegate_mail",
+  "overall_result": "PARTIAL",
+  "triage_result": {
+    "result": "PASS",
+    "reason": "rule-based triage evaluation",
+    "checks": {
+      "rule_assertions": "PASS"
+    },
+    "errors": [],
+    "actual": {
+      "needs_response": true,
+      "priority": "HIGH",
+      "score": 8,
+      "signals": {
+        "sender_importance": "unknown",
+        "has_request": true,
+        "has_deadline": true,
+        "tone": "请求",
+        "requires_response": "明确需要"
+      },
+      "reason": "该邮件包含明确的请求和紧急的时间要求，需在明天10:00之前确认。；priority=HIGH；score=8；confidence=0.9",
+      "reply_draft": "Dear Office Assistant,\n\nThank you for your message. I confirm that I have read the pre-read as requested.\n\nBest regards,\nTest User"
+    }
+  },
+  "summary_result": {
+    "result": "PARTIAL",
+    "reason": "总结基本涵盖了关键信息，但存在开放问题，且未明确指出预读文件的具体内容。",
+    "checks": {
+      "coverage": "PARTIAL",
+      "faithfulness": "PASS",
+      "usefulness": "PARTIAL"
+    },
+    "missing_items": [
+      "具体的预读文件内容"
+    ],
+    "hallucinations": [],
+    "notes": [
+      "开放问题未在期望要求中列出，但提及的内容与邮件无关。"
+    ]
+  },
+  "reply_result": {
+    "result": "PASS",
+    "reason": "回复满足所有关键要求，语气专业且中立。",
+    "checks": {
+      "coverage": "PASS",
+      "faithfulness": "PASS",
+      "usefulness": "PASS"
+    },
+    "missing_items": [],
+    "hallucinations": [],
+    "notes": []
+  },
+  "expected": {
+    "triage": {
+      "needs_response": true,
+      "allowed_priority": [
+        "MEDIUM",
+        "HIGH"
+      ],
+      "disallowed_priority": [
+        "LOW"
+      ],
+      "expected_signal_assertions": {
+        "has_request": true,
+        "has_deadline": true
+      },
+      "expected_score_band": [
+        4,
+        20
+      ],
+      "reason_must_include_any": [
+        "请求",
+        "明天10:00",
+        "确认阅读"
+      ]
+    },
+    "summary": {
+      "must_capture": [
+        "on behalf of VP",
+        "confirm",
+        "tomorrow 10:00"
+      ],
+      "must_not_hallucinate": [
+        "contract approval",
+        "no response needed"
+      ],
+      "expected_key_points_count_range": [
+        1,
+        8
+      ],
+      "expected_open_questions": [],
+      "short_summary_max_chars": 260,
+      "long_summary_min_chars": 50
+    },
+    "reply": {
+      "should_generate": true,
+      "tone": "professional_neutral",
+      "must_include": [
+        "确认",
+        "预读材料"
+      ],
+      "must_not_include": [
+        "ignore"
+      ],
+      "max_length_category": "short"
+    }
+  },
+  "actual_file": "tc08.actual.json",
+  "summary_judgment_raw_file": "tc08.summary_judgment.raw.txt",
+  "reply_judgment_raw_file": "tc08.reply_judgment.raw.txt"
+}

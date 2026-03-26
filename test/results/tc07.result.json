@@ -1,0 +1,118 @@
+{
+  "case": "tc07",
+  "scenario_type": "multi_intent_fyi_request_schedule",
+  "overall_result": "PARTIAL",
+  "triage_result": {
+    "result": "PASS",
+    "reason": "rule-based triage evaluation",
+    "checks": {
+      "rule_assertions": "PASS"
+    },
+    "errors": [],
+    "actual": {
+      "needs_response": true,
+      "priority": "MEDIUM",
+      "score": 4,
+      "signals": {
+        "sender_importance": "peer",
+        "has_request": true,
+        "has_deadline": true,
+        "tone": "请求",
+        "requires_response": "可能需要"
+      },
+      "reason": "该邮件包含明确的请求和时间要求，但发件人为同级同事，影响优先级。；priority=MEDIUM；score=4；confidence=0.9",
+      "reply_draft": "Hi Teammate,\n\nThank you for the update. I will review section 2 and get back to you regarding the sync at 4pm tomorrow.\n\nBest,\nTest User"
+    }
+  },
+  "summary_result": {
+    "result": "PARTIAL",
+    "reason": "虽然大部分关键要求被满足，但存在一些表达问题和缺失。",
+    "checks": {
+      "coverage": "PARTIAL",
+      "faithfulness": "PARTIAL",
+      "usefulness": "PARTIAL"
+    },
+    "missing_items": [
+      "没有明确提到需要在明天4点前完成审查的时间要求"
+    ],
+    "hallucinations": [
+      "没有明显的幻觉，但对开放问题的理解不够准确"
+    ],
+    "notes": [
+      "短摘要和长摘要都包含了关键信息，但开放问题的表述不够清晰，未能完全反映出原邮件的要求。"
+    ]
+  },
+  "reply_result": {
+    "result": "PASS",
+    "reason": "回复满足所有关键要求，语气专业且中立。",
+    "checks": {
+      "coverage": "PASS",
+      "faithfulness": "PASS",
+      "usefulness": "PASS"
+    },
+    "missing_items": [],
+    "hallucinations": [],
+    "notes": []
+  },
+  "expected": {
+    "triage": {
+      "needs_response": true,
+      "allowed_priority": [
+        "MEDIUM",
+        "UNCERTAIN",
+        "HIGH"
+      ],
+      "disallowed_priority": [
+        "LOW"
+      ],
+      "expected_signal_assertions": {
+        "has_request": true
+      },
+      "expected_score_band": [
+        2,
+        9
+      ],
+      "reason_must_include_any": [
+        "请求",
+        "审阅",
+        "确认时间"
+      ]
+    },
+    "summary": {
+      "must_capture": [
+        "latest draft",
+        "review section 2",
+        "4pm tomorrow"
+      ],
+      "must_not_hallucinate": [
+        "client escalation",
+        "approval by CEO"
+      ],
+      "expected_key_points_count_range": [
+        2,
+        10
+      ],
+      "expected_open_questions": [
+        "4pm",
+        "sync"
+      ],
+      "short_summary_max_chars": 280,
+      "long_summary_min_chars": 70
+    },
+    "reply": {
+      "should_generate": true,
+      "tone": "professional_neutral",
+      "must_include": [
+        "review section 2",
+        "4pm"
+      ],
+      "must_not_include": [
+        "final approval granted"
+      ],
+      "max_length_category": "short"
+    }
+  },
+  "actual_file": "tc07.actual.json",
+  "summary_judgment_raw_file": "tc07.summary_judgment.raw.txt",
+  "reply_judgment_raw_file": "tc07.reply_judgment.raw.txt"
+}

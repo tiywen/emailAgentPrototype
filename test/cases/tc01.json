@@ -1,34 +1,59 @@
 // 设计原因：高风险必判高（manager + request + deadline）。
-// 测试指标：signal抽取正确性、score区间、priority稳定性、reply行为一致性。
+// 测试指标：triage信号与分数、summary抓取关键行动、reply承接时限。
 {
   "id": "tc01",
+  "scenario_type": "manager_request_deadline_high_risk",
   "input": {
-    "thread_id": "tc01",
-    "subject": "Final deck before 5pm",
-    "messages": [
-      {
-        "sender": "Alice (Manager)",
-        "recipients": ["you@company.com"],
-        "timestamp": "2026-03-25T08:30:00Z",
-        "body": "Please send me the final deck by 5pm today. This is urgent for the steering meeting."
-      }
-    ]
+    "user_context": {
+      "user_role": "manager",
+      "working_hours": "09:00-18:00",
+      "important_senders": ["alice.manager@company.com"],
+      "usual_external_priority": "medium"
+    },
+    "thread": {
+      "thread_id": "tc01",
+      "subject": "Final deck before 5pm",
+      "messages": [
+        {
+          "sender": {
+            "email": "alice.manager@company.com",
+            "display_name": "Alice",
+            "relationship": "manager"
+          },
+          "recipients": ["you@company.com"],
+          "timestamp": "2026-03-25T08:30:00Z",
+          "body": "Please send me the final deck by 5pm today. This is urgent for the steering meeting."
+        }
+      ]
+    }
   },
   "expected_output": {
-    "是否需要回复": true,
-    "回复草稿规则": "non_empty",
-    "判断原因应包含": ["priority=HIGH"],
-    "signals": {
-      "sender_importance": ["manager"],
-      "has_request": true,
-      "has_deadline": true,
-      "requires_response": ["明确需要", "可能需要"]
+    "triage": {
+      "needs_response": true,
+      "allowed_priority": ["HIGH"],
+      "disallowed_priority": ["LOW", "UNCERTAIN"],
+      "expected_signal_assertions": {
+        "sender_importance": "manager",
+        "has_request": true,
+        "has_deadline": true
+      },
+      "expected_score_band": [6, 20],
+      "reason_must_include_any": ["deadline", "urgent", "上级", "manager"]
     },
-    "score_band": {
-      "min": 6
+    "summary": {
+      "must_capture": ["final deck", "5pm", "urgent"],
+      "must_not_hallucinate": ["next week", "no action needed"],
+      "expected_key_points_count_range": [1, 8],
+      "expected_open_questions": [],
+      "short_summary_max_chars": 260,
+      "long_summary_min_chars": 60
     },
-    "priority_rule": {
-      "allowed": ["HIGH"]
+    "reply": {
+      "should_generate": true,
+      "tone": "professional_neutral",
+      "must_include": ["5pm", "final deck"],
+      "must_not_include": ["cannot help"],
+      "max_length_category": "short"
     }
   }
 }

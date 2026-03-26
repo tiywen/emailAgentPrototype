@@ -1,17 +1,58 @@
 {
-  "是否需要回复": true,
-  "判断原因": "该邮件来自外部联系人，包含明确的请求并需要用户回复，因此被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
-  "回复草稿": "Dear [Vendor's Name],\n\nThank you for sending the proposal. I will review it and share my comments with you shortly.\n\nBest regards,\nTest User",
-  "_raw_priority": "HIGH",
-  "_raw_priority_score": 8,
-  "_raw_confidence": 0.9,
-  "_raw_signals": {
-    "sender_importance": "external",
-    "has_request": true,
-    "has_deadline": false,
-    "tone": "请求",
-    "requires_response": "明确需要"
+  "triage_raw": {
+    "是否需要回复": true,
+    "判断原因": "该邮件来自外部合作伙伴，包含明确的请求并需要用户回复，因而被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
+    "回复草稿": "Dear Vendor Partner,\n\nThank you for your email. I will review the attached proposal and share my comments with you shortly.\n\nBest regards,\nTest User",
+    "_raw_priority": "HIGH",
+    "_raw_priority_score": 8,
+    "_raw_confidence": 0.9,
+    "_raw_signals": {
+      "sender_importance": "external",
+      "has_request": true,
+      "has_deadline": false,
+      "tone": "请求",
+      "requires_response": "明确需要"
+    },
+    "_raw_reasoning": "该邮件来自外部合作伙伴，包含明确的请求并需要用户回复，因而被归类为高优先级。",
+    "_raw_reply_draft": "Dear Vendor Partner,\n\nThank you for your email. I will review the attached proposal and share my comments with you shortly.\n\nBest regards,\nTest User"
   },
-  "_raw_reasoning": "该邮件来自外部联系人，包含明确的请求并需要用户回复，因此被归类为高优先级。",
-  "_raw_reply_draft": "Dear [Vendor's Name],\n\nThank you for sending the proposal. I will review it and share my comments with you shortly.\n\nBest regards,\nTest User"
+  "triage_normalized": {
+    "needs_response": true,
+    "priority": "HIGH",
+    "score": 8,
+    "signals": {
+      "sender_importance": "external",
+      "has_request": true,
+      "has_deadline": false,
+      "tone": "请求",
+      "requires_response": "明确需要"
+    },
+    "reason": "该邮件来自外部合作伙伴，包含明确的请求并需要用户回复，因而被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
+    "reply_draft": "Dear Vendor Partner,\n\nThank you for your email. I will review the attached proposal and share my comments with you shortly.\n\nBest regards,\nTest User"
+  },
+  "summary_short": {
+    "summary": "The vendor partner has requested a review of the attached proposal and is seeking comments from the recipient.",
+    "key_points": [
+      "Vendor partner sent a proposal for review.",
+      "Comments are requested from the recipient."
+    ],
+    "open_questions": [
+      "What is the deadline for providing comments on the proposal?"
+    ]
+  },
+  "summary_long": {
+    "summary": "The vendor partner has sent a proposal for review and is requesting comments from the recipient. The proposal is attached to the email for evaluation.",
+    "key_points": [
+      "The email is from a vendor partner requesting feedback.",
+      "The recipient is expected to review an attached proposal.",
+      "Comments on the proposal are requested by the vendor partner.",
+      "The email was sent on March 25, 2026.",
+      "The recipient's email address is provided in the communication.",
+      "The vendor partner's email address is also included."
+    ],
+    "open_questions": [
+      "What is the deadline for providing comments on the proposal?",
+      "Are there specific areas of the proposal that need more focus during the review?"
+    ]
+  }
 }

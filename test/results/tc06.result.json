@@ -1,0 +1,117 @@
+{
+  "case": "tc06",
+  "scenario_type": "long_thread_action_ambiguous_uncertain",
+  "overall_result": "PARTIAL",
+  "triage_result": {
+    "result": "PARTIAL",
+    "reason": "rule-based triage evaluation",
+    "checks": {
+      "rule_assertions": "PARTIAL"
+    },
+    "errors": [
+      "signal mismatch: has_deadline expected=True, actual=False"
+    ],
+    "actual": {
+      "needs_response": true,
+      "priority": "MEDIUM",
+      "score": 4,
+      "signals": {
+        "sender_importance": "peer",
+        "has_request": true,
+        "has_deadline": false,
+        "tone": "请求",
+        "requires_response": "可能需要"
+      },
+      "reason": "邮件包含来自同级同事的请求，虽然没有明确的时间要求，但需要用户可能的行动。；priority=MEDIUM；score=4；confidence=0.9",
+      "reply_draft": "Hi, thank you for the update. I will review the slides and see if we can polish them before sharing. Best, test-user"
+    }
+  },
+  "summary_result": {
+    "result": "PARTIAL",
+    "reason": "虽然总结捕捉了大部分关键信息，但缺少了开放问题部分的内容。",
+    "checks": {
+      "coverage": "PARTIAL",
+      "faithfulness": "PASS",
+      "usefulness": "PARTIAL"
+    },
+    "missing_items": [
+      "开放问题部分未能完整列出"
+    ],
+    "hallucinations": [],
+    "notes": [
+      "短总结和长总结都符合字数要求，且准确反映了邮件内容。"
+    ]
+  },
+  "reply_result": {
+    "result": "PASS",
+    "reason": "回复满足所有关键要求，语气专业且中立。",
+    "checks": {
+      "coverage": "PASS",
+      "faithfulness": "PASS",
+      "usefulness": "PASS"
+    },
+    "missing_items": [],
+    "hallucinations": [],
+    "notes": []
+  },
+  "expected": {
+    "triage": {
+      "needs_response": true,
+      "allowed_priority": [
+        "UNCERTAIN",
+        "MEDIUM"
+      ],
+      "disallowed_priority": [
+        "LOW"
+      ],
+      "expected_signal_assertions": {
+        "has_deadline": true
+      },
+      "expected_score_band": [
+        1,
+        5
+      ],
+      "reason_must_include_any": [
+        "请求",
+        "工作坊",
+        "时间紧迫性"
+      ]
+    },
+    "summary": {
+      "must_capture": [
+        "background materials",
+        "draft visuals",
+        "polish"
+      ],
+      "must_not_hallucinate": [
+        "hard deadline",
+        "must send by today"
+      ],
+      "expected_key_points_count_range": [
+        2,
+        10
+      ],
+      "expected_open_questions": [
+        "specific feedback",
+        "which slides"
+      ],
+      "short_summary_max_chars": 260,
+      "long_summary_min_chars": 80
+    },
+    "reply": {
+      "should_generate": true,
+      "tone": "professional_neutral",
+      "must_include": [
+        "review",
+        "workshop"
+      ],
+      "must_not_include": [
+        "will deliver by"
+      ],
+      "max_length_category": "short"
+    }
+  },
+  "actual_file": "tc06.actual.json",
+  "summary_judgment_raw_file": "tc06.summary_judgment.raw.txt",
+  "reply_judgment_raw_file": "tc06.reply_judgment.raw.txt"
+}

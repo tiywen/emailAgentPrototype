@@ -1,17 +1,53 @@
 {
-  "是否需要回复": true,
-  "判断原因": "该邮件来自上级，包含明确的请求和截止时间，因此被归类为高优先级。；priority=HIGH；score=8；confidence=1.0",
-  "回复草稿": "尊敬的Alice，感谢您的邮件。我会在明天中午之前审核并批准最终合同。如有任何问题，我会及时与您联系。谢谢！",
-  "_raw_priority": "HIGH",
-  "_raw_priority_score": 8,
-  "_raw_confidence": 1.0,
-  "_raw_signals": {
-    "sender_importance": "manager",
-    "has_request": true,
-    "has_deadline": true,
-    "tone": "请求",
-    "requires_response": "明确需要"
+  "triage_raw": {
+    "是否需要回复": true,
+    "判断原因": "该邮件来自上级，包含明确的请求和截止时间，因此被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
+    "回复草稿": "Dear Alice,\n\nThank you for sending the final contract. I will review and approve it by tomorrow noon as requested.\n\nBest regards,\nTest User",
+    "_raw_priority": "HIGH",
+    "_raw_priority_score": 8,
+    "_raw_confidence": 0.9,
+    "_raw_signals": {
+      "sender_importance": "manager",
+      "has_request": true,
+      "has_deadline": true,
+      "tone": "请求",
+      "requires_response": "明确需要"
+    },
+    "_raw_reasoning": "该邮件来自上级，包含明确的请求和截止时间，因此被归类为高优先级。",
+    "_raw_reply_draft": "Dear Alice,\n\nThank you for sending the final contract. I will review and approve it by tomorrow noon as requested.\n\nBest regards,\nTest User"
   },
-  "_raw_reasoning": "该邮件来自上级，包含明确的请求和截止时间，因此被归类为高优先级。",
-  "_raw_reply_draft": "尊敬的Alice，感谢您的邮件。我会在明天中午之前审核并批准最终合同。如有任何问题，我会及时与您联系。谢谢！"
+  "triage_normalized": {
+    "needs_response": true,
+    "priority": "HIGH",
+    "score": 8,
+    "signals": {
+      "sender_importance": "manager",
+      "has_request": true,
+      "has_deadline": true,
+      "tone": "请求",
+      "requires_response": "明确需要"
+    },
+    "reason": "该邮件来自上级，包含明确的请求和截止时间，因此被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
+    "reply_draft": "Dear Alice,\n\nThank you for sending the final contract. I will review and approve it by tomorrow noon as requested.\n\nBest regards,\nTest User"
+  },
+  "summary_short": {
+    "summary": "Alice has sent the final contract for approval, which is attached to the email. The approval is requested by tomorrow noon.",
+    "key_points": [
+      "Final contract is attached.",
+      "Approval is needed by tomorrow noon."
+    ],
+    "open_questions": []
+  },
+  "summary_long": {
+    "summary": "Alice has sent an email regarding the final contract, which is attached to the message. She requests approval by tomorrow noon.",
+    "key_points": [
+      "Alice is the manager sending the email.",
+      "The email contains an attachment of the final contract.",
+      "Approval of the contract is required.",
+      "The deadline for approval is set for tomorrow at noon."
+    ],
+    "open_questions": [
+      "Is there any specific feedback required for the contract approval?"
+    ]
+  }
 }
