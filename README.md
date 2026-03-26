@@ -363,28 +363,36 @@ python main.py --input data/input.json --dry-run
 
 ---
 
-## 11. 测试执行（10 个场景用例）
+## 11. 测试说明（当前评估框架）
 
-`test/cases/` 提供了 10 个可直接执行的 dry-run 场景（`tc01`~`tc10`），每个文件包含：
+当前测试集位于 `test/cases/`，共 10 个 dry-run case（`tc01`~`tc10`），每个 case 使用统一结构：
 
-- 顶部注释：该 case 的设计原因与测试指标
-- `input`：测试输入（thread 格式）
-- `expected_output`：预期检查规则（是否需要回复、草稿是否为空、判断原因关键字）
+- `input`：线程化邮件输入（含 user_context / thread / messages）
+- `expected_output.triage`：信号、分数区间、优先级与原因锚点规则
+- `expected_output.summary`：摘要覆盖/禁幻觉/开放问题/长度约束
+- `expected_output.reply`：是否应生成、语气、必须包含/禁止包含要点
 
-### 11.1 十个 Case 的简要覆盖范围
+### 11.1 评估逻辑
 
-- `tc01`：上级 + 明确请求 + 当日 deadline（高优先）
-- `tc02`：外部联系人 + 时间要求（高优先）
-- `tc03`：隐性请求、无明确时限（不确定）
-- `tc04`：纯 FYI 且明确无需动作（低优先）
-- `tc05`：系统公告/群发通知（低优先）
-- `tc06`：表面 FYI 但实质审批请求（高优先）
-- `tc07`：长线程末尾才出现关键行动要求（高优先）
-- `tc08`：有请求但无 deadline（中优先）
-- `tc09`：弱请求 + 信息不足（不确定）
-- `tc10`：礼貌措辞但业务紧迫（高优先）
+`run_test_cases.py` 对每个 case 生成三类能力输出并分别评估：
 
-### 11.2 如何运行测试
+- `triage`（规则评估，deterministic）
+  - 核验 `needs_response`
+  - 核验 `allowed_priority` / `disallowed_priority`
+  - 核验 `expected_signal_assertions`
+  - 核验 `expected_score_band`
+  - 核验 `reason_must_include_any`
+- `summary`（rubric 评估，LLM-as-a-judge）
+  - 从 `coverage` / `faithfulness` / `usefulness` 三维判定
+  - 输出 `PASS / PARTIAL / FAIL`
+  - 记录 `missing_items`、`hallucinations`、`notes`
+- `reply`（rubric 评估，LLM-as-a-judge）
+  - 同样按 `coverage` / `faithfulness` / `usefulness` 判定
+  - 输出 `PASS / PARTIAL / FAIL`
+
+`overall_result` 基于三块结果综合给出（`PASS / PARTIAL / FAIL`）。
+
+### 11.2 运行方式
 
 运行全部：
 
@@ -404,15 +412,33 @@ python run_test_cases.py --case tc01
 python run_test_cases.py --case tc01 --case tc06 --case tc10
 ```
 
-指定模型与输出目录：
+指定模型和输出目录：
 
 ```bash
 python run_test_cases.py --all --model gpt-4o-mini --save-dir test/results
 ```
 
-### 11.3 测试输出说明
+可选参数（常用）：
 
-- 每个 case 的实际结果：`test/results/<case_id>.actual.json`
-- 汇总报告：`test/results/report.json`
-  - 包含 `PASS/FAIL`
-  - 失败原因（字段不匹配、草稿规则不符、判断原因缺少关键字等）
+- `--cases-dir`：指定 case 目录（默认 `test/cases`）
+- `--current-user-identity`：覆盖测试时的用户身份描述
+
+### 11.3 结果文件（已精简）
+
+`test/results/` 当前仅保留必要产物：
+
+- `report.json`：总览统计 + 每个 case 的完整评估结果
+- `tcXX.actual.json`：模型原始输出（实际 output）
+- `tcXX.result.json`：单 case 评估结果（含 expected / actual 对照）
+
+### 11.4 当前最新一轮结果快照
+
+基于最近一次 `--all` 运行（见 `test/results/report.json`）：
+
+- 总 case：`10`
+- Overall：`PASS 2` / `PARTIAL 8` / `FAIL 0`（`overall_pass_rate = 0.2`）
+- Triage：`PASS 9` / `PARTIAL 1` / `FAIL 0`
+- Summary：`PASS 2` / `PARTIAL 8` / `FAIL 0`
+- Reply：`PASS 10` / `PARTIAL 0` / `FAIL 0`
+
+说明：当前主要瓶颈在 `summary` 的 rubric 命中（常见为关键点遗漏或开放问题不贴合）；`reply` 已稳定通过，`triage` 仅有少量边界样本为 `PARTIAL`。
