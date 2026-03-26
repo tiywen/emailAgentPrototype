@@ -1,5 +1,5 @@
-// 设计原因：验证“上级 + 明确请求 + 当日deadline + 紧急语气”的高优先级识别能力。
-// 测试指标：High-priority precision、Miss rate（应避免漏判）。
+// 设计原因：高风险必判高（manager + request + deadline）。
+// 测试指标：signal抽取正确性、score区间、priority稳定性、reply行为一致性。
 {
   "id": "tc01",
   "input": {
@@ -17,6 +17,18 @@
   "expected_output": {
     "是否需要回复": true,
     "回复草稿规则": "non_empty",
-    "判断原因应包含": ["priority=HIGH"]
+    "判断原因应包含": ["priority=HIGH"],
+    "signals": {
+      "sender_importance": ["manager"],
+      "has_request": true,
+      "has_deadline": true,
+      "requires_response": ["明确需要", "可能需要"]
+    },
+    "score_band": {
+      "min": 6
+    },
+    "priority_rule": {
+      "allowed": ["HIGH"]
+    }
   }
 }

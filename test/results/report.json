@@ -1,7 +1,7 @@
 {
   "total": 10,
-  "passed": 9,
-  "failed": 1,
+  "passed": 8,
+  "failed": 2,
   "results": [
     {
       "case": "tc01",
@@ -12,22 +12,62 @@
         "回复草稿规则": "non_empty",
         "判断原因应包含": [
           "priority=HIGH"
-        ]
+        ],
+        "signals": {
+          "sender_importance": [
+            "manager"
+          ],
+          "has_request": true,
+          "has_deadline": true,
+          "requires_response": [
+            "明确需要",
+            "可能需要"
+          ]
+        },
+        "score_band": {
+          "min": 6
+        },
+        "priority_rule": {
+          "allowed": [
+            "HIGH"
+          ]
+        }
       },
-      "actual_file": "tc01.actual.json"
+      "actual_file": "tc01.actual.json",
+      "normalized_file": "tc01.normalized.json"
     },
     {
       "case": "tc02",
       "status": "PASS",
       "errors": [],
       "expected": {
-        "是否需要回复": true,
-        "回复草稿规则": "non_empty",
+        "是否需要回复": false,
+        "回复草稿规则": "empty",
         "判断原因应包含": [
-          "priority=HIGH"
-        ]
+          "priority=LOW"
+        ],
+        "signals": {
+          "has_request": false,
+          "has_deadline": false,
+          "requires_response": [
+            "不需要"
+          ]
+        },
+        "score_band": {
+          "max": 1
+        },
+        "priority_rule": {
+          "allowed": [
+            "LOW",
+            "UNCERTAIN"
+          ],
+          "forbidden": [
+            "HIGH"
+          ]
+        }
       },
-      "actual_file": "tc02.actual.json"
+      "actual_file": "tc02.actual.json",
+      "normalized_file": "tc02.normalized.json"
     },
     {
       "case": "tc03",
@@ -38,35 +78,96 @@
         "回复草稿规则": "non_empty",
         "判断原因应包含": [
           "priority=UNCERTAIN"
-        ]
+        ],
+        "signals": {
+          "has_deadline": false,
+          "requires_response": [
+            "可能需要"
+          ]
+        },
+        "score_band": {
+          "min": 1,
+          "max": 4
+        },
+        "priority_rule": {
+          "allowed": [
+            "UNCERTAIN",
+            "MEDIUM"
+          ],
+          "forbidden": [
+            "LOW"
+          ]
+        }
       },
-      "actual_file": "tc03.actual.json"
+      "actual_file": "tc03.actual.json",
+      "normalized_file": "tc03.normalized.json"
     },
     {
       "case": "tc04",
       "status": "PASS",
       "errors": [],
       "expected": {
-        "是否需要回复": false,
-        "回复草稿规则": "empty",
+        "是否需要回复": true,
+        "回复草稿规则": "non_empty",
         "判断原因应包含": [
-          "priority=LOW"
-        ]
+          "priority=HIGH"
+        ],
+        "signals": {
+          "has_request": true,
+          "has_deadline": true
+        },
+        "score_band": {
+          "min": 6
+        },
+        "priority_rule": {
+          "allowed": [
+            "HIGH"
+          ],
+          "not_low": true
+        }
       },
-      "actual_file": "tc04.actual.json"
+      "actual_file": "tc04.actual.json",
+      "normalized_file": "tc04.normalized.json"
     },
     {
       "case": "tc05",
-      "status": "PASS",
-      "errors": [],
+      "status": "FAIL",
+      "errors": [
+        "priority_score above max: score=8.0, max=7",
+        "priority=HIGH violates high_requires_any gating rule (need one of ['has_deadline', 'sender_importance=manager'], signals={'sender_importance': 'external', 'has_request': True, 'has_deadline': False, 'tone': '请求', 'requires_response': '明确需要'})"
+      ],
       "expected": {
-        "是否需要回复": false,
-        "回复草稿规则": "empty",
-        "判断原因应包含": [
-          "priority=LOW"
-        ]
+        "是否需要回复": true,
+        "回复草稿规则": "non_empty",
+        "signals": {
+          "sender_importance": [
+            "external",
+            "unknown"
+          ],
+          "has_request": true,
+          "has_deadline": false
+        },
+        "score_band": {
+          "min": 2,
+          "max": 7
+        },
+        "priority_rule": {
+          "allowed": [
+            "MEDIUM",
+            "UNCERTAIN",
+            "HIGH"
+          ],
+          "forbidden": [
+            "LOW"
+          ],
+          "high_requires_any": [
+            "has_deadline",
+            "sender_importance=manager"
+          ]
+        }
       },
-      "actual_file": "tc05.actual.json"
+      "actual_file": "tc05.actual.json",
+      "normalized_file": "tc05.normalized.json"
     },
     {
       "case": "tc06",
@@ -75,39 +176,92 @@
       "expected": {
         "是否需要回复": true,
         "回复草稿规则": "non_empty",
-        "判断原因应包含": [
-          "priority=HIGH"
-        ]
+        "signals": {
+          "has_deadline": false,
+          "requires_response": [
+            "可能需要",
+            "明确需要"
+          ]
+        },
+        "score_band": {
+          "min": 1,
+          "max": 5
+        },
+        "priority_rule": {
+          "allowed": [
+            "UNCERTAIN",
+            "MEDIUM"
+          ],
+          "forbidden": [
+            "LOW"
+          ]
+        }
       },
-      "actual_file": "tc06.actual.json"
+      "actual_file": "tc06.actual.json",
+      "normalized_file": "tc06.normalized.json"
     },
     {
       "case": "tc07",
+      "status": "FAIL",
+      "errors": [
+        "signal mismatch: has_deadline expected=False, actual=True",
+        "priority_score above max: score=8.0, max=6"
+      ],
+      "expected": {
+        "是否需要回复": true,
+        "回复草稿规则": "non_empty",
+        "signals": {
+          "has_request": true,
+          "has_deadline": false
+        },
+        "score_band": {
+          "min": 2,
+          "max": 6
+        },
+        "priority_rule": {
+          "allowed": [
+            "MEDIUM",
+            "UNCERTAIN",
+            "HIGH"
+          ],
+          "forbidden": [
+            "LOW"
+          ]
+        }
+      },
+      "actual_file": "tc07.actual.json",
+      "normalized_file": "tc07.normalized.json"
+    },
+    {
+      "case": "tc08",
       "status": "PASS",
       "errors": [],
       "expected": {
         "是否需要回复": true,
         "回复草稿规则": "non_empty",
-        "判断原因应包含": [
-          "priority=HIGH"
-        ]
+        "signals": {
+          "has_request": true,
+          "has_deadline": true,
+          "requires_response": [
+            "明确需要",
+            "可能需要"
+          ]
+        },
+        "score_band": {
+          "min": 4
+        },
+        "priority_rule": {
+          "allowed": [
+            "MEDIUM",
+            "HIGH"
+          ],
+          "forbidden": [
+            "LOW"
+          ]
+        }
       },
-      "actual_file": "tc07.actual.json"
-    },
-    {
-      "case": "tc08",
-      "status": "FAIL",
-      "errors": [
-        "判断原因 missing token: priority=MEDIUM"
-      ],
-      "expected": {
-        "是否需要回复": true,
-        "回复草稿规则": "non_empty",
-        "判断原因应包含": [
-          "priority=MEDIUM"
-        ]
-      },
-      "actual_file": "tc08.actual.json"
+      "actual_file": "tc08.actual.json",
+      "normalized_file": "tc08.normalized.json"
     },
     {
       "case": "tc09",
@@ -116,11 +270,25 @@
       "expected": {
         "是否需要回复": true,
         "回复草稿规则": "non_empty",
-        "判断原因应包含": [
-          "priority=UNCERTAIN"
-        ]
+        "signals": {
+          "has_request": true,
+          "has_deadline": true
+        },
+        "score_band": {
+          "min": 4
+        },
+        "priority_rule": {
+          "allowed": [
+            "MEDIUM",
+            "HIGH"
+          ],
+          "forbidden": [
+            "LOW"
+          ]
+        }
       },
-      "actual_file": "tc09.actual.json"
+      "actual_file": "tc09.actual.json",
+      "normalized_file": "tc09.normalized.json"
     },
     {
       "case": "tc10",
@@ -129,11 +297,25 @@
       "expected": {
         "是否需要回复": true,
         "回复草稿规则": "non_empty",
-        "判断原因应包含": [
-          "priority=HIGH"
-        ]
+        "signals": {
+          "has_request": true,
+          "has_deadline": true,
+          "requires_response": [
+            "明确需要",
+            "可能需要"
+          ]
+        },
+        "score_band": {
+          "min": 6
+        },
+        "priority_rule": {
+          "allowed": [
+            "HIGH"
+          ]
+        }
       },
-      "actual_file": "tc10.actual.json"
+      "actual_file": "tc10.actual.json",
+      "normalized_file": "tc10.normalized.json"
     }
   ]
 }

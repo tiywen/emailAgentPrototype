@@ -1,5 +1,17 @@
 {
-  "是否需要回复": false,
-  "判断原因": "邮件内容明确表示不需要任何行动，因此被归类为低优先级。；priority=LOW；score=0；confidence=1.0",
-  "回复草稿": ""
+  "是否需要回复": true,
+  "判断原因": "该邮件来自上级，包含明确的请求和截止时间，因此被归类为高优先级。；priority=HIGH；score=8；confidence=1.0",
+  "回复草稿": "尊敬的Alice，感谢您的邮件。我会在明天中午之前审核并批准最终合同。如有任何问题，我会及时与您联系。谢谢！",
+  "_raw_priority": "HIGH",
+  "_raw_priority_score": 8,
+  "_raw_confidence": 1.0,
+  "_raw_signals": {
+    "sender_importance": "manager",
+    "has_request": true,
+    "has_deadline": true,
+    "tone": "请求",
+    "requires_response": "明确需要"
+  },
+  "_raw_reasoning": "该邮件来自上级，包含明确的请求和截止时间，因此被归类为高优先级。",
+  "_raw_reply_draft": "尊敬的Alice，感谢您的邮件。我会在明天中午之前审核并批准最终合同。如有任何问题，我会及时与您联系。谢谢！"
 }

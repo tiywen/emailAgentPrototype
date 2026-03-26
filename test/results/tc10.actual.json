@@ -1,5 +1,17 @@
 {
   "是否需要回复": true,
-  "判断原因": "该邮件来自外部联系人，包含明确的反馈请求和紧急的时间要求，因此被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
-  "回复草稿": "Dear [Partner Lead],\n\nThank you for your email. I will ensure to provide my feedback by the end of the day.\n\nBest regards,\nTest User"
+  "判断原因": "该邮件来自外部联系人，包含明确的请求和截止时间，需优先处理。；priority=HIGH；score=8；confidence=0.9",
+  "回复草稿": "尊敬的合作伙伴，感谢您的邮件。我会在今天内提供反馈，以确保我们能按当前方案推进。",
+  "_raw_priority": "HIGH",
+  "_raw_priority_score": 8,
+  "_raw_confidence": 0.9,
+  "_raw_signals": {
+    "sender_importance": "external",
+    "has_request": true,
+    "has_deadline": true,
+    "tone": "请求",
+    "requires_response": "明确需要"
+  },
+  "_raw_reasoning": "该邮件来自外部联系人，包含明确的请求和截止时间，需优先处理。",
+  "_raw_reply_draft": "尊敬的合作伙伴，感谢您的邮件。我会在今天内提供反馈，以确保我们能按当前方案推进。"
 }

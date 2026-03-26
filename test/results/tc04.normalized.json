@@ -1,0 +1,14 @@
+{
+  "priority": "HIGH",
+  "priority_score": 8,
+  "signals": {
+    "sender_importance": "manager",
+    "has_request": true,
+    "has_deadline": true,
+    "tone": "请求",
+    "requires_response": "明确需要"
+  },
+  "need_reply": true,
+  "draft_text": "尊敬的Alice，感谢您的邮件。我会在明天中午之前审核并批准最终合同。如有任何问题，我会及时与您联系。谢谢！",
+  "reason_text": "该邮件来自上级，包含明确的请求和截止时间，因此被归类为高优先级。；priority=HIGH；score=8；confidence=1.0"
+}

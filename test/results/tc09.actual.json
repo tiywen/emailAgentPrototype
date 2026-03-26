@@ -1,5 +1,17 @@
 {
   "是否需要回复": true,
-  "判断原因": "邮件来自同级同事，包含请求但没有明确的时间要求，导致优先级不确定。；priority=UNCERTAIN；score=1；confidence=0.8",
-  "回复草稿": "Hi, I will take a look at it as soon as I can. Thank you for your patience."
+  "判断原因": "该邮件来自同级同事，包含明确的请求和今天的确认截止时间，导致其被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
+  "回复草稿": "Hi Legal Ops,\n\nThank you for the update. I will review the latest clause and confirm by the end of the day.\n\nBest regards,\nTest User",
+  "_raw_priority": "HIGH",
+  "_raw_priority_score": 8,
+  "_raw_confidence": 0.9,
+  "_raw_signals": {
+    "sender_importance": "peer",
+    "has_request": true,
+    "has_deadline": true,
+    "tone": "请求",
+    "requires_response": "明确需要"
+  },
+  "_raw_reasoning": "该邮件来自同级同事，包含明确的请求和今天的确认截止时间，导致其被归类为高优先级。",
+  "_raw_reply_draft": "Hi Legal Ops,\n\nThank you for the update. I will review the latest clause and confirm by the end of the day.\n\nBest regards,\nTest User"
 }

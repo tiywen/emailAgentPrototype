@@ -1,5 +1,17 @@
 {
   "是否需要回复": true,
-  "判断原因": "邮件来自同级同事，包含请求但没有明确的时间要求，导致优先级不确定。；priority=UNCERTAIN；score=1；confidence=0.8",
-  "回复草稿": "Hi, thank you for reaching out. I will review and share my thoughts with you shortly."
+  "判断原因": "邮件来自同级同事，包含请求但没有明确的时间要求，因此优先级不确定。；priority=UNCERTAIN；score=1；confidence=0.8",
+  "回复草稿": "Hi, thank you for reaching out. I will review and share my thoughts with you shortly.",
+  "_raw_priority": "UNCERTAIN",
+  "_raw_priority_score": 1,
+  "_raw_confidence": 0.8,
+  "_raw_signals": {
+    "sender_importance": "peer",
+    "has_request": true,
+    "has_deadline": false,
+    "tone": "请求",
+    "requires_response": "可能需要"
+  },
+  "_raw_reasoning": "邮件来自同级同事，包含请求但没有明确的时间要求，因此优先级不确定。",
+  "_raw_reply_draft": "Hi, thank you for reaching out. I will review and share my thoughts with you shortly."
 }

@@ -1,5 +1,17 @@
 {
-  "是否需要回复": true,
-  "判断原因": "该邮件来自外部客户，包含明确的请求和截止时间，需优先处理。；priority=HIGH；score=8；confidence=0.9",
-  "回复草稿": "Dear [Client's Name],\n\nThank you for your email. I will confirm the implementation schedule by Friday EOD as requested.\n\nBest regards,\nTest User"
+  "是否需要回复": false,
+  "判断原因": "该邮件仅为信息通知，且不需要任何用户行动，因此被归类为低优先级。；priority=LOW；score=0；confidence=1.0",
+  "回复草稿": "",
+  "_raw_priority": "LOW",
+  "_raw_priority_score": 0,
+  "_raw_confidence": 1.0,
+  "_raw_signals": {
+    "sender_importance": "unknown",
+    "has_request": false,
+    "has_deadline": false,
+    "tone": "FYI",
+    "requires_response": "不需要"
+  },
+  "_raw_reasoning": "该邮件仅为信息通知，且不需要任何用户行动，因此被归类为低优先级。",
+  "_raw_reply_draft": ""
 }

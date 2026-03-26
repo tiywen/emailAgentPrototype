@@ -1,22 +1,33 @@
-// 设计原因：验证“有明确请求但无明确时限”的中优先级判断。
-// 测试指标：Decision quality、Override rate（不应极端判高/低）。
+// 设计原因：sender ambiguity（老板助理代发），测试角色不确定下的风险控制。
+// 测试指标：sender signal鲁棒性、priority容忍区间、high gating。
 {
   "id": "tc08",
   "input": {
     "thread_id": "tc08",
-    "subject": "Need your comments on proposal",
+    "subject": "On behalf of VP: pre-read confirmation",
     "messages": [
       {
-        "sender": "unknown.vendor@partner.com",
+        "sender": "assistant.office@company.com",
         "recipients": ["you@company.com"],
         "timestamp": "2026-03-25T07:10:00Z",
-        "body": "Could you review the attached proposal and share your comments?"
+        "body": "Sending this on behalf of VP Li. Please confirm you have read the pre-read before tomorrow 10:00."
       }
     ]
   },
   "expected_output": {
     "是否需要回复": true,
     "回复草稿规则": "non_empty",
-    "判断原因应包含": ["priority=MEDIUM"]
+    "signals": {
+      "has_request": true,
+      "has_deadline": true,
+      "requires_response": ["明确需要", "可能需要"]
+    },
+    "score_band": {
+      "min": 4
+    },
+    "priority_rule": {
+      "allowed": ["MEDIUM", "HIGH"],
+      "forbidden": ["LOW"]
+    }
   }
 }

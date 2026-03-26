@@ -1,5 +1,17 @@
 {
   "是否需要回复": true,
-  "判断原因": "该邮件来自外部联系人，包含明确的请求并需要用户回复，因此被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
-  "回复草稿": "Dear [Vendor's Name],\n\nThank you for your email. I will review the attached proposal and share my comments with you shortly.\n\nBest regards,\nTest User"
+  "判断原因": "该邮件来自外部发件人，并包含明确的请求和紧急的时间要求，因此被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
+  "回复草稿": "Dear VP Li,\n\nI confirm that I have read the pre-read as requested. \n\nBest regards,\nTest User",
+  "_raw_priority": "HIGH",
+  "_raw_priority_score": 8,
+  "_raw_confidence": 0.9,
+  "_raw_signals": {
+    "sender_importance": "external",
+    "has_request": true,
+    "has_deadline": true,
+    "tone": "请求",
+    "requires_response": "明确需要"
+  },
+  "_raw_reasoning": "该邮件来自外部发件人，并包含明确的请求和紧急的时间要求，因此被归类为高优先级。",
+  "_raw_reply_draft": "Dear VP Li,\n\nI confirm that I have read the pre-read as requested. \n\nBest regards,\nTest User"
 }

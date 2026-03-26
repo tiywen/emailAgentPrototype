@@ -1,0 +1,14 @@
+{
+  "priority": "LOW",
+  "priority_score": 0,
+  "signals": {
+    "sender_importance": "unknown",
+    "has_request": false,
+    "has_deadline": false,
+    "tone": "FYI",
+    "requires_response": "不需要"
+  },
+  "need_reply": false,
+  "draft_text": "",
+  "reason_text": "该邮件仅为信息通知，且不需要任何用户行动，因此被归类为低优先级。；priority=LOW；score=0；confidence=1.0"
+}

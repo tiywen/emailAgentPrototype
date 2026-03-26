@@ -1,22 +1,32 @@
-// 设计原因：验证“礼貌措辞但业务紧迫（客户会议前）”的隐性紧急场景识别。
-// 测试指标：Failure mode验证、High-priority precision。
+// 设计原因：多语言输入（中文+英文）与礼貌紧急并存，验证跨语言信号抽取。
+// 测试指标：多语言鲁棒性、high-priority识别、reply可用性。
 {
   "id": "tc10",
   "input": {
     "thread_id": "tc10",
-    "subject": "Feedback before customer meeting",
+    "subject": "客户会议前确认 / Feedback before customer meeting",
     "messages": [
       {
         "sender": "partner_lead@partner.com",
         "recipients": ["you@company.com"],
         "timestamp": "2026-03-25T06:50:00Z",
-        "body": "Would really appreciate your feedback by end of day, since we have a customer meeting tomorrow morning."
+        "body": "Would really appreciate your feedback by end of day. 我们明早有客户会议，请今天内确认是否可以按当前方案推进。"
       }
     ]
   },
   "expected_output": {
     "是否需要回复": true,
     "回复草稿规则": "non_empty",
-    "判断原因应包含": ["priority=HIGH"]
+    "signals": {
+      "has_request": true,
+      "has_deadline": true,
+      "requires_response": ["明确需要", "可能需要"]
+    },
+    "score_band": {
+      "min": 6
+    },
+    "priority_rule": {
+      "allowed": ["HIGH"]
+    }
   }
 }

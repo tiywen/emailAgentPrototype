@@ -1,22 +1,35 @@
-// 设计原因：验证“系统公告/群发通知”是否避免误报为高优先级。
-// 测试指标：High-priority precision（反向验证）、Override rate。
+// 设计原因：校准边界样本（external + request + no deadline）。
+// 测试指标：score band校准、优先级容忍区间、HIGH gating规则。
 {
   "id": "tc05",
   "input": {
     "thread_id": "tc05",
-    "subject": "System maintenance notice",
+    "subject": "Need your comments on proposal",
     "messages": [
       {
-        "sender": "it-notice@company.com",
-        "recipients": ["all@company.com"],
-        "timestamp": "2026-03-25T02:00:00Z",
-        "body": "FYI: Scheduled maintenance this Sunday 1am-3am. No user action required."
+        "sender": "unknown.vendor@partner.com",
+        "recipients": ["you@company.com"],
+        "timestamp": "2026-03-25T07:10:00Z",
+        "body": "Could you review the attached proposal and share your comments?"
       }
     ]
   },
   "expected_output": {
-    "是否需要回复": false,
-    "回复草稿规则": "empty",
-    "判断原因应包含": ["priority=LOW"]
+    "是否需要回复": true,
+    "回复草稿规则": "non_empty",
+    "signals": {
+      "sender_importance": ["external", "unknown"],
+      "has_request": true,
+      "has_deadline": false
+    },
+    "score_band": {
+      "min": 2,
+      "max": 7
+    },
+    "priority_rule": {
+      "allowed": ["MEDIUM", "UNCERTAIN", "HIGH"],
+      "forbidden": ["LOW"],
+      "high_requires_any": ["has_deadline", "sender_importance=manager"]
+    }
   }
 }

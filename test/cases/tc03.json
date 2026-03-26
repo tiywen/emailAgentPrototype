@@ -1,5 +1,5 @@
-// 设计原因：验证“隐性请求、无明确deadline”的不确定场景是否归入 UNCERTAIN。
-// 测试指标：Miss rate（避免误判LOW）、User trust（一致性）。
+// 设计原因：UNCERTAIN制度化场景1：弱请求 + 角色不清 + 无deadline。
+// 测试指标：在低把握度下优先不确定，避免错误自信分类。
 {
   "id": "tc03",
   "input": {
@@ -17,6 +17,18 @@
   "expected_output": {
     "是否需要回复": true,
     "回复草稿规则": "non_empty",
-    "判断原因应包含": ["priority=UNCERTAIN"]
+    "判断原因应包含": ["priority=UNCERTAIN"],
+    "signals": {
+      "has_deadline": false,
+      "requires_response": ["可能需要"]
+    },
+    "score_band": {
+      "min": 1,
+      "max": 4
+    },
+    "priority_rule": {
+      "allowed": ["UNCERTAIN", "MEDIUM"],
+      "forbidden": ["LOW"]
+    }
   }
 }

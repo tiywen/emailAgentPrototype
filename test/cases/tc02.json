@@ -1,22 +1,34 @@
-// 设计原因：验证“外部联系人 + 明确请求 + 截止时间”是否稳定判为高优先级。
-// 测试指标：High-priority precision、Suggestion acceptance rate（应生成可用草稿）。
+// 设计原因：明显应判低（系统公告 / no action required）。
+// 测试指标：低优先级稳定性、避免误报高优先、草稿行为正确。
 {
   "id": "tc02",
   "input": {
     "thread_id": "tc02",
-    "subject": "Client confirmation needed",
+    "subject": "System maintenance notice",
     "messages": [
       {
-        "sender": "client_pm@partner.com",
-        "recipients": ["you@company.com"],
-        "timestamp": "2026-03-25T10:00:00Z",
-        "body": "Could you confirm the implementation schedule by Friday EOD? We need your response before we lock the client timeline."
+        "sender": "it-notice@company.com",
+        "recipients": ["all@company.com"],
+        "timestamp": "2026-03-25T02:00:00Z",
+        "body": "FYI: Scheduled maintenance this Sunday 1am-3am. No user action required."
       }
     ]
   },
   "expected_output": {
-    "是否需要回复": true,
-    "回复草稿规则": "non_empty",
-    "判断原因应包含": ["priority=HIGH"]
+    "是否需要回复": false,
+    "回复草稿规则": "empty",
+    "判断原因应包含": ["priority=LOW"],
+    "signals": {
+      "has_request": false,
+      "has_deadline": false,
+      "requires_response": ["不需要"]
+    },
+    "score_band": {
+      "max": 1
+    },
+    "priority_rule": {
+      "allowed": ["LOW", "UNCERTAIN"],
+      "forbidden": ["HIGH"]
+    }
   }
 }

@@ -1,22 +1,33 @@
-// 设计原因：验证“纯FYI且明确无需动作”是否低优先级且不生成草稿。
-// 测试指标：Override rate（应低）、Reduced Checking（低优先可被信任）。
+// 设计原因：冲突信号（FYI + request + deadline），验证不能被表层FYI误导为低优先。
+// 测试指标：冲突信号处理、false negative控制。
 {
   "id": "tc04",
   "input": {
     "thread_id": "tc04",
-    "subject": "Weekly project update",
+    "subject": "FYI - final contract attached",
     "messages": [
       {
-        "sender": "report@company.com",
-        "recipients": ["you@company.com", "team@company.com"],
-        "timestamp": "2026-03-25T09:00:00Z",
-        "body": "FYI: this week we finished API integration and updated the dashboard. No action needed from your side."
+        "sender": "alice.manager@company.com",
+        "recipients": ["you@company.com"],
+        "timestamp": "2026-03-25T12:00:00Z",
+        "body": "FYI — final contract is attached, please approve by tomorrow noon."
       }
     ]
   },
   "expected_output": {
-    "是否需要回复": false,
-    "回复草稿规则": "empty",
-    "判断原因应包含": ["priority=LOW"]
+    "是否需要回复": true,
+    "回复草稿规则": "non_empty",
+    "判断原因应包含": ["priority=HIGH"],
+    "signals": {
+      "has_request": true,
+      "has_deadline": true
+    },
+    "score_band": {
+      "min": 6
+    },
+    "priority_rule": {
+      "allowed": ["HIGH"],
+      "not_low": true
+    }
   }
 }

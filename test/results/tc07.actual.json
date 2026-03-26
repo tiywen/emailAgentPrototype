@@ -1,5 +1,17 @@
 {
   "是否需要回复": true,
-  "判断原因": "该邮件来自上级，包含明确请求和紧急的时间要求，因此被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
-  "回复草稿": "Dear [PM's Name],\n\nThank you for your message. I will ensure the final deck is sent to you before 6pm today.\n\nBest regards,\nTest User"
+  "判断原因": "该邮件来自同级同事，包含明确的请求和紧急的时间要求，因此被归类为高优先级。；priority=HIGH；score=8；confidence=0.9",
+  "回复草稿": "Hi, thank you for the update. I will review section 2 and confirm if 4pm tomorrow works for the sync shortly.",
+  "_raw_priority": "HIGH",
+  "_raw_priority_score": 8,
+  "_raw_confidence": 0.9,
+  "_raw_signals": {
+    "sender_importance": "peer",
+    "has_request": true,
+    "has_deadline": true,
+    "tone": "请求",
+    "requires_response": "明确需要"
+  },
+  "_raw_reasoning": "该邮件来自同级同事，包含明确的请求和紧急的时间要求，因此被归类为高优先级。",
+  "_raw_reply_draft": "Hi, thank you for the update. I will review section 2 and confirm if 4pm tomorrow works for the sync shortly."
 }

@@ -226,6 +226,12 @@ def call_llm_for_reply_decision(
                 "是否需要回复": need_reply,
                 "判断原因": "；".join(reason_parts),
                 "回复草稿": draft,
+                "_raw_priority": priority or "UNCERTAIN",
+                "_raw_priority_score": score,
+                "_raw_confidence": confidence,
+                "_raw_signals": signals,
+                "_raw_reasoning": reasoning,
+                "_raw_reply_draft": str(data.get("reply_draft") or "").strip(),
             }
         return data
     except json.JSONDecodeError as err:

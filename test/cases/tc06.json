@@ -1,22 +1,45 @@
-// 设计原因：验证“表面FYI但含审批请求+deadline”的冲突信号场景。
-// 测试指标：Decision quality、Failure mode（防止被FYI负权重误导）。
+// 设计原因：UNCERTAIN制度化场景2：长thread中最后一句行动要求是否成立不明确。
+// 测试指标：信息不足时避免过度自信，优先UNCERTAIN/MEDIUM而非LOW。
 {
   "id": "tc06",
   "input": {
     "thread_id": "tc06",
-    "subject": "FYI - final contract attached",
+    "subject": "Workshop prep follow-up",
     "messages": [
       {
-        "sender": "alice.manager@company.com",
+        "sender": "pm@company.com",
         "recipients": ["you@company.com"],
-        "timestamp": "2026-03-25T12:00:00Z",
-        "body": "FYI — final contract is attached, please approve by tomorrow noon."
+        "timestamp": "2026-03-24T08:00:00Z",
+        "body": "Sharing background materials for tomorrow's workshop."
+      },
+      {
+        "sender": "designer@company.com",
+        "recipients": ["you@company.com"],
+        "timestamp": "2026-03-24T15:00:00Z",
+        "body": "Draft visuals are attached for review."
+      },
+      {
+        "sender": "pm@company.com",
+        "recipients": ["you@company.com"],
+        "timestamp": "2026-03-25T09:30:00Z",
+        "body": "If possible, maybe we can polish one or two slides before sharing."
       }
     ]
   },
   "expected_output": {
     "是否需要回复": true,
     "回复草稿规则": "non_empty",
-    "判断原因应包含": ["priority=HIGH"]
+    "signals": {
+      "has_deadline": false,
+      "requires_response": ["可能需要", "明确需要"]
+    },
+    "score_band": {
+      "min": 1,
+      "max": 5
+    },
+    "priority_rule": {
+      "allowed": ["UNCERTAIN", "MEDIUM"],
+      "forbidden": ["LOW"]
+    }
   }
 }

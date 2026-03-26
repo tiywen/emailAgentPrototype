@@ -2,13 +2,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 from typing import Any
 
 from email_assistant.dotenv_load import load_project_dotenv
 from email_assistant.models import SingleEmailInput, ThreadInput, UnifiedInput
 from email_assistant.preprocessor import build_thread_text
-from email_assistant.summary_pipeline import analyze_reply_decision_thread_text
+from email_assistant.llm_client import call_llm_for_reply_decision
 
 
 def _strip_json_comments(text: str) -> str:
@@ -54,8 +55,80 @@ def _to_unified_input(payload: dict[str, Any]) -> UnifiedInput:
     )
 
 
-def _evaluate(actual: dict[str, Any], expected: dict[str, Any]) -> tuple[bool, list[str]]:
+def _normalize_raw(actual: dict[str, Any]) -> dict[str, Any]:
+    reason = str(actual.get("判断原因") or "")
+    raw_priority = str(actual.get("_raw_priority") or "").strip().upper()
+    if not raw_priority:
+        if "priority=HIGH" in reason:
+            raw_priority = "HIGH"
+        elif "priority=MEDIUM" in reason:
+            raw_priority = "MEDIUM"
+        elif "priority=UNCERTAIN" in reason:
+            raw_priority = "UNCERTAIN"
+        elif "priority=LOW" in reason:
+            raw_priority = "LOW"
+    raw_score = actual.get("_raw_priority_score")
+    if raw_score is None:
+        marker = "score="
+        pos = reason.find(marker)
+        if pos >= 0:
+            raw = reason[pos + len(marker):].split("；", 1)[0].strip()
+            try:
+                raw_score = float(raw)
+            except ValueError:
+                raw_score = None
+    raw_signals = actual.get("_raw_signals")
+    if not isinstance(raw_signals, dict):
+        raw_signals = {}
+    return {
+        "priority": raw_priority,
+        "priority_score": raw_score,
+        "signals": raw_signals,
+        "need_reply": bool(actual.get("是否需要回复")),
+        "draft_text": str(actual.get("回复草稿") or "").strip(),
+        "reason_text": reason,
+    }
+
+
+def _match_signal(actual_value: Any, expected_value: Any) -> bool:
+    if isinstance(expected_value, list):
+        return str(actual_value) in [str(v) for v in expected_value]
+    return str(actual_value) == str(expected_value)
+
+
+def _eval_priority_rules(norm: dict[str, Any], rules: dict[str, Any], errors: list[str]) -> None:
+    priority = norm.get("priority") or ""
+    allowed = rules.get("allowed") or []
+    forbidden = rules.get("forbidden") or []
+    not_low = bool(rules.get("not_low"))
+    if isinstance(allowed, list) and allowed and priority not in [str(v).upper() for v in allowed]:
+        errors.append(f"priority not in allowed set: actual={priority}, allowed={allowed}")
+    if isinstance(forbidden, list) and priority in [str(v).upper() for v in forbidden]:
+        errors.append(f"priority in forbidden set: actual={priority}, forbidden={forbidden}")
+    if not_low and priority == "LOW":
+        errors.append("priority should not be LOW")
+
+    high_requires_any = rules.get("high_requires_any") or []
+    if priority == "HIGH" and isinstance(high_requires_any, list) and high_requires_any:
+        signals = norm.get("signals") or {}
+        ok = False
+        for cond in high_requires_any:
+            c = str(cond).strip()
+            if c == "has_deadline" and bool(signals.get("has_deadline")):
+                ok = True
+            if c == "sender_importance=manager" and str(signals.get("sender_importance")) == "manager":
+                ok = True
+        if not ok:
+            errors.append(
+                "priority=HIGH violates high_requires_any gating rule "
+                f"(need one of {high_requires_any}, signals={signals})"
+            )
+
+
+def _evaluate(actual: dict[str, Any], expected: dict[str, Any]) -> tuple[bool, list[str], dict[str, Any]]:
     errors: list[str] = []
+    norm = _normalize_raw(actual)
+
     expected_need_reply = expected.get("是否需要回复")
     if isinstance(expected_need_reply, bool):
         if bool(actual.get("是否需要回复")) != expected_need_reply:
@@ -78,7 +151,38 @@ def _evaluate(actual: dict[str, Any], expected: dict[str, Any]) -> tuple[bool, l
             if token_text and token_text not in reason:
                 errors.append(f"判断原因 missing token: {token_text}")
 
-    return (len(errors) == 0), errors
+    # New calibration-oriented assertions
+    signals_rule = expected.get("signals") or {}
+    if isinstance(signals_rule, dict) and signals_rule:
+        signals = norm.get("signals") or {}
+        for key, expected_value in signals_rule.items():
+            actual_value = signals.get(key)
+            if not _match_signal(actual_value, expected_value):
+                errors.append(
+                    f"signal mismatch: {key} expected={expected_value}, actual={actual_value}"
+                )
+
+    score_band = expected.get("score_band") or {}
+    if isinstance(score_band, dict) and score_band:
+        score = norm.get("priority_score")
+        if score is None:
+            errors.append("priority_score missing")
+        else:
+            try:
+                score_num = float(score)
+            except (TypeError, ValueError):
+                errors.append(f"priority_score is not numeric: {score}")
+            else:
+                if "min" in score_band and score_num < float(score_band["min"]):
+                    errors.append(f"priority_score below min: score={score_num}, min={score_band['min']}")
+                if "max" in score_band and score_num > float(score_band["max"]):
+                    errors.append(f"priority_score above max: score={score_num}, max={score_band['max']}")
+
+    priority_rule = expected.get("priority_rule") or {}
+    if isinstance(priority_rule, dict) and priority_rule:
+        _eval_priority_rules(norm, priority_rule, errors)
+
+    return (len(errors) == 0), errors, norm
 
 
 def main() -> int:
@@ -142,18 +246,27 @@ def main() -> int:
 
             unified = _to_unified_input(input_obj)
             thread_text = build_thread_text(unified)
-            actual_obj = analyze_reply_decision_thread_text(
-                thread_text,
-                model=args.model,
+            model_name = args.model or os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+            api_key = os.getenv("OPENAI_API_KEY")
+            if not api_key:
+                raise ValueError("OPENAI_API_KEY is not set.")
+            actual_obj = call_llm_for_reply_decision(
+                model=model_name,
+                thread_text=thread_text,
+                api_key=api_key,
                 current_user_identity=args.current_user_identity,
-            ).model_dump()
+            )
 
-            ok, errors = _evaluate(actual_obj, expected_obj)
+            ok, errors, normalized = _evaluate(actual_obj, expected_obj)
             if ok:
                 passed += 1
 
             (save_dir / f"{case_id}.actual.json").write_text(
                 json.dumps(actual_obj, ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
+            (save_dir / f"{case_id}.normalized.json").write_text(
+                json.dumps(normalized, ensure_ascii=False, indent=2),
                 encoding="utf-8",
             )
             summary.append(
@@ -163,6 +276,7 @@ def main() -> int:
                     "errors": errors,
                     "expected": expected_obj,
                     "actual_file": f"{case_id}.actual.json",
+                    "normalized_file": f"{case_id}.normalized.json",
                 }
             )
         except Exception as err:

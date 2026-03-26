@@ -1,34 +1,33 @@
-// 设计原因：验证“长线程最后一封才出现关键请求”的上下文提取能力。
-// 测试指标：Miss rate、场景驱动测试（关键case）。
+// 设计原因：多意图邮件（FYI + request + scheduling）避免“平均化”误判。
+// 测试指标：multi-intent识别、priority稳健性、reply行为。
 {
   "id": "tc07",
   "input": {
     "thread_id": "tc07",
-    "subject": "Client workshop preparation",
+    "subject": "Plan update + quick review + scheduling",
     "messages": [
       {
-        "sender": "pm@company.com",
-        "recipients": ["you@company.com"],
-        "timestamp": "2026-03-24T08:00:00Z",
-        "body": "Sharing background materials for tomorrow's workshop."
-      },
-      {
-        "sender": "designer@company.com",
-        "recipients": ["you@company.com"],
-        "timestamp": "2026-03-24T15:00:00Z",
-        "body": "Draft visuals are attached for review."
-      },
-      {
-        "sender": "pm@company.com",
+        "sender": "teammate@company.com",
         "recipients": ["you@company.com"],
         "timestamp": "2026-03-25T09:30:00Z",
-        "body": "Please send the final deck today before 6pm so I can share it with the client."
+        "body": "FYI, we finished the latest draft. Could you quickly review section 2 and let us know if 4pm tomorrow works for a sync?"
       }
     ]
   },
   "expected_output": {
     "是否需要回复": true,
     "回复草稿规则": "non_empty",
-    "判断原因应包含": ["priority=HIGH"]
+    "signals": {
+      "has_request": true,
+      "has_deadline": false
+    },
+    "score_band": {
+      "min": 2,
+      "max": 6
+    },
+    "priority_rule": {
+      "allowed": ["MEDIUM", "UNCERTAIN", "HIGH"],
+      "forbidden": ["LOW"]
+    }
   }
 }
