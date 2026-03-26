@@ -1,67 +1,269 @@
-# Email Assistant Minimal Prototype
+# Email Assistant（邮件摘要与优先级助手）
 
-A minimal runnable Email Processing Agent prototype in Python.
+一个基于 Python 的邮件分析原型，支持：
 
-## What it does
+- 从 Microsoft Graph 拉取邮箱邮件进行分析（Streamlit UI）
+- 手动粘贴整段邮件线程进行分析
+- 上传邮件文件（`.html` / `.htm` / `.eml` / `.msg`）进行分析
+- 生成两种摘要（Short / Long）
+- 判断是否需要回复、给出优先级判断理由，并生成可编辑回复草稿
+- 保留 CLI 方式（输入 JSON）用于离线批处理/快速测试
 
-- Reads email data from local JSON files
-- Supports:
-  - single email input
-  - email thread input (recommended)
-- Sorts messages by time and builds a model-friendly thread text
-- Calls OpenAI model to generate structured output
-- Outputs result:
-  - printed in terminal
-  - saved as local JSON (`data/output.json` by default)
+---
 
-## Structured output schema
+## 1. 主要功能
 
-```json
-{
-  "summary": "string",
-  "key_points": ["string"],
-  "action_items": [
-    {
-      "task": "string",
-      "owner": "string or unknown",
-      "deadline": "string or unknown"
-    }
-  ],
-  "open_questions": ["string"]
-}
-```
+### 摘要能力
+- `Short version summary`：更简洁的概览
+- `Long version summary`：更详细的上下文信息
+- 摘要会输出：
+  - `summary`
+  - `key_points`
+  - `open_questions`
 
-If fields are unclear, the system keeps stable defaults (`unknown`, empty string, or empty list).
+### 回复优先级判断能力
+- 基于结构化信号与评分规则，输出优先级判断（`HIGH/MEDIUM/UNCERTAIN/LOW`）
+- 兼容前端展示字段：
+  - `是否需要回复`
+  - `判断原因`
+  - `回复草稿`
+- 默认规则：
+  - `HIGH` / `MEDIUM` / `UNCERTAIN`：默认生成回复草稿
+  - `LOW`：默认不生成草稿
 
-## Quick start
+### 多输入来源（Streamlit）
+- 登录邮箱（Graph 拉取收件箱）
+- 粘贴整封邮件/线程文本
+- 上传邮件文件：`.html` / `.htm` / `.eml` / `.msg`
 
-1) Install dependencies:
+---
 
+## 2. 项目结构
+
+- `streamlit_app.py`：Web 前端主入口（登录、邮件输入、摘要、回复判断）
+- `main.py`：CLI 入口（读取 JSON，输出摘要 JSON）
+- `email_assistant/summary_pipeline.py`：统一分析流程
+- `email_assistant/llm_client.py`：Prompt 构建与 OpenAI 调用
+- `email_assistant/graph_mail.py`：Graph API、邮件正文提取、上传文件解析
+- `email_assistant/msal_device.py`：MSAL 设备码登录与 token cache 刷新
+- `email_assistant/input_loader.py`：CLI 输入 JSON 解析
+- `email_assistant/preprocessor.py`：线程文本拼装与排序
+- `email_assistant/models.py`：Pydantic 输入/输出模型
+- `email_assistant/jwt_peek.py`：JWT 诊断字段提取（仅调试）
+- `email_assistant/dotenv_load.py`：项目根 `.env` 加载
+- `examples/`：示例输入
+- `data/`：默认输入/输出样例
+
+---
+
+## 3. 安装与运行
+
+### 环境要求
+- Python 3.10+
+
+### 安装依赖
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-2) Configure API key:
+### 配置环境变量
+1. 复制 `.env.example` 为 `.env`
+2. 至少填写：
+   - `OPENAI_API_KEY=...`
+3. 可选：
+   - `OPENAI_MODEL=gpt-4o-mini`（默认值）
+   - Graph/Entra 相关变量（见下文）
 
-- Copy `.env.example` to `.env`
-- Set `OPENAI_API_KEY=...`
+### 本地运行指南（从 0 到可用）
 
-3) Run with default sample:
+下面这套步骤按顺序执行，产品经理或开发都可以独立完成本地部署。
+
+1) 获取代码并进入目录
 
 ```bash
-python main.py --input data/input.json --output data/output.json --model gpt-4o-mini
+git clone <你的仓库地址>
+cd emailAgentPrototype
 ```
 
-4) Dry run (no model call):
+2) 检查 Python 版本（建议 3.10+）
+
+```bash
+python --version
+```
+
+3) 创建并激活虚拟环境
+
+- Windows PowerShell：
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+- macOS / Linux：
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+4) 安装依赖
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+5) 准备 `.env`
+
+```bash
+cp .env.example .env
+```
+
+如果你在 Windows PowerShell，没有 `cp` 命令可用，使用：
+
+```powershell
+Copy-Item .env.example .env
+```
+
+然后编辑 `.env`，最少填这 1 项即可启动手动模式：
+
+```env
+OPENAI_API_KEY=你的密钥
+```
+
+可选：
+
+```env
+OPENAI_MODEL=gpt-4o-mini
+```
+
+若要使用“登录邮箱（Graph 拉取）”模式，再补：
+
+```env
+AZURE_CLIENT_ID=...
+AZURE_TENANT_ID=...
+```
+
+6) 启动 Web 应用（推荐）
+
+```bash
+streamlit run streamlit_app.py
+```
+
+看到本地地址后（通常是 `http://localhost:8501`），在浏览器打开即可。
+
+7) 首次验证（建议按这个顺序）
+
+- 在“邮件来源”选择 `粘贴整封邮件或线程`
+- 粘贴一段测试邮件
+- 点击 `Short version summary`
+- 再点击 `Analyze reply priority & draft`
+- 看到摘要和回复判断同时出现，说明本地运行成功
+
+8) 可选：验证文件上传解析
+
+- 切换到 `上传邮件文件`
+- 上传 `.html` / `.eml` / `.msg` 任一文件
+- 点击摘要按钮，确认能正常返回结果
+
+9) 可选：验证 Graph 登录模式
+
+- 在侧边栏点击 `Sign in (device code)`
+- 按提示完成浏览器设备码登录
+- 返回页面点击 `Refresh inbox` 拉取邮件列表
+
+10) 关闭与下次启动
+
+- 关闭服务：在终端按 `Ctrl + C`
+- 下次启动只需：
+  - 进入项目目录
+  - 激活虚拟环境
+  - 执行 `streamlit run streamlit_app.py`
+
+### 本地运行常见报错（快速处理）
+
+- `OPENAI_API_KEY is not set`
+  - 检查 `.env` 是否存在、是否填写了 `OPENAI_API_KEY`
+  - 重启 Streamlit
+
+- `.msg` 解析失败
+  - 执行 `python -m pip install -r requirements.txt`（确保 `extract-msg` 已安装）
+
+- PowerShell 无法执行激活脚本
+  - 先执行：
+  ```powershell
+  Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+  ```
+  - 然后重新激活虚拟环境
+
+- Graph 登录成功但拉取邮件失败（401）
+  - 优先改用手动模式继续工作（不依赖 Graph）
+  - 再按本文 “Microsoft Graph / Entra 配置” 和 “常见问题排查”章节处理
+
+---
+
+## 4. Streamlit 使用说明（推荐）
+
+启动：
+```bash
+streamlit run streamlit_app.py
+```
+
+### 4.1 输入方式
+在页面的“邮件来源”中选择：
+
+1. `登录邮箱（Graph 拉取）`
+   - 侧边栏设备码登录后，拉取收件箱邮件列表
+   - 选中邮件后可执行摘要或回复分析
+
+2. `粘贴整封邮件或线程`
+   - 直接将完整邮件对话粘贴到文本框
+   - 无需登录 Graph 即可分析
+
+3. `上传邮件文件`
+   - 支持 `.html` / `.htm` / `.eml` / `.msg`
+   - 上传后自动解析正文并用于分析
+
+### 4.2 摘要与回复分析
+- 摘要仅在点击按钮后生成（不会因切换邮件自动触发）
+- Short/Long 按钮颜色会与当前显示版本同步
+- 已生成摘要后再做回复分析，会同时保留两块结果
+- 回复草稿通过文本框展示，可直接编辑
+
+### 4.3 处理中的交互规则
+- 处理中会禁用大部分交互控件，避免并发操作冲突
+- `Sign out` 按钮保留可用
+
+---
+
+## 5. CLI 使用说明
+
+CLI 仍可用于基于 JSON 的摘要生成。
+
+### 常用命令
+```bash
+python main.py --input data/input.json --output data/output.json --model gpt-4o-mini --style short
+```
+
+```bash
+python main.py --input data/input.json --style long
+```
 
 ```bash
 python main.py --input data/input.json --dry-run
 ```
 
-## Input formats
+### 参数
+- `--input`：输入 JSON 路径（默认 `data/input.json`）
+- `--output`：输出 JSON 路径（默认 `data/output.json`）
+- `--model`：模型名（默认 `gpt-4o-mini`）
+- `--style`：`short` / `long`
+- `--dry-run`：仅输出预处理后的线程文本，不调用模型
 
-### A) Single email
+---
 
+## 6. CLI 输入格式
+
+### 单封邮件
 ```json
 {
   "subject": "string",
@@ -72,8 +274,7 @@ python main.py --input data/input.json --dry-run
 }
 ```
 
-### B) Thread (recommended)
-
+### 邮件线程（推荐）
 ```json
 {
   "thread_id": "string",
@@ -89,74 +290,72 @@ python main.py --input data/input.json --dry-run
 }
 ```
 
-## Project structure
+---
 
-- `main.py`: CLI entry point (read -> preprocess -> call LLM -> parse -> output)
-- `email_assistant/input_loader.py`: input file reading and schema validation
-- `email_assistant/preprocessor.py`: thread sorting and formatting
-- `email_assistant/llm_client.py`: prompt construction and OpenAI call
-- `email_assistant/models.py`: input/output schemas and output normalization
-- `data/`: default input/output
-- `examples/`: multiple test samples
-- `streamlit_app.py`: local UI with Microsoft Entra device-code login and Graph mail read
-- `email_assistant/msal_device.py`: MSAL public client + device flow helpers
-- `email_assistant/graph_mail.py`: Microsoft Graph inbox/list/detail helpers
-- `email_assistant/summary_pipeline.py`: shared LLM analysis (used by CLI and Streamlit)
+## 7. 输出格式
 
-## Streamlit + Microsoft Graph
-
-Prerequisites in **Microsoft Entra** (app registration):
-
-- Application type supports **public client** (“Allow public client flows” = **Yes**).
-- **Delegated** API permissions on Microsoft Graph: **User.Read**, **Mail.Read** (admin consent if required by tenant).
-
-Environment variables (see `.env.example`):
-
-- `AZURE_CLIENT_ID` — Application (client) ID  
-- `AZURE_TENANT_ID` — Directory (tenant) ID  
-- Same values are accepted as `MICROSOFT_CLIENT_ID` / `MICROSOFT_TENANT_ID`.
-
-Run the app:
-
-```bash
-python -m pip install -r requirements.txt
-streamlit run streamlit_app.py
+### 摘要输出
+```json
+{
+  "summary": "string",
+  "key_points": ["string"],
+  "open_questions": ["string"]
+}
 ```
 
-Sign in via **device code flow** in the sidebar. After login, the app keeps an **MSAL serialized token cache** plus the current access token in Streamlit **session state** (not persisted to disk). Each Graph call first runs **`acquire_token_silent`** so a fresh access token is used when possible—this avoids sending a corrupted or truncated JWT after reruns (Graph error `InvalidAuthenticationToken` / “no dots”). Fetch inbox, pick a message, then **Analyze full body** to run the same summarization pipeline as the CLI.
+### 回复判断输出（前端展示字段）
+```json
+{
+  "是否需要回复": true,
+  "判断原因": "string",
+  "回复草稿": "string"
+}
+```
 
-### Troubleshooting login (`AADSTS700016`, directory `''`)
+---
 
-- **`AZURE_TENANT_ID` missing or empty** — Azure reports the app was not found **in the directory `''`**. In **Entra ID → Overview**, copy **Directory (tenant) ID** (a GUID different from Application client ID) into `.env` as `AZURE_TENANT_ID=...`.
-- **Windows environment variables** — If `AZURE_TENANT_ID` is set **globally to empty**, it used to block values from `.env`. This repo loads project `.env` with **override** so local `.env` wins; still remove empty duplicate vars if problems persist.
-- **Client vs tenant** — `AZURE_CLIENT_ID` = Application (client) ID; `AZURE_TENANT_ID` = Directory (tenant) ID. They must **not** be the same value.
-- **Wrong GUID in Client ID** — Use **Application (client) ID**, not **Object ID**, from the app registration **Overview**.
-- **App not in that tenant** — The registration must live in the same directory as `AZURE_TENANT_ID`. If the app is multi-tenant, you can try `AZURE_AUTHORITY=https://login.microsoftonline.com/organizations` (and matching “Accounts in any org directory” setting).
-- **Corporate proxy / metadata issues** — Try `AZURE_MSAL_DISABLE_INSTANCE_DISCOVERY=true` in `.env`, restart Streamlit, sign in again.
-- **UI check** — After clicking **Sign in**, open **MSAL 元数据（排查登录）**: `msal_tenant` should be your tenant GUID (not `common`). The device-flow URL should contain that tenant segment.
+## 8. Microsoft Graph / Entra 配置
 
-### Troubleshooting Graph (`401` after login)
+在 Entra App Registration 中：
 
-HTTP **401** on `https://graph.microsoft.com/...` usually means the **access token is not valid for that Graph host** (national cloud mismatch), not that “the session expired”.
+- 应用类型需支持 Public Client（设备码登录）
+- Graph Delegated 权限至少包含：
+  - `User.Read`
+  - `Mail.ReadWrite`
 
-- Compare token **`iss`** (in sidebar **访问令牌摘要**) with your tenant:
-  - If `iss` contains `login.partner.microsoftonline.cn`, set  
-    `GRAPH_API_ROOT=https://microsoftgraph.chinacloudapi.cn/v1.0` in `.env` and restart Streamlit (see [Microsoft Graph national clouds](https://learn.microsoft.com/en-us/graph/deployments)).
-  - US Government: `GRAPH_API_ROOT=https://graph.microsoft.us/v1.0` and matching Entra authority host.
-- **`aud`** should be Microsoft Graph (`https://graph.microsoft.com` or Graph’s app id). If it is not, permissions/scopes or login cloud need to be fixed in Entra.
-- After changing `GRAPH_API_ROOT`, try **Refresh inbox** again; only **Sign out** and sign in again if you still get 401.
+`.env` 常用字段：
 
-- **Personal Microsoft account (Outlook.com / MSA)** — If `GET /me` succeeds but **`/me/mailFolders/inbox/messages` returns 401**, use **`GET /me/messages`** to list mail (this app does). Tokens with `Mail.Read` can still hit that folder path quirk on some consumer mailboxes.
+- `AZURE_CLIENT_ID`
+- `AZURE_TENANT_ID`
+- 可选 `AZURE_AUTHORITY`（如 `.../common`）
+- 可选 `GRAPH_API_ROOT`（国别云场景）
+- 可选 `AZURE_MSAL_DISABLE_INSTANCE_DISCOVERY=true`（部分代理环境）
 
-- **`/me` = 200 but `/me/messages` = 401 with the same token (common with MSA)** — In Entra, set **Supported account types** to **“Accounts in any organizational directory and personal Microsoft accounts”** (multitenant + personal). In `.env`, set **`AZURE_AUTHORITY=https://login.microsoftonline.com/common`** (do **not** use a single-tenant authority only for personal Outlook mail). Restart the app, **Sign out**, then sign in again so a new token is issued against `/common`. Optional: keep `AZURE_TENANT_ID` for reference; it is not used in the authority URL when `AZURE_AUTHORITY` is set. See [supported account types](https://learn.microsoft.com/en-us/security/zero-trust/develop/identity-supported-account-types).
+---
 
-## Test samples
+## 9. 常见问题排查
 
-Included in `examples/`:
+### 9.1 `AADSTS700016` / directory `''`
+- 检查 `AZURE_CLIENT_ID` / `AZURE_TENANT_ID` 是否填写正确且不是同一个 GUID
+- 确认 `.env` 已加载（本项目默认会从项目根加载并覆盖同名空值）
+- 必要时设置 `AZURE_AUTHORITY`
 
-- clear deadline
-- multi-turn thread
-- meeting scheduling
-- FYI only
-- action item with unclear owner
-- long/ambiguous request thread
+### 9.2 Graph `401 Unauthorized`
+- 检查 `GRAPH_API_ROOT` 与租户云环境是否匹配
+- 检查 token 的 `aud` / `iss` 是否指向 Graph 与正确云
+- 对个人 Outlook（MSA）建议使用 `AZURE_AUTHORITY=https://login.microsoftonline.com/common`
+
+### 9.3 `.msg` 无法解析
+- 确保依赖已安装：`extract-msg`
+- 重新执行：
+  ```bash
+  python -m pip install -r requirements.txt
+  ```
+
+---
+
+## 10. 说明
+
+- 本项目为原型，重点在流程可用与交互验证。
+- 结果质量受模型能力、邮件原文质量、上下文完整性影响。
+- JWT 仅做无签名解析用于调试显示，不用于安全验证。  
